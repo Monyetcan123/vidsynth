@@ -1,0 +1,1457 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>VidSynth — Professional AI Video Creation, Character Transformation & Visual Production Studio</title>
+  <meta name="description" content="VidSynth is an enterprise-grade generative video AI platform for character transformation, semantic rotoscoping, depth-guided relighting, and deterministic camera motion control." />
+  <link rel="canonical" href="https://vidsynth.app/" />
+
+  <!-- Open Graph / Social Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://vidsynth.app/" />
+  <meta property="og:title" content="VidSynth — Transform Vision Into Motion" />
+  <meta property="og:description" content="Transform characters, redefine visual identity, and create cinematic video experiences with multi-pass generative AI conditioning." />
+  <meta property="og:image" content="https://vidsynth.app/assets/images/comp-transformed-poster.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="VidSynth — Professional AI Video Creation Studio" />
+  <meta name="twitter:description" content="Deterministic character transformation, 16-bit Z-depth relighting, and camera motion conditioning for visual production." />
+
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+
+  <!-- Google Fonts: Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS Play CDN + Custom Darkroom Design System -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="surface-obsidian text-[#F5F6FA] antialiased selection:bg-[#00F0FF]/20">
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- ========================================================================
+       4A. STICKY ANNOUNCEMENT BAR
+       ======================================================================== -->
+  <div id="announcement-bar" role="region" aria-label="Product announcement" class="sticky top-0 z-50 bg-[#08080C] border-b border-[#252832] px-4 py-2">
+    <div class="max-w-[1360px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <span class="px-2 py-0.5 font-mono-tech text-[10px] uppercase tracking-wider bg-[#00F0FF]/10 text-[#00F0FF] border border-[#00F0FF]/40 rounded-xs">
+          EARLY ACCESS COHORT
+        </span>
+        <span class="text-[#F5F6FA] font-medium">Introducing VidSynth Studio</span>
+        <span class="hidden sm:inline text-[#626775]">—</span>
+        <span class="hidden sm:inline text-[#9296A3]">Multi-pass character synthesis, 16-bit EXR alpha mattes, and deterministic camera conditioning.</span>
+      </div>
+      <div class="flex items-center gap-4 ml-auto">
+        <button type="button" data-open-changelog class="font-mono-tech text-[11px] text-[#00F0FF] hover:underline flex items-center gap-1">
+          <span>Architecture &amp; Changelog</span>
+          <span aria-hidden="true">→</span>
+        </button>
+        <button id="dismiss-announcement-btn" type="button" class="text-[#626775] hover:text-[#F5F6FA] font-mono-tech text-xs px-1" aria-label="Dismiss announcement bar">
+          ✕
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       4B. PREMIUM NAVIGATION BAR
+       ======================================================================== -->
+  <header class="sticky top-0 z-40 bg-[#040407]/90 backdrop-blur-md border-b border-[#252832]">
+    <div class="max-w-[1360px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+      <!-- Left: Brand Identity -->
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5 group focus:outline-none">
+          <img src="assets/icons/favicon.svg" alt="VidSynth mark" class="w-8 h-8 rounded-xs" />
+          <div class="flex items-baseline gap-2">
+            <span class="font-semibold tracking-tight text-base text-[#F5F6FA] group-hover:text-[#00F0FF] transition-colors">VIDSYNTH</span>
+            <span class="font-mono-tech text-[10px] tracking-widest uppercase px-1.5 py-0.5 bg-[#101117] border border-[#252832] text-[#9296A3] rounded-xs">STUDIO</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center: Primary Navigation Links -->
+      <nav aria-label="Main navigation" class="hidden lg:flex items-center gap-1">
+        <a href="#comparison-studio" class="btn-ghost">Product</a>
+        <a href="#bento-showcase" class="btn-ghost">Models</a>
+        <a href="#motion-rig" class="btn-ghost">Solutions</a>
+        <a href="pricing.html" class="btn-ghost">Pricing</a>
+        <a href="security.html#documentation" class="btn-ghost">Resources</a>
+      </nav>
+
+      <!-- Right: Runtime Status Indicator & Auth / Studio Actions -->
+      <div class="hidden lg:flex items-center gap-3">
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#08080C] border border-[#252832]" title="Reflects actual runtime configuration in config/config.js">
+          <span data-runtime-status-dot class="w-2 h-2 rounded-full bg-[#00F0FF]"></span>
+          <span data-runtime-status-label class="font-mono-tech text-[10px] tracking-wider text-[#9296A3]">SANDBOX PREVIEW MODE</span>
+        </div>
+        <a href="login.html" data-nav-signin class="btn-ghost">Sign In</a>
+        <a href="register.html" class="btn-secondary text-xs py-2 px-3.5">Get Started</a>
+        <a href="dashboard.html" class="btn-primary text-xs py-2 px-4">Launch Studio</a>
+      </div>
+
+      <!-- Mobile Menu Trigger -->
+      <button id="mobile-menu-btn" type="button" aria-expanded="false" aria-controls="mobile-nav-drawer" class="lg:hidden p-2 rounded-sm border border-[#252832] bg-[#101117] text-[#F5F6FA]" aria-label="Toggle navigation menu">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="square" stroke-width="1.75" d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Responsive Menu Drawer -->
+    <div id="mobile-nav-drawer" class="hidden lg:hidden fixed inset-0 top-16 z-50 bg-[#040407]/98 border-t border-[#252832] p-6 overflow-y-auto">
+      <div class="flex flex-col justify-between h-full max-w-md mx-auto">
+        <div class="space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-[#252832]">
+            <div class="flex items-center gap-2">
+              <span data-runtime-status-dot class="w-2 h-2 rounded-full bg-[#00F0FF]"></span>
+              <span data-runtime-status-label class="font-mono-tech text-[11px] text-[#9296A3]">SANDBOX PREVIEW MODE</span>
+            </div>
+            <button id="mobile-menu-close-btn" type="button" class="text-xs font-mono-tech text-[#9296A3] hover:text-[#F5F6FA] px-2 py-1 border border-[#252832] rounded-xs">
+              CLOSE ✕
+            </button>
+          </div>
+          <nav class="flex flex-col gap-2" aria-label="Mobile navigation">
+            <a href="#comparison-studio" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Product — Comparison Studio</a>
+            <a href="#bento-showcase" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Models — Showcase &amp; Specs</a>
+            <a href="#motion-rig" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Solutions — Director Motion Rig</a>
+            <a href="#architecture" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Architecture &amp; Pipeline</a>
+            <a href="pricing.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Pricing &amp; Plans</a>
+            <a href="security.html#documentation" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Resources &amp; Security</a>
+          </nav>
+        </div>
+        <div class="pt-6 border-t border-[#252832] flex flex-col gap-3">
+          <a href="dashboard.html" class="btn-primary w-full justify-center">Launch Studio</a>
+          <div class="grid grid-cols-2 gap-3">
+            <a href="login.html" class="btn-secondary w-full justify-center">Sign In</a>
+            <a href="register.html" class="btn-secondary w-full justify-center">Get Started</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <!-- ======================================================================
+         4C. HERO SECTION
+         ====================================================================== -->
+    <section class="relative darkroom-grid-bg border-b border-[#252832] pt-12 pb-20 lg:pt-20 lg:pb-28">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+          <!-- Left Column: Editorial Copy & CTAs (5 Cols) -->
+          <div class="lg:col-span-5 space-y-6">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="eyebrow-tag">
+                <span class="eyebrow-dot"></span>
+                <span>NEURAL VFX PRODUCTION SUITE</span>
+              </span>
+              <span class="font-mono-tech text-[11px] text-[#626775] px-2 py-0.5 border border-[#252832] bg-[#08080C] rounded-xs">
+                BUILD v0.9.4
+              </span>
+            </div>
+
+            <h1 class="text-4xl sm:text-5xl lg:text-[52px] font-semibold tracking-tight text-[#F5F6FA] leading-[1.08]">
+              Your Vision.<br />
+              <span class="text-[#00F0FF]">Reimagined in Motion.</span>
+            </h1>
+
+            <p class="text-base sm:text-lg text-[#9296A3] leading-relaxed">
+              Transform characters, redefine visual identity, and create cinematic video experiences with next-generation generative AI.
+            </p>
+
+            <!-- Primary & Secondary CTAs -->
+            <div class="flex flex-wrap items-center gap-3.5 pt-2">
+              <a href="dashboard.html" class="btn-primary px-6 py-3 text-sm">
+                <span>Launch Studio</span>
+                <span aria-hidden="true" class="font-mono-tech">→</span>
+              </a>
+              <a href="#comparison-studio" class="btn-secondary px-6 py-3 text-sm">
+                <span>Explore Technology</span>
+              </a>
+            </div>
+
+            <!-- Compact Product Status & Pipeline Telemetry Element -->
+            <div class="pt-4 border-t border-[#252832] grid grid-cols-2 gap-4">
+              <div>
+                <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#626775]">ACTIVE CONDITIONING</div>
+                <div class="font-mono-tech text-xs text-[#F5F6FA] mt-0.5">VS-CHAR-2.4 • VS-RELIGHT-1.2</div>
+              </div>
+              <div>
+                <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#626775]">COLOR &amp; MATTE PIPELINE</div>
+                <div class="font-mono-tech text-xs text-[#F5F6FA] mt-0.5">ACEScg 16-Bit EXR + Trimap</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Cinematic Multi-Pass Hero Viewport (7 Cols) -->
+          <div class="lg:col-span-7">
+            <div class="surface-elevated reticle-frame p-2 sm:p-3 shadow-2xl">
+              <!-- Viewport Top Telemetry Bar -->
+              <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-[#08080C] border border-[#252832] mb-2 text-[11px] font-mono-tech">
+                <div class="flex items-center gap-2">
+                  <span class="w-2 h-2 rounded-full bg-[#00F0FF]"></span>
+                  <span class="text-[#F5F6FA]">VIEWPORT 01 // MULTI-PASS SCANNER</span>
+                </div>
+                <div class="flex items-center gap-3 text-[#9296A3]">
+                  <span>24.00 FPS</span>
+                  <span class="text-[#626775]">|</span>
+                  <span>REC.709 → ACEScg</span>
+                  <span class="hidden sm:inline text-[#00F0FF]">[REFERENCE DEMO PLATE]</span>
+                </div>
+              </div>
+
+              <!-- Hero HTML5 Video -->
+              <div class="relative aspect-video bg-[#08080C] border border-[#252832] overflow-hidden">
+                <video
+                  src="assets/videos/hero-reel.webm"
+                  poster="assets/images/hero-reel-poster.jpg"
+                  autoplay
+                  loop
+                  muted
+                  playsinline
+                  class="w-full h-full object-cover"
+                ></video>
+              </div>
+
+              <!-- Viewport Bottom Metadata Strip -->
+              <div class="mt-2 px-3 py-2 bg-[#08080C] border border-[#252832] flex flex-wrap items-center justify-between gap-2 text-[11px] font-mono-tech text-[#9296A3]">
+                <span>PASSES: RAW SOURCE → SEMANTIC MATTE → NEURAL CHARACTER SYNTHESIS</span>
+                <a href="#comparison-studio" class="text-[#00F0FF] hover:underline">Open Interactive Comparison Studio ↓</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4D. PRODUCT CAPABILITY METRICS (STRICT DATA INTEGRITY)
+         ====================================================================== -->
+    <section aria-labelledby="metrics-heading" class="bg-[#08080C] border-b border-[#252832] py-12">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-6">
+          <h2 id="metrics-heading" class="font-mono-tech text-xs uppercase tracking-wider text-[#9296A3]">
+            VERIFIED PIPELINE &amp; FORMAT SPECIFICATIONS
+          </h2>
+          <span class="font-mono-tech text-[11px] text-[#626775]">
+            Specification Basis: Deterministic Reference Pipeline Capabilities (No Fabricated Traction Claims)
+          </span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <!-- Metric 1 -->
+          <div class="surface-elevated p-5">
+            <div class="font-mono-tech text-[11px] text-[#626775] uppercase">SUPPORTED VIDEO &amp; CONTAINER I/O</div>
+            <div class="font-mono-tech text-xl font-semibold text-[#F5F6FA] mt-2">MP4 • WebM • ProRes • EXR</div>
+            <p class="text-xs text-[#9296A3] mt-2">
+              H.264/HEVC &amp; VP9 ingest; multi-channel 16-bit OpenEXR sequence export for compositing suites.
+            </p>
+          </div>
+
+          <!-- Metric 2 -->
+          <div class="surface-elevated p-5">
+            <div class="font-mono-tech text-[11px] text-[#626775] uppercase">AVAILABLE TRANSFORMATION MODES</div>
+            <div class="font-mono-tech text-xl font-semibold text-[#00F0FF] mt-2">5 Conditioning Passes</div>
+            <p class="text-xs text-[#9296A3] mt-2">
+              Character Transformation, Semantic Rotoscoping, Z-Depth Relighting, Identity Lock, and Optical Flow.
+            </p>
+          </div>
+
+          <!-- Metric 3 -->
+          <div class="surface-elevated p-5">
+            <div class="font-mono-tech text-[11px] text-[#626775] uppercase">MAXIMUM TARGET RESOLUTION</div>
+            <div class="font-mono-tech text-xl font-semibold text-[#F5F6FA] mt-2">Up to 3840 × 2160</div>
+            <p class="text-xs text-[#9296A3] mt-2">
+              Native latent conditioning at 1080p/1440p with spatial detail recovery up to 4K UHD @ 24/30/60 fps.
+            </p>
+          </div>
+
+          <!-- Metric 4 -->
+          <div class="surface-elevated p-5">
+            <div class="font-mono-tech text-[11px] text-[#626775] uppercase">TEMPORAL ATTENTION WINDOW</div>
+            <div class="font-mono-tech text-xl font-semibold text-[#7161FF] mt-2">16-Frame RAFT Lock</div>
+            <p class="text-xs text-[#9296A3] mt-2">
+              Bi-directional optical flow trajectory conditioning across 16-frame sliding windows to suppress flicker.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. INTERACTIVE CINEMATIC COMPARISON STUDIO
+         ====================================================================== -->
+    <section id="comparison-studio" class="py-20 lg:py-28 border-b border-[#252832]">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Section Header -->
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+          <div class="max-w-2xl space-y-3">
+            <span class="eyebrow-tag">
+              <span class="eyebrow-dot"></span>
+              <span>SYNCHRONIZED A/B INSPECTION VIEWPORT</span>
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA]">
+              Interactive Cinematic Comparison Studio
+            </h2>
+            <p class="text-sm sm:text-base text-[#9296A3]">
+              Scrub the comparison divider or use <kbd class="px-1.5 py-0.5 text-xs font-mono-tech bg-[#101117] border border-[#252832] rounded-xs">←</kbd> <kbd class="px-1.5 py-0.5 text-xs font-mono-tech bg-[#101117] border border-[#252832] rounded-xs">→</kbd> arrow keys to inspect frame-locked source footage against VidSynth's 5 neural conditioning passes.
+            </p>
+          </div>
+          <div class="px-3.5 py-2 rounded-sm bg-[#08080C] border border-[#252832] text-xs font-mono-tech text-[#9296A3]">
+            <span class="text-[#00F0FF]">PLATE DISCLOSURE:</span> Synchronized Multi-Pass R&amp;D Reference Footage (96 Frames @ 24.00 FPS)
+          </div>
+        </div>
+
+        <!-- Studio Layout: 8 Cols Viewport + 4 Cols Render Pass Controls -->
+        <div id="comparison-studio-frame" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start bg-[#08080C] p-3 sm:p-5 border border-[#252832] rounded-sm">
+          <!-- Left 8 Cols: Dual-Layer Video Comparison + Transport Controls -->
+          <div class="lg:col-span-8 space-y-3">
+            <!-- Top Layer Labels Bar -->
+            <div class="flex flex-wrap items-center justify-between gap-2 px-3 py-2 bg-[#101117] border border-[#252832] text-xs font-mono-tech">
+              <div class="flex items-center gap-2">
+                <span class="px-1.5 py-0.5 bg-[#08080C] border border-[#252832] text-[#9296A3]">LEFT LAYER</span>
+                <span class="text-[#F5F6FA]">Original Footage (Rec.709 Witness Plate)</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span id="comp-right-layer-badge" class="text-[#00F0FF]">VidSynth Transformation — VS-CHAR-2.4</span>
+                <span class="px-1.5 py-0.5 bg-[#08080C] border border-[#252832] text-[#9296A3]">RIGHT LAYER</span>
+              </div>
+            </div>
+
+            <!-- Synchronized Dual Video Viewport -->
+            <div id="comparison-viewport" class="comparison-viewport reticle-frame">
+              <!-- Layer 1 (Right / Underneath): VidSynth Transformation Pass -->
+              <div id="comparison-layer-after" class="comparison-layer comparison-layer-after">
+                <video
+                  id="comp-video-after"
+                  src="assets/videos/comp-transformed.webm"
+                  poster="assets/images/comp-transformed-poster.jpg"
+                  loop
+                  muted
+                  playsinline
+                  preload="auto"
+                ></video>
+              </div>
+
+              <!-- Layer 2 (Left / Clipped on top): Original Source Footage -->
+              <div id="comparison-layer-before" class="comparison-layer comparison-layer-before">
+                <video
+                  id="comp-video-before"
+                  src="assets/videos/comp-original.webm"
+                  poster="assets/images/comp-original-poster.jpg"
+                  loop
+                  muted
+                  playsinline
+                  preload="auto"
+                ></video>
+              </div>
+
+              <!-- Corner Floating Overlay Badges -->
+              <div class="absolute top-10 left-3 z-10 pointer-events-none px-2.5 py-1 bg-[#040407]/85 border border-[#252832] rounded-xs font-mono-tech text-[11px] text-[#F5F6FA]">
+                ORIGINAL FOOTAGE
+              </div>
+              <div class="absolute top-10 right-3 z-10 pointer-events-none px-2.5 py-1 bg-[#040407]/85 border border-[#00F0FF]/50 rounded-xs font-mono-tech text-[11px] text-[#00F0FF]">
+                VIDSYNTH TRANSFORMATION
+              </div>
+
+              <!-- Draggable Horizontal Comparison Divider -->
+              <div
+                id="comparison-divider"
+                role="slider"
+                tabindex="0"
+                aria-label="Comparison split divider between Original Footage and VidSynth Transformation"
+                aria-valuemin="2"
+                aria-valuemax="98"
+                aria-valuenow="50"
+                class="comparison-divider"
+              >
+                <div class="comparison-handle-knob" title="Drag left/right or use Arrow keys">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="square" stroke-width="2" d="M8 9l-3 3 3 3M16 9l3 3-3 3" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Precision Transport & Synchronization Deck -->
+            <div class="p-3 bg-[#101117] border border-[#252832] rounded-sm space-y-3">
+              <!-- Scrubber Timeline -->
+              <div class="flex items-center gap-3">
+                <span id="comp-timecode-display" class="font-mono-tech text-xs text-[#00F0FF] w-24 shrink-0">00:00:00:00</span>
+                <input
+                  id="comp-timeline-scrubber"
+                  type="range"
+                  min="0"
+                  max="100"
+                  step="0.1"
+                  value="0"
+                  aria-label="Synchronized video timeline scrubber"
+                  class="studio-scrubber flex-1"
+                />
+                <span id="comp-sync-status" class="font-mono-tech text-[11px] text-[#10B981] px-2 py-0.5 bg-[#08080C] border border-[#252832] rounded-xs shrink-0">
+                  LOCK ±0ms
+                </span>
+              </div>
+
+              <!-- Transport Controls Row -->
+              <div class="flex flex-wrap items-center justify-between gap-3 pt-1 border-t border-[#252832]">
+                <div class="flex items-center gap-1.5">
+                  <button id="comp-play-pause-btn" type="button" class="px-3 py-1.5 text-xs font-mono-tech font-semibold rounded-xs bg-[#00F0FF] text-[#040407] hover:bg-[#26F3FF]">
+                    <span id="comp-play-pause-label">PAUSE</span>
+                  </button>
+                  <button id="comp-step-back-btn" type="button" class="px-2.5 py-1.5 text-xs font-mono-tech rounded-xs bg-[#08080C] border border-[#252832] text-[#F5F6FA] hover:border-[#00F0FF]" title="Step backward 1 frame (1/24s)">
+                    -1F
+                  </button>
+                  <button id="comp-step-fwd-btn" type="button" class="px-2.5 py-1.5 text-xs font-mono-tech rounded-xs bg-[#08080C] border border-[#252832] text-[#F5F6FA] hover:border-[#00F0FF]" title="Step forward 1 frame (1/24s)">
+                    +1F
+                  </button>
+                  <button id="comp-reset-split-btn" type="button" class="px-2.5 py-1.5 text-xs font-mono-tech rounded-xs bg-[#08080C] border border-[#252832] text-[#9296A3] hover:text-[#F5F6FA]">
+                    50/50 SPLIT
+                  </button>
+                  <span id="comp-split-readout" class="hidden sm:inline font-mono-tech text-[11px] text-[#626775] ml-1">50% / 50%</span>
+                </div>
+
+                <!-- Audio & Fullscreen -->
+                <div class="flex items-center gap-2.5">
+                  <button id="comp-mute-btn" type="button" class="px-2.5 py-1 text-[11px] font-mono-tech rounded-xs border border-[#252832] bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">
+                    MUTED
+                  </button>
+                  <input
+                    id="comp-volume-slider"
+                    type="range"
+                    min="0"
+                    max="100"
+                    value="60"
+                    aria-label="Monitor audio volume"
+                    class="studio-scrubber w-20"
+                  />
+                  <button id="comp-fullscreen-btn" type="button" class="px-2.5 py-1 text-[11px] font-mono-tech rounded-xs border border-[#252832] bg-[#08080C] text-[#F5F6FA] hover:border-[#00F0FF]">
+                    FULLSCREEN ⛶
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right 4 Cols: 5 Render Pass Controls & Telemetry Inspector -->
+          <div class="lg:col-span-4 space-y-4">
+            <div class="surface-elevated p-4 space-y-3">
+              <div class="flex items-center justify-between border-b border-[#252832] pb-2.5">
+                <h3 class="font-mono-tech text-xs uppercase tracking-wider text-[#F5F6FA]">RENDER PASS CONTROLS</h3>
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">5 CONDITIONING LAYERS</span>
+              </div>
+
+              <p class="text-xs text-[#9296A3]">
+                Select a render pass to switch the right comparison viewport and inspect its conditioning parameters:
+              </p>
+
+              <!-- 5 Interactive Pass Toggle Buttons -->
+              <div class="space-y-2" role="group" aria-label="Render pass conditioning toggles">
+                <button type="button" data-render-pass="character" aria-pressed="true" class="pass-toggle-btn active">
+                  <div class="flex items-center gap-2.5">
+                    <span class="pass-indicator"></span>
+                    <span>Character Transformation</span>
+                  </div>
+                  <span class="font-mono-tech text-[10px] text-[#9296A3]">VS-CHAR-2.4</span>
+                </button>
+
+                <button type="button" data-render-pass="segmentation" aria-pressed="false" class="pass-toggle-btn">
+                  <div class="flex items-center gap-2.5">
+                    <span class="pass-indicator"></span>
+                    <span>Segmentation Mask</span>
+                  </div>
+                  <span class="font-mono-tech text-[10px] text-[#9296A3]">VS-MATTE-3.0</span>
+                </button>
+
+                <button type="button" data-render-pass="depth" aria-pressed="false" class="pass-toggle-btn">
+                  <div class="flex items-center gap-2.5">
+                    <span class="pass-indicator"></span>
+                    <span>Depth Relighting</span>
+                  </div>
+                  <span class="font-mono-tech text-[10px] text-[#9296A3]">VS-RELIGHT-1.2</span>
+                </button>
+
+                <button type="button" data-render-pass="identity" aria-pressed="false" class="pass-toggle-btn">
+                  <div class="flex items-center gap-2.5">
+                    <span class="pass-indicator"></span>
+                    <span>Identity Preservation</span>
+                  </div>
+                  <span class="font-mono-tech text-[10px] text-[#9296A3]">VS-IDLOCK-2.1</span>
+                </button>
+
+                <button type="button" data-render-pass="temporal" aria-pressed="false" class="pass-toggle-btn">
+                  <div class="flex items-center gap-2.5">
+                    <span class="pass-indicator"></span>
+                    <span>Temporal Consistency</span>
+                  </div>
+                  <span class="font-mono-tech text-[10px] text-[#9296A3]">VS-TEMPORAL-1.5</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Active Render Pass Telemetry Readout Panel -->
+            <div class="surface-elevated p-4 space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-tech text-[10px] uppercase tracking-wider text-[#626775]">ACTIVE PASS TELEMETRY</span>
+                <span id="pass-telemetry-badge" class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#00F0FF]/10 text-[#00F0FF] border border-[#00F0FF]/40 rounded-xs">
+                  VS-CHAR-2.4
+                </span>
+              </div>
+
+              <h4 id="pass-telemetry-title" class="text-sm font-semibold text-[#F5F6FA]">Character Transformation</h4>
+              <p id="pass-telemetry-desc" class="text-xs text-[#9296A3] leading-relaxed">
+                Synthesizes stylized character surface geometry, anodized armor materials, and subsurface visor optics while locking onto the performer's cranial pose and torso articulation.
+              </p>
+
+              <div class="pt-2 border-t border-[#252832] space-y-2 text-xs">
+                <div>
+                  <div class="font-mono-tech text-[10px] text-[#626775]">ARCHITECTURE</div>
+                  <div id="pass-telemetry-arch" class="font-mono-tech text-[11px] text-[#F5F6FA]">Latent Diffusion UNet-3D + Spatial ControlNet</div>
+                </div>
+                <div>
+                  <div class="font-mono-tech text-[10px] text-[#626775]">CONDITIONING WEIGHTS</div>
+                  <div id="pass-telemetry-cond" class="font-mono-tech text-[11px] text-[#00F0FF]">LoRA Weight: 0.88 • Structural Denoising: 0.62 • CFG: 6.5</div>
+                </div>
+                <div>
+                  <div class="font-mono-tech text-[10px] text-[#626775]">CHANNEL FORMAT</div>
+                  <div id="pass-telemetry-channel" class="font-mono-tech text-[11px] text-[#9296A3]">16-bit Half-Float ACEScg EXR (RGBA)</div>
+                </div>
+              </div>
+
+              <div class="p-2.5 bg-[#08080C] border border-[#252832] rounded-xs text-[11px] text-[#9296A3]">
+                <strong class="text-[#F5F6FA] font-mono-tech">TRANSPARENCY NOTE:</strong> Toggling passes switches synchronized pre-rendered reference streams to demonstrate pipeline outputs. It does not execute live browser GPU inference.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. DIRECTOR MOTION RIG
+         ====================================================================== -->
+    <section id="motion-rig" class="py-20 lg:py-28 bg-[#08080C] border-b border-[#252832]">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+          <div class="max-w-2xl space-y-3">
+            <span class="eyebrow-tag">
+              <span class="eyebrow-dot violet"></span>
+              <span>6-DOF CAMERA CONDITIONING CONTROLLER</span>
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA]">
+              Director Motion Rig
+            </h2>
+            <p class="text-sm sm:text-base text-[#9296A3]">
+              Condition latent video generation with explicit camera extrinsics, focal length ramps, and shutter motion blur profiles before submitting batch renders.
+            </p>
+          </div>
+          <div class="px-3.5 py-2 rounded-sm bg-[#101117] border border-[#252832] text-xs font-mono-tech text-[#9296A3]">
+            <span class="text-[#7161FF]">SIMULATION MODE:</span> Pre-Rendered Trajectory Previews (Illustrates Camera Conditioning Vectors)
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          <!-- Left 5 Cols: 6 Camera Motion Preset Selector Buttons -->
+          <div class="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 gap-3" role="tablist" aria-label="Camera motion presets">
+            <button type="button" role="tab" aria-selected="true" data-motion-preset="crash-zoom" class="motion-preset-btn active">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">01 // RIG-CAM-01</span>
+                <span class="font-mono-tech text-[10px] text-[#626775]">24→85mm</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Crash Zoom</div>
+              <p class="text-xs text-[#9296A3]">High-velocity Z-axis impulse with radial motion blur conditioning.</p>
+            </button>
+
+            <button type="button" role="tab" aria-selected="false" data-motion-preset="orbit" class="motion-preset-btn">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">02 // RIG-CAM-02</span>
+                <span class="font-mono-tech text-[10px] text-[#626775]">45°/sec</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">360° Orbit</div>
+              <p class="text-xs text-[#9296A3]">Continuous azimuthal orbit locked to subject centroid at 2.8m radius.</p>
+            </button>
+
+            <button type="button" role="tab" aria-selected="false" data-motion-preset="slow-motion" class="motion-preset-btn">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">03 // RIG-CAM-03</span>
+                <span class="font-mono-tech text-[10px] text-[#626775]">24→96fps</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Slow Motion</div>
+              <p class="text-xs text-[#9296A3]">4× bi-directional optical flow sub-frame synthesis without ghosting.</p>
+            </button>
+
+            <button type="button" role="tab" aria-selected="false" data-motion-preset="tracking-pan" class="motion-preset-btn">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">04 // RIG-CAM-04</span>
+                <span class="font-mono-tech text-[10px] text-[#626775]">1.6 m/s X</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Tracking Pan</div>
+              <p class="text-xs text-[#9296A3]">Lateral X-axis dolly translation with 0.0° horizon lock and parallax.</p>
+            </button>
+
+            <button type="button" role="tab" aria-selected="false" data-motion-preset="dolly-in" class="motion-preset-btn">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">05 // RIG-CAM-05</span>
+                <span class="font-mono-tech text-[10px] text-[#626775]">+0.85 m/s Z</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Dolly In</div>
+              <p class="text-xs text-[#9296A3]">Physical 3D Z-space forward translation with shallow f/1.8 DoF shift.</p>
+            </button>
+
+            <button type="button" role="tab" aria-selected="false" data-motion-preset="handheld" class="motion-preset-btn">
+              <div class="flex items-center justify-between w-full">
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">06 // RIG-CAM-06</span>
+                <span class="font-mono-tech text-[10px] text-[#626775]">6-DoF 1.8Hz</span>
+              </div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Cinematic Handheld</div>
+              <p class="text-xs text-[#9296A3]">Procedural 6.5kg shoulder-rig micro-sway with central safe-zone lock.</p>
+            </button>
+          </div>
+
+          <!-- Right 7 Cols: Active Motion Trajectory Viewport & Telemetry Panel -->
+          <div class="lg:col-span-7 surface-elevated p-4 sm:p-5 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-[#252832]">
+              <div class="flex items-center gap-2.5">
+                <span id="motion-active-code" class="px-2 py-0.5 font-mono-tech text-[11px] bg-[#00F0FF]/10 text-[#00F0FF] border border-[#00F0FF]/40 rounded-xs">
+                  RIG-CAM-01
+                </span>
+                <h3 id="motion-active-name" class="text-base font-semibold text-[#F5F6FA]">Crash Zoom</h3>
+              </div>
+              <span class="font-mono-tech text-[11px] text-[#9296A3]">CAMERA EXTRINSICS MATRIX PREVIEW</span>
+            </div>
+
+            <!-- Dedicated Motion Rig Video Preview -->
+            <div class="relative aspect-video bg-[#040407] border border-[#252832] rounded-xs overflow-hidden">
+              <video
+                id="motion-rig-video"
+                src="assets/videos/motion-crash-zoom.webm"
+                poster="assets/images/motion-crash-zoom-poster.jpg"
+                autoplay
+                loop
+                muted
+                playsinline
+                class="w-full h-full object-cover"
+              ></video>
+            </div>
+
+            <!-- Telemetry & Velocity Curve Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-4 pt-2">
+              <div class="md:col-span-7 space-y-2.5">
+                <p id="motion-meta-explanation" class="text-xs text-[#9296A3] leading-relaxed">
+                  Simulates a high-velocity mechanical zoom-and-dolly punch toward the primary subject anchor, conditioning latent background layers with physically proportional radial motion blur.
+                </p>
+                <div class="grid grid-cols-2 gap-2 pt-1 text-xs">
+                  <div class="p-2 bg-[#08080C] border border-[#252832] rounded-xs">
+                    <div class="font-mono-tech text-[10px] text-[#626775]">OPTICS / FOCAL</div>
+                    <div id="motion-meta-focal" class="font-mono-tech text-[11px] text-[#F5F6FA] mt-0.5">24mm → 85mm Anamorphic Zoom</div>
+                  </div>
+                  <div class="p-2 bg-[#08080C] border border-[#252832] rounded-xs">
+                    <div class="font-mono-tech text-[10px] text-[#626775]">VECTOR VELOCITY</div>
+                    <div id="motion-meta-velocity" class="font-mono-tech text-[11px] text-[#00F0FF] mt-0.5">4.2 m/s Z-Axis Impulse</div>
+                  </div>
+                  <div class="p-2 bg-[#08080C] border border-[#252832] rounded-xs">
+                    <div class="font-mono-tech text-[10px] text-[#626775]">SHUTTER PROFILE</div>
+                    <div id="motion-meta-shutter" class="font-mono-tech text-[11px] text-[#F5F6FA] mt-0.5">180° (Radial Motion Blur Active)</div>
+                  </div>
+                  <div class="p-2 bg-[#08080C] border border-[#252832] rounded-xs">
+                    <div class="font-mono-tech text-[10px] text-[#626775]">INTERPOLATION CURVE</div>
+                    <div id="motion-meta-easing" class="font-mono-tech text-[11px] text-[#9296A3] mt-0.5">Cubic-Bezier (0.16, 1.0, 0.3, 1.0)</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- SVG Velocity / Trajectory Graph -->
+              <div class="md:col-span-5 p-3 bg-[#08080C] border border-[#252832] rounded-xs flex flex-col justify-between">
+                <div class="flex items-center justify-between text-[10px] font-mono-tech text-[#626775]">
+                  <span>TRAJECTORY SOLVER CURVE</span>
+                  <span class="text-[#00F0FF]">72 FRAMES</span>
+                </div>
+                <svg viewBox="0 0 240 92" class="w-full h-24 my-1">
+                  <line x1="16" y1="16" x2="224" y2="16" stroke="#252832" stroke-dasharray="3 3" stroke-width="1" />
+                  <line x1="16" y1="46" x2="224" y2="46" stroke="#252832" stroke-dasharray="3 3" stroke-width="1" />
+                  <line x1="16" y1="76" x2="224" y2="76" stroke="#252832" stroke-dasharray="3 3" stroke-width="1" />
+                  <path
+                    id="motion-trajectory-path"
+                    d="M 16 76 C 55 74, 70 18, 135 16 L 224 16"
+                    fill="none"
+                    stroke="#00F0FF"
+                    stroke-width="2.2"
+                  />
+                </svg>
+                <div class="flex items-center justify-between text-[10px] font-mono-tech text-[#626775]">
+                  <span>T=0.00s</span>
+                  <span>T=1.50s</span>
+                  <span>T=3.00s</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. CINEMATIC SHOWCASE — ASYMMETRIC BENTO GRID
+         ====================================================================== -->
+    <section id="bento-showcase" class="py-20 lg:py-28 border-b border-[#252832]">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-10">
+          <div class="max-w-2xl space-y-3">
+            <span class="eyebrow-tag">
+              <span class="eyebrow-dot"></span>
+              <span>ASYMMETRIC PRODUCTION WALL</span>
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA]">
+              Cinematic Showcase &amp; Model Architecture
+            </h2>
+            <p class="text-sm sm:text-base text-[#9296A3]">
+              Hover over any reference plate to preview playback, or open the frame inspector for full pipeline metadata. All plates are verified internal VidSynth R&amp;D sequences.
+            </p>
+          </div>
+          <a href="dashboard.html" class="btn-secondary text-xs">
+            <span>Configure Custom Project in Studio</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <!-- Asymmetric Bento Grid -->
+        <div class="bento-showcase-grid">
+          <!-- 1. Large Cinematic Featured Project (col-span-8 row-span-2) -->
+          <article
+            data-showcase-card
+            data-video-src="assets/videos/showcase-chronos.webm"
+            data-poster-src="assets/images/showcase-chronos-poster.jpg"
+            data-title="Project Chronos — Neo-Tokyo Rain Sequence"
+            data-category="Character &amp; Environment Synthesis"
+            data-model="VS-CHAR-2.4 + VS-RELIGHT-1.2"
+            data-spec="3840×1600 (2.40:1 Scope) • 24fps • 16-bit EXR"
+            data-desc="Full-frame character transformation with synchronized volumetric rain occlusion and anamorphic visor streak conditioning."
+            class="showcase-card bento-item-featured"
+          >
+            <div class="relative aspect-video bg-[#08080C] overflow-hidden">
+              <video
+                src="assets/videos/showcase-chronos.webm"
+                poster="assets/images/showcase-chronos-poster.jpg"
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                class="w-full h-full object-cover"
+              ></video>
+              <div class="absolute top-3 left-3 flex flex-wrap items-center gap-2">
+                <span class="px-2.5 py-1 font-mono-tech text-[10px] uppercase bg-[#040407]/90 border border-[#00F0FF]/50 text-[#00F0FF] rounded-xs">
+                  FEATURED REFERENCE PLATE
+                </span>
+                <span class="px-2.5 py-1 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#F5F6FA] rounded-xs">
+                  VS-CHAR-2.4 + VS-RELIGHT-1.2
+                </span>
+              </div>
+            </div>
+            <div class="p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#101117] border-t border-[#252832]">
+              <div class="space-y-1">
+                <div class="font-mono-tech text-[11px] text-[#00F0FF]">CHARACTER &amp; ENVIRONMENT SYNTHESIS • VIDSYNTH R&amp;D</div>
+                <h3 class="text-lg font-semibold text-[#F5F6FA]">Project Chronos — Neo-Tokyo Rain Sequence</h3>
+                <p class="text-xs text-[#9296A3]">3840×1600 (2.40:1 Scope) • 24.00 fps • ACEScg 16-Bit Multi-Pass Output</p>
+              </div>
+              <button type="button" data-inspect-showcase class="btn-secondary text-xs py-2 px-4 shrink-0">
+                Inspect Plate ⛶
+              </button>
+            </div>
+          </article>
+
+          <!-- 2. Medium Video Showcase 1 (col-span-4) -->
+          <article
+            data-showcase-card
+            data-video-src="assets/videos/showcase-valence.webm"
+            data-poster-src="assets/images/showcase-valence-poster.jpg"
+            data-title="Project Valence — Biomorphic Suit Replacement"
+            data-category="Semantic Garment &amp; Armor Rig"
+            data-model="VS-CHAR-2.4"
+            data-spec="1920×1080 • 24fps • ProRes 422 HQ"
+            data-desc="Replaces studio wardrobe with articulated carbon-weave armor panels while preserving shoulder deformation."
+            class="showcase-card bento-item-med-1"
+          >
+            <div class="relative aspect-video bg-[#08080C] overflow-hidden">
+              <video
+                src="assets/videos/showcase-valence.webm"
+                poster="assets/images/showcase-valence-poster.jpg"
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                class="w-full h-full object-cover"
+              ></video>
+              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#F5F6FA] rounded-xs">
+                VS-CHAR-2.4
+              </span>
+            </div>
+            <div class="p-4 flex items-center justify-between gap-3 bg-[#101117] border-t border-[#252832]">
+              <div>
+                <div class="font-mono-tech text-[10px] text-[#9296A3]">SEMANTIC GARMENT RIG</div>
+                <h3 class="text-sm font-semibold text-[#F5F6FA] mt-0.5">Valence — Biomorphic Suit Replacement</h3>
+                <div class="font-mono-tech text-[11px] text-[#626775] mt-0.5">1920×1080 • 24fps • VidSynth R&amp;D</div>
+              </div>
+              <button type="button" data-inspect-showcase class="btn-ghost text-xs border border-[#252832]">Inspect</button>
+            </div>
+          </article>
+
+          <!-- 3. Medium Video Showcase 2 (col-span-4) -->
+          <article
+            data-showcase-card
+            data-video-src="assets/videos/showcase-aether.webm"
+            data-poster-src="assets/images/showcase-aether-poster.jpg"
+            data-title="Project Aether — Anamorphic Lighting Transfer"
+            data-category="Depth-Guided Relighting"
+            data-model="VS-RELIGHT-1.2"
+            data-spec="2560×1440 • 30fps • 16-bit EXR"
+            data-desc="Derives dense surface normals from monocular footage to relight subjects with orbiting virtual key sources."
+            class="showcase-card bento-item-med-2"
+          >
+            <div class="relative aspect-video bg-[#08080C] overflow-hidden">
+              <video
+                src="assets/videos/showcase-aether.webm"
+                poster="assets/images/showcase-aether-poster.jpg"
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                class="w-full h-full object-cover"
+              ></video>
+              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#00F0FF] rounded-xs">
+                VS-RELIGHT-1.2
+              </span>
+            </div>
+            <div class="p-4 flex items-center justify-between gap-3 bg-[#101117] border-t border-[#252832]">
+              <div>
+                <div class="font-mono-tech text-[10px] text-[#9296A3]">DEPTH-GUIDED RELIGHTING</div>
+                <h3 class="text-sm font-semibold text-[#F5F6FA] mt-0.5">Aether — Anamorphic Lighting Transfer</h3>
+                <div class="font-mono-tech text-[11px] text-[#626775] mt-0.5">2560×1440 • 30fps • VidSynth R&amp;D</div>
+              </div>
+              <button type="button" data-inspect-showcase class="btn-ghost text-xs border border-[#252832]">Inspect</button>
+            </div>
+          </article>
+
+          <!-- 4. Narrow Technical Demonstration (col-span-4) -->
+          <article
+            data-showcase-card
+            data-video-src="assets/videos/showcase-matte.webm"
+            data-poster-src="assets/images/showcase-matte-poster.jpg"
+            data-title="Sub-Pixel Alpha Matte &amp; Hair Rotoscoping"
+            data-category="Segmentation Pass"
+            data-model="VS-MATTE-3.0"
+            data-spec="1920×1080 • 16-bit OpenEXR Alpha"
+            data-desc="Demonstrates automated tri-map generation and sub-pixel boundary alpha extraction for Nuke compositing."
+            class="showcase-card bento-item-narrow"
+          >
+            <div class="relative aspect-video bg-[#08080C] overflow-hidden">
+              <video
+                src="assets/videos/showcase-matte.webm"
+                poster="assets/images/showcase-matte-poster.jpg"
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                class="w-full h-full object-cover"
+              ></video>
+              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#10B981] rounded-xs">
+                VS-MATTE-3.0
+              </span>
+            </div>
+            <div class="p-4 flex items-center justify-between gap-3 bg-[#101117] border-t border-[#252832]">
+              <div>
+                <div class="font-mono-tech text-[10px] text-[#9296A3]">TECHNICAL MATTE DEMO</div>
+                <h3 class="text-sm font-semibold text-[#F5F6FA] mt-0.5">Sub-Pixel Alpha &amp; Rotoscoping</h3>
+                <div class="font-mono-tech text-[11px] text-[#626775] mt-0.5">16-Bit EXR Alpha • IoU 0.984</div>
+              </div>
+              <button type="button" data-inspect-showcase class="btn-ghost text-xs border border-[#252832]">Inspect</button>
+            </div>
+          </article>
+
+          <!-- 5. Wide Transformation Comparison (col-span-5) -->
+          <article
+            data-showcase-card
+            data-video-src="assets/videos/showcase-temporal.webm"
+            data-poster-src="assets/images/showcase-temporal-poster.jpg"
+            data-title="Temporal Coherence Under Rapid Occlusion"
+            data-category="Optical Flow Stabilization"
+            data-model="VS-TEMPORAL-1.5"
+            data-spec="Side-by-Side Split • 24fps • 16F Window"
+            data-desc="Side-by-side diagnostic comparing unconditioned per-frame diffusion against RAFT optical-flow stabilized output during foreground bar occlusion."
+            class="showcase-card bento-item-wide"
+          >
+            <div class="relative aspect-video bg-[#08080C] overflow-hidden">
+              <video
+                src="assets/videos/showcase-temporal.webm"
+                poster="assets/images/showcase-temporal-poster.jpg"
+                loop
+                muted
+                playsinline
+                preload="metadata"
+                class="w-full h-full object-cover"
+              ></video>
+              <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#F59E0B] rounded-xs">
+                VS-TEMPORAL-1.5 // SPLIT DIAGNOSTIC
+              </span>
+            </div>
+            <div class="p-4 flex items-center justify-between gap-3 bg-[#101117] border-t border-[#252832]">
+              <div>
+                <div class="font-mono-tech text-[10px] text-[#9296A3]">OPTICAL FLOW STABILIZATION</div>
+                <h3 class="text-sm font-semibold text-[#F5F6FA] mt-0.5">Temporal Coherence Under Rapid Occlusion</h3>
+                <div class="font-mono-tech text-[11px] text-[#626775] mt-0.5">16-Frame Sliding Window • Deflicker Active</div>
+              </div>
+              <button type="button" data-inspect-showcase class="btn-ghost text-xs border border-[#252832]">Inspect</button>
+            </div>
+          </article>
+
+          <!-- 6. Compact Model Information Panel (col-span-3) -->
+          <div class="showcase-card bento-item-spec p-5 bg-[#101117]">
+            <div class="space-y-3">
+              <div class="flex items-center justify-between border-b border-[#252832] pb-2.5">
+                <span class="font-mono-tech text-xs font-semibold text-[#F5F6FA]">MODEL REGISTRY</span>
+                <span class="font-mono-tech text-[10px] text-[#00F0FF]">5 MODULES</span>
+              </div>
+              <p class="text-xs text-[#9296A3]">
+                Modular conditioning architecture designed for multi-pass VFX pipelines:
+              </p>
+              <ul class="space-y-2.5 text-xs font-mono-tech">
+                <li class="p-2 bg-[#08080C] border border-[#252832] rounded-xs flex items-center justify-between">
+                  <span class="text-[#00F0FF]">VS-CHAR-2.4</span>
+                  <span class="text-[#9296A3] text-[10px]">Character Synthesis</span>
+                </li>
+                <li class="p-2 bg-[#08080C] border border-[#252832] rounded-xs flex items-center justify-between">
+                  <span class="text-[#10B981]">VS-MATTE-3.0</span>
+                  <span class="text-[#9296A3] text-[10px]">16-Bit Trimap Alpha</span>
+                </li>
+                <li class="p-2 bg-[#08080C] border border-[#252832] rounded-xs flex items-center justify-between">
+                  <span class="text-[#7161FF]">VS-RELIGHT-1.2</span>
+                  <span class="text-[#9296A3] text-[10px]">Z-Depth &amp; Normals</span>
+                </li>
+                <li class="p-2 bg-[#08080C] border border-[#252832] rounded-xs flex items-center justify-between">
+                  <span class="text-[#F5F6FA]">VS-IDLOCK-2.1</span>
+                  <span class="text-[#9296A3] text-[10px]">68-Pt Cranial Lock</span>
+                </li>
+                <li class="p-2 bg-[#08080C] border border-[#252832] rounded-xs flex items-center justify-between">
+                  <span class="text-[#F59E0B]">VS-TEMPORAL-1.5</span>
+                  <span class="text-[#9296A3] text-[10px]">RAFT Optical Flow</span>
+                </li>
+              </ul>
+            </div>
+            <div class="pt-4 mt-4 border-t border-[#252832]">
+              <a href="dashboard.html" class="btn-primary w-full text-xs py-2">Open Model Catalog in Studio →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. TECHNOLOGY & INFRASTRUCTURE ARCHITECTURE
+         ====================================================================== -->
+    <section id="architecture" class="py-20 lg:py-28 bg-[#08080C] border-b border-[#252832]">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div class="max-w-2xl space-y-3">
+            <span class="eyebrow-tag">
+              <span class="eyebrow-dot"></span>
+              <span>PIPELINE &amp; CLOUD TOPOLOGY</span>
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA]">
+              Technology &amp; Proposed Infrastructure Architecture
+            </h2>
+            <p class="text-sm sm:text-base text-[#9296A3]">
+              In accordance with our engineering transparency standards, we clearly separate capabilities implemented in this web application from our proposed cloud GPU rendering infrastructure.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 text-xs font-mono-tech">
+            <span class="px-2.5 py-1 rounded-xs bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981]">● IMPLEMENTED IN STUDIO</span>
+            <span class="px-2.5 py-1 rounded-xs bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA]">◌ PROPOSED CLOUD DEPLOYMENT</span>
+          </div>
+        </div>
+
+        <!-- 6 Core Pipeline Capabilities Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="surface-elevated p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-xs text-[#00F0FF]">01 // CHARACTER TRANSFORMATION</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+            </div>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">Spatial ControlNet + Identity Lock</h3>
+            <p class="text-xs text-[#9296A3] leading-relaxed">
+              Decouples structural pose and facial landmark geometry from surface texture synthesis, preventing facial distortion during steep head turns.
+            </p>
+          </div>
+
+          <div class="surface-elevated p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-xs text-[#00F0FF]">02 // VIDEO SEGMENTATION</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+            </div>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">Sub-Pixel Trimap &amp; Semantic Mattes</h3>
+            <p class="text-xs text-[#9296A3] leading-relaxed">
+              Generates isolated alpha channels for cranial mesh, garments, and props so background plates remain untouched until final composite.
+            </p>
+          </div>
+
+          <div class="surface-elevated p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-xs text-[#00F0FF]">03 // DEPTH ESTIMATION</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+            </div>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">16-Bit Disparity &amp; Normal Relighting</h3>
+            <p class="text-xs text-[#9296A3] leading-relaxed">
+              Predicts dense metric Z-depth per frame to guide virtual rim and key light interaction across synthesized materials.
+            </p>
+          </div>
+
+          <div class="surface-elevated p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-xs text-[#00F0FF]">04 // TEMPORAL CONSISTENCY</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+            </div>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">Bi-Directional Optical Flow Warping</h3>
+            <p class="text-xs text-[#9296A3] leading-relaxed">
+              Enforces cross-frame latent attention weighted by RAFT optical flow motion vectors across 16-frame sliding windows.
+            </p>
+          </div>
+
+          <div class="surface-elevated p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-xs text-[#00F0FF]">05 // AUTH &amp; TENANT DATA LAYER</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">IMPLEMENTED</span>
+            </div>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">Supabase PostgreSQL + Row Level Security</h3>
+            <p class="text-xs text-[#9296A3] leading-relaxed">
+              Complete schema (`001_initial_schema.sql`) with strict per-user RLS policies for profiles, projects, render job logs, and credit ledgers.
+            </p>
+          </div>
+
+          <div class="surface-elevated p-5 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-xs text-[#7161FF]">06 // DISTRIBUTED RENDERING</span>
+              <span class="font-mono-tech text-[10px] text-[#7161FF]">PROPOSED ARCHITECTURE</span>
+            </div>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">Asynchronous Batch GPU Workers</h3>
+            <p class="text-xs text-[#9296A3] leading-relaxed">
+              Designed to dispatch multi-pass conditioning jobs to containerized GPU worker nodes via asynchronous job queues.
+            </p>
+          </div>
+        </div>
+
+        <!-- Proposed AWS Infrastructure Architecture Blueprint -->
+        <div class="surface-elevated p-6 sm:p-8 border-l-2 border-l-[#7161FF]">
+          <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#252832]">
+            <div>
+              <span class="font-mono-tech text-[11px] uppercase tracking-wider text-[#7161FF]">
+                PROPOSED INFRASTRUCTURE ARCHITECTURE (CLOUD DEPLOYMENT BLUEPRINT)
+              </span>
+              <h3 class="text-lg font-semibold text-[#F5F6FA] mt-1">
+                Target AWS Production Topology for Distributed GPU Rendering
+              </h3>
+            </div>
+            <span class="px-3 py-1 font-mono-tech text-[11px] bg-[#08080C] border border-[#252832] text-[#9296A3] rounded-xs">
+              STATUS: ARCHITECTURAL SPECIFICATION (NO FAKE TELEMETRY)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
+              <div class="font-mono-tech text-[10px] text-[#00F0FF]">COMPUTE TIER (PROPOSED)</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Amazon EC2 GPU Instances</div>
+              <p class="text-xs text-[#9296A3]">
+                Target `g5.2xlarge` / `p4d` inference nodes for running UNet-3D diffusion, RAFT optical flow, and ViT-Matte passes.
+              </p>
+            </div>
+
+            <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
+              <div class="font-mono-tech text-[10px] text-[#00F0FF]">ORCHESTRATION (PROPOSED)</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">AWS Batch Job Queue</div>
+              <p class="text-xs text-[#9296A3]">
+                Asynchronous scheduling of frame-chunked conditioning jobs with spot/on-demand scaling based on queue depth.
+              </p>
+            </div>
+
+            <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
+              <div class="font-mono-tech text-[10px] text-[#00F0FF]">MEDIA STORAGE (PROPOSED)</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Amazon S3 Asset Buckets</div>
+              <p class="text-xs text-[#9296A3]">
+                Pre-signed URL ingest for source plates and lifecycle-managed storage for 16-bit OpenEXR / ProRes output sequences.
+              </p>
+            </div>
+
+            <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
+              <div class="font-mono-tech text-[10px] text-[#00F0FF]">OBSERVABILITY (PROPOSED)</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Amazon CloudWatch</div>
+              <p class="text-xs text-[#9296A3]">
+                Worker container logging, frame render duration metrics, and dead-letter queue alerting for failed conditioning passes.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         11. COMMERCIAL MODEL & PRICING PREVIEW
+         ====================================================================== -->
+    <section id="pricing-preview" class="py-20 lg:py-28 border-b border-[#252832]">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+          <div class="max-w-2xl space-y-3">
+            <span class="eyebrow-tag">
+              <span class="eyebrow-dot"></span>
+              <span>COMMERCIAL ARCHITECTURE</span>
+            </span>
+            <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA]">
+              Transparent Plans for Individuals &amp; Production Studios
+            </h2>
+            <p class="text-sm sm:text-base text-[#9296A3]">
+              Commercial terms are structured around transparent compute credit consumption. Finalized volume pricing and SLA commitments are tailored during onboarding.
+            </p>
+          </div>
+          <a href="pricing.html" class="btn-secondary text-xs">
+            <span>View Full Feature Matrix &amp; Credit Calculator</span>
+            <span aria-hidden="true">→</span>
+          </a>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Tier 1: SANDBOX -->
+          <div class="surface-elevated p-6 sm:p-7 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-tech text-xs uppercase text-[#9296A3]">TIER 01 // SANDBOX</span>
+                <span class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#08080C] border border-[#252832] text-[#00F0FF] rounded-xs">EVALUATION ACCESS</span>
+              </div>
+              <h3 class="text-2xl font-semibold text-[#F5F6FA]">Sandbox</h3>
+              <p class="text-xs text-[#9296A3]">
+                For individual technical directors and creators evaluating VidSynth's workflow and conditioning passes.
+              </p>
+              <div class="pt-4 border-t border-[#252832] space-y-2.5 text-xs text-[#F5F6FA]">
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Limited evaluation generation credits</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Standard export (MP4 H.264 / WebM VP9)</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Basic studio project management</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Community &amp; pipeline documentation</span></div>
+              </div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-[#252832]">
+              <a href="register.html" class="btn-secondary w-full justify-center">Launch Sandbox Studio</a>
+            </div>
+          </div>
+
+          <!-- Tier 2: PRO VFX STUDIO -->
+          <div class="surface-elevated p-6 sm:p-7 flex flex-col justify-between border-[#00F0FF] relative">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-tech text-xs uppercase text-[#00F0FF]">TIER 02 // PRO VFX STUDIO</span>
+                <span class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">PROPOSED PLAN</span>
+              </div>
+              <h3 class="text-2xl font-semibold text-[#F5F6FA]">Pro VFX Studio</h3>
+              <p class="text-xs text-[#9296A3]">
+                For professional creators, finishing artists, and boutique VFX studios requiring multi-pass deliverables.
+              </p>
+              <div class="pt-4 border-t border-[#252832] space-y-2.5 text-xs text-[#F5F6FA]">
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Higher monthly generation credit limits</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Priority batch queue processing (when active)</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>All 5 conditioning passes &amp; 6-DoF Motion Rig</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>16-bit OpenEXR &amp; ProRes 422 HQ export support</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Extended project &amp; render history retention</span></div>
+              </div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-[#252832]">
+              <a href="#early-access" class="btn-primary w-full justify-center">Request Early Access</a>
+            </div>
+          </div>
+
+          <!-- Tier 3: ENTERPRISE -->
+          <div class="surface-elevated p-6 sm:p-7 flex flex-col justify-between">
+            <div class="space-y-4">
+              <div class="flex items-center justify-between">
+                <span class="font-mono-tech text-xs uppercase text-[#7161FF]">TIER 03 // ENTERPRISE</span>
+                <span class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA] rounded-xs">CUSTOM COMMERCIAL</span>
+              </div>
+              <h3 class="text-2xl font-semibold text-[#F5F6FA]">Enterprise</h3>
+              <p class="text-xs text-[#9296A3]">
+                For production studios and media organizations requiring custom workspace governance and dedicated support.
+              </p>
+              <div class="pt-4 border-t border-[#252832] space-y-2.5 text-xs text-[#F5F6FA]">
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Custom usage pools &amp; volume allocations</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Multi-seat team workspaces &amp; organization RBAC</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Custom pipeline integrations (ShotGrid / Nuke)</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Dedicated solutions engineering support</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Isolated storage &amp; enterprise security options</span></div>
+              </div>
+            </div>
+            <div class="pt-6 mt-6 border-t border-[#252832]">
+              <a href="#early-access" class="btn-secondary w-full justify-center">Contact Sales</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         12. EARLY ACCESS & ENTERPRISE LEAD REGISTRATION
+         ====================================================================== -->
+    <section id="early-access" class="py-20 lg:py-28 bg-[#08080C] border-b border-[#252832]">
+      <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+          <!-- Left 5 Cols: Context & Data Integrity Disclosure -->
+          <div class="lg:col-span-5 space-y-4">
+            <span class="eyebrow-tag">
+              <span class="eyebrow-dot"></span>
+              <span>COHORT ONBOARDING &amp; SALES INQUIRIES</span>
+            </span>
+            <h2 class="text-3xl font-semibold tracking-tight text-[#F5F6FA]">
+              Request Early Access or Commercial Consultation
+            </h2>
+            <p class="text-sm text-[#9296A3] leading-relaxed">
+              Register your studio or engineering team for the upcoming Pro VFX Studio cohort or schedule a technical architecture review.
+            </p>
+            <div class="p-4 surface-elevated space-y-2 text-xs text-[#9296A3]">
+              <div class="font-mono-tech text-[11px] text-[#00F0FF] uppercase">DATA STORAGE TRANSPARENCY</div>
+              <p>
+                When Supabase credentials are configured in <code class="text-[#F5F6FA]">config/config.js</code>, submissions are persisted directly to <code class="text-[#F5F6FA]">public.early_access_leads</code> with duplicate-email validation. In Local Sandbox Mode, submissions are validated and stored in your browser's local demonstration registry.
+              </p>
+            </div>
+            <div class="p-4 surface-elevated border-l-2 border-l-[#00F0FF] space-y-1.5 text-xs">
+              <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#9296A3]">DIRECT FOUNDER &amp; EXECUTIVE INQUIRIES</div>
+              <p class="text-[#9296A3]">
+                For studio partnerships, architecture briefings, or direct founder correspondence:
+              </p>
+              <a href="mailto:founder@vidsynth.app" class="inline-flex items-center gap-2 font-mono-tech text-xs text-[#00F0FF] hover:underline pt-0.5">
+                <span>founder@vidsynth.app</span>
+                <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right 7 Cols: Functional Lead Registration Form -->
+          <div class="lg:col-span-7 surface-elevated p-6 sm:p-8">
+            <form data-early-access-form novalidate class="space-y-4">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="ea-full-name" class="block font-mono-tech text-[11px] uppercase text-[#9296A3] mb-1.5">
+                    Full Name <span class="text-[#00F0FF]">*</span>
+                  </label>
+                  <input
+                    id="ea-full-name"
+                    name="full_name"
+                    type="text"
+                    required
+                    placeholder="Elena Rostova"
+                    class="input-field"
+                  />
+                </div>
+                <div>
+                  <label for="ea-work-email" class="block font-mono-tech text-[11px] uppercase text-[#9296A3] mb-1.5">
+                    Work Email <span class="text-[#00F0FF]">*</span>
+                  </label>
+                  <input
+                    id="ea-work-email"
+                    name="work_email"
+                    type="email"
+                    required
+                    placeholder="elena@studio-domain.com"
+                    class="input-field"
+                  />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                  <label for="ea-company" class="block font-mono-tech text-[11px] uppercase text-[#9296A3] mb-1.5">
+                    Company or Organization <span class="text-[#00F0FF]">*</span>
+                  </label>
+                  <input
+                    id="ea-company"
+                    name="company"
+                    type="text"
+                    required
+                    placeholder="KinoVFX Post-Production"
+                    class="input-field"
+                  />
+                </div>
+                <div>
+                  <label for="ea-use-case" class="block font-mono-tech text-[11px] uppercase text-[#9296A3] mb-1.5">
+                    Intended Use Case <span class="text-[#00F0FF]">*</span>
+                  </label>
+                  <select id="ea-use-case" name="use_case" required class="input-field">
+                    <option value="">Select primary use case...</option>
+                    <option value="Character Transformation & Wardrobe Synthesis">Character Transformation &amp; Wardrobe Synthesis</option>
+                    <option value="Semantic Rotoscoping & 16-Bit EXR Mattes">Semantic Rotoscoping &amp; 16-Bit EXR Mattes</option>
+                    <option value="Depth-Guided Relighting & Color Pipeline">Depth-Guided Relighting &amp; Color Pipeline</option>
+                    <option value="Director Motion Rig & Previsualization">Director Motion Rig &amp; Previsualization</option>
+                    <option value="Enterprise Studio Pipeline Integration">Enterprise Studio Pipeline Integration</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <span class="text-xs text-[#626775]">
+                  By submitting, you agree to our <a href="security.html#privacy" class="text-[#9296A3] underline hover:text-[#F5F6FA]">Privacy Policy</a>.
+                </span>
+                <button type="submit" class="btn-primary px-6 py-2.5 text-sm">
+                  Register for Early Access →
+                </button>
+              </div>
+
+              <!-- Dynamic Form Validation & Persistence Status Box -->
+              <div data-form-status class="hidden" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       14. REFINED MULTI-COLUMN FOOTER
+       ======================================================================== -->
+  <footer class="bg-[#040407] border-t border-[#252832] pt-14 pb-10 text-xs text-[#9296A3]">
+    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 pb-12 border-b border-[#252832]">
+        <!-- Brand Column -->
+        <div class="col-span-2 md:col-span-1 space-y-3">
+          <a href="index.html" class="flex items-center gap-2">
+            <img src="assets/icons/favicon.svg" alt="VidSynth" class="w-6 h-6" />
+            <span class="font-semibold text-sm text-[#F5F6FA] tracking-tight">VIDSYNTH</span>
+          </a>
+          <p class="text-xs text-[#626775] leading-relaxed">
+            Transform Vision Into Motion. Professional AI video creation, character transformation &amp; visual production studio.
+          </p>
+          <div class="font-mono-tech text-[10px] text-[#626775] space-y-1">
+            <div>DOMAIN: https://vidsynth.app</div>
+            <div>FOUNDER: <a href="mailto:founder@vidsynth.app" class="text-[#00F0FF] hover:underline">founder@vidsynth.app</a></div>
+          </div>
+        </div>
+
+        <!-- Product -->
+        <div class="space-y-2.5">
+          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Product</div>
+          <ul class="space-y-2">
+            <li><a href="dashboard.html" class="hover:text-[#F5F6FA]">Studio</a></li>
+            <li><a href="#bento-showcase" class="hover:text-[#F5F6FA]">Models</a></li>
+            <li><a href="pricing.html" class="hover:text-[#F5F6FA]">Pricing</a></li>
+            <li><button type="button" data-open-changelog class="hover:text-[#F5F6FA]">Changelog</button></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div class="space-y-2.5">
+          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Resources</div>
+          <ul class="space-y-2">
+            <li><a href="security.html#documentation" class="hover:text-[#F5F6FA]">Documentation</a></li>
+            <li><a href="security.html#api-reference" class="hover:text-[#F5F6FA]">API Reference</a></li>
+            <li><a href="dashboard.html" class="hover:text-[#F5F6FA]">Help Center</a></li>
+            <li><a href="security.html#support" class="hover:text-[#F5F6FA]">Community &amp; Support</a></li>
+          </ul>
+        </div>
+
+        <!-- Company -->
+        <div class="space-y-2.5">
+          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Company</div>
+          <ul class="space-y-2">
+            <li><a href="#architecture" class="hover:text-[#F5F6FA]">About Architecture</a></li>
+            <li><a href="security.html#contact" class="hover:text-[#F5F6FA]">Contact</a></li>
+            <li><a href="security.html#security-overview" class="hover:text-[#F5F6FA]">Security Overview</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal -->
+        <div class="space-y-2.5">
+          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Legal</div>
+          <ul class="space-y-2">
+            <li><a href="security.html#privacy" class="hover:text-[#F5F6FA]">Privacy Policy</a></li>
+            <li><a href="security.html#terms" class="hover:text-[#F5F6FA]">Terms of Service</a></li>
+            <li><a href="security.html#cookies" class="hover:text-[#F5F6FA]">Cookie Policy</a></li>
+            <li><a href="security.html#data-processing" class="hover:text-[#F5F6FA]">Data Processing</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#626775]">
+        <div>
+          © <span data-current-year>2026</span> VidSynth Studio. All rights reserved.
+        </div>
+        <div class="font-mono-tech">
+          DESIGN SYSTEM: MIDNIGHT OBSIDIAN // ZERO FABRICATED METRICS POLICY
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       MODAL 1: BENTO SHOWCASE VIDEO INSPECTOR
+       ======================================================================== -->
+  <div id="showcase-inspect-modal" class="hidden modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="showcase-modal-title">
+    <div class="modal-panel max-w-3xl p-5 space-y-4">
+      <div class="flex items-center justify-between border-b border-[#252832] pb-3">
+        <div>
+          <span id="showcase-modal-category" class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SYNTHESIS PASS</span>
+          <h3 id="showcase-modal-title" class="text-base font-semibold text-[#F5F6FA]">Reference Sequence</h3>
+        </div>
+        <button type="button" data-close-showcase-modal class="px-2.5 py-1 font-mono-tech text-xs border border-[#252832] rounded-xs text-[#9296A3] hover:text-[#F5F6FA]">
+          CLOSE ✕
+        </button>
+      </div>
+      <div class="aspect-video bg-[#040407] border border-[#252832] overflow-hidden">
+        <video id="showcase-modal-video" controls loop playsinline class="w-full h-full object-cover"></video>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs bg-[#08080C] p-3.5 border border-[#252832]">
+        <div>
+          <div class="font-mono-tech text-[10px] text-[#626775]">MODEL IDENTIFIER</div>
+          <div id="showcase-modal-model" class="font-mono-tech text-xs text-[#00F0FF] mt-0.5">VS-CHAR-2.4</div>
+        </div>
+        <div>
+          <div class="font-mono-tech text-[10px] text-[#626775]">FORMAT &amp; RESOLUTION</div>
+          <div id="showcase-modal-spec" class="font-mono-tech text-xs text-[#F5F6FA] mt-0.5">1920×1080 • 24fps</div>
+        </div>
+        <div class="sm:col-span-2 pt-2 border-t border-[#252832]">
+          <p id="showcase-modal-desc" class="text-xs text-[#9296A3]"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 2: ARCHITECTURE & SYSTEM CHANGELOG
+       ======================================================================== -->
+  <div id="changelog-modal" class="hidden modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="changelog-modal-title">
+    <div class="modal-panel p-6 space-y-4">
+      <div class="flex items-center justify-between border-b border-[#252832] pb-3">
+        <div>
+          <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">RELEASE &amp; ARCHITECTURE NOTES</span>
+          <h3 id="changelog-modal-title" class="text-base font-semibold text-[#F5F6FA]">Introducing VidSynth Studio (v0.9.4-preview)</h3>
+        </div>
+        <button type="button" data-close-changelog class="px-2.5 py-1 font-mono-tech text-xs border border-[#252832] rounded-xs text-[#9296A3] hover:text-[#F5F6FA]">
+          CLOSE ✕
+        </button>
+      </div>
+      <div class="space-y-4 text-xs text-[#9296A3] leading-relaxed">
+        <div class="p-3.5 bg-[#08080C] border border-[#252832] space-y-1.5">
+          <div class="font-mono-tech text-[11px] text-[#F5F6FA]">SYNCHRONIZED A/B COMPARISON STUDIO</div>
+          <p>Dual-stream HTML5 video comparison engine with sub-frame drift correction, 5 conditioning pass toggles, and frame-step transport controls.</p>
+        </div>
+        <div class="p-3.5 bg-[#08080C] border border-[#252832] space-y-1.5">
+          <div class="font-mono-tech text-[11px] text-[#F5F6FA]">6-DOF DIRECTOR MOTION RIG</div>
+          <p>Interactive camera trajectory conditioning preview supporting Crash Zoom, 360° Orbit, 4× Optical Flow Slow Motion, Tracking Pan, Dolly In, and Handheld profiles.</p>
+        </div>
+        <div class="p-3.5 bg-[#08080C] border border-[#252832] space-y-1.5">
+          <div class="font-mono-tech text-[11px] text-[#F5F6FA]">SUPABASE AUTH &amp; STUDIO WORKSPACE</div>
+          <p>Complete authentication flows, PostgreSQL RLS migration (`001_initial_schema.sql`), project CRUD, render pass simulation logging, and credit ledger tracking.</p>
+        </div>
+      </div>
+      <div class="pt-3 border-t border-[#252832] flex justify-end">
+        <button type="button" data-close-changelog class="btn-primary text-xs py-2 px-4">Acknowledge</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="config/config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/video-comparison.js"></script>
+</body>
+</html>
