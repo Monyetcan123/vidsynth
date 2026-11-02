@@ -3,21 +3,63 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VidSynth — Professional AI Video Creation, Character Transformation & Visual Production Studio</title>
-  <meta name="description" content="VidSynth is an enterprise-grade generative video AI platform for character transformation, semantic rotoscoping, depth-guided relighting, and deterministic camera motion control." />
+  <title>VidSynth AI — VidSynth Studio | Neural VFX Production Suite</title>
+  <meta name="description" content="VidSynth AI is a professional neural visual effects platform designed for advanced video synthesis, character transformation, semantic rotoscoping, 16-bit Z-depth relighting, and deterministic camera motion control." />
+  <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://vidsynth.app/" />
 
   <!-- Open Graph / Social Metadata -->
   <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VidSynth AI" />
   <meta property="og:url" content="https://vidsynth.app/" />
-  <meta property="og:title" content="VidSynth — Transform Vision Into Motion" />
+  <meta property="og:title" content="VidSynth AI — VidSynth Studio | Neural VFX Production Suite" />
   <meta property="og:description" content="Transform characters, redefine visual identity, and create cinematic video experiences with multi-pass generative AI conditioning." />
   <meta property="og:image" content="https://vidsynth.app/assets/images/comp-transformed-poster.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="VidSynth — Professional AI Video Creation Studio" />
+  <meta name="twitter:title" content="VidSynth AI — Neural VFX Production Suite" />
   <meta name="twitter:description" content="Deterministic character transformation, 16-bit Z-depth relighting, and camera motion conditioning for visual production." />
+  <meta name="twitter:image" content="https://vidsynth.app/assets/images/comp-transformed-poster.jpg" />
 
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+
+  <!-- Verifiable JSON-LD Structured Data (Zero Fabricated Claims) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://vidsynth.app/#website",
+        "url": "https://vidsynth.app/",
+        "name": "VidSynth AI",
+        "description": "VidSynth Studio — Neural VFX Production Suite. A professional neural visual effects platform designed for advanced video synthesis and creative production workflows.",
+        "publisher": {
+          "@id": "https://vidsynth.app/#project"
+        }
+      },
+      {
+        "@type": "SoftwareApplication",
+        "@id": "https://vidsynth.app/#project",
+        "name": "VidSynth Studio",
+        "alternateName": "VidSynth AI",
+        "url": "https://vidsynth.app/",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Web Browser",
+        "description": "Neural visual effects and generative video conditioning suite featuring character transformation, semantic rotoscoping, 16-bit Z-depth relighting, and 6-DoF camera trajectory conditioning.",
+        "founder": {
+          "@type": "Person",
+          "name": "Najla Afaf Ullaya",
+          "email": "founder@vidsynth.app"
+        },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "email": "founder@vidsynth.app",
+          "contactType": "founder and early access inquiries"
+        }
+      }
+    ]
+  }
+  </script>
 
   <!-- Google Fonts: Inter & JetBrains Mono -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -32,13 +74,13 @@
   <a href="#main-content" class="skip-link">Skip to main content</a>
 
   <!-- ========================================================================
-       4A. STICKY ANNOUNCEMENT BAR
+       STICKY ANNOUNCEMENT BAR
        ======================================================================== -->
   <div id="announcement-bar" role="region" aria-label="Product announcement" class="sticky top-0 z-50 bg-[#08080C] border-b border-[#252832] px-4 py-2">
     <div class="max-w-[1360px] mx-auto flex flex-wrap items-center justify-between gap-3 text-xs">
       <div class="flex flex-wrap items-center gap-2.5">
         <span class="px-2 py-0.5 font-mono-tech text-[10px] uppercase tracking-wider bg-[#00F0FF]/10 text-[#00F0FF] border border-[#00F0FF]/40 rounded-xs">
-          EARLY ACCESS COHORT
+          EARLY ACCESS PILOT
         </span>
         <span class="text-[#F5F6FA] font-medium">Introducing VidSynth Studio</span>
         <span class="hidden sm:inline text-[#626775]">—</span>
@@ -46,7 +88,7 @@
       </div>
       <div class="flex items-center gap-4 ml-auto">
         <button type="button" data-open-changelog class="font-mono-tech text-[11px] text-[#00F0FF] hover:underline flex items-center gap-1">
-          <span>Architecture &amp; Changelog</span>
+          <span>Architecture &amp; Release Notes</span>
           <span aria-hidden="true">→</span>
         </button>
         <button id="dismiss-announcement-btn" type="button" class="text-[#626775] hover:text-[#F5F6FA] font-mono-tech text-xs px-1" aria-label="Dismiss announcement bar">
@@ -57,14 +99,14 @@
   </div>
 
   <!-- ========================================================================
-       4B. PREMIUM NAVIGATION BAR
+       HEADER NAVIGATION BAR
        ======================================================================== -->
   <header class="sticky top-0 z-40 bg-[#040407]/90 backdrop-blur-md border-b border-[#252832]">
     <div class="max-w-[1360px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
       <!-- Left: Brand Identity -->
       <div class="flex items-center gap-3">
         <a href="index.html" class="flex items-center gap-2.5 group focus:outline-none">
-          <img src="assets/icons/favicon.svg" alt="VidSynth mark" class="w-8 h-8 rounded-xs" />
+          <img src="assets/icons/favicon.svg" alt="VidSynth AI geometric brand mark" class="w-8 h-8 rounded-xs" />
           <div class="flex items-baseline gap-2">
             <span class="font-semibold tracking-tight text-base text-[#F5F6FA] group-hover:text-[#00F0FF] transition-colors">VIDSYNTH</span>
             <span class="font-mono-tech text-[10px] tracking-widest uppercase px-1.5 py-0.5 bg-[#101117] border border-[#252832] text-[#9296A3] rounded-xs">STUDIO</span>
@@ -74,26 +116,38 @@
 
       <!-- Center: Primary Navigation Links -->
       <nav aria-label="Main navigation" class="hidden lg:flex items-center gap-1">
-        <a href="#comparison-studio" class="btn-ghost">Product</a>
-        <a href="#bento-showcase" class="btn-ghost">Models</a>
-        <a href="#motion-rig" class="btn-ghost">Solutions</a>
+        <a href="#comparison-studio" class="btn-ghost">Comparison Studio</a>
+        <a href="#bento-showcase" class="btn-ghost">Bento Showcase</a>
+        <a href="#motion-rig" class="btn-ghost">Motion Rig</a>
+        <a href="#architecture" class="btn-ghost">Architecture</a>
         <a href="pricing.html" class="btn-ghost">Pricing</a>
-        <a href="security.html#documentation" class="btn-ghost">Resources</a>
+        <a href="security.html" class="btn-ghost">Security</a>
       </nav>
 
-      <!-- Right: Runtime Status Indicator & Auth / Studio Actions -->
+      <!-- Right: SANDBOX PREVIEW MODE Badge & Primary Early Access CTA -->
       <div class="hidden lg:flex items-center gap-3">
-        <div class="flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#08080C] border border-[#252832]" title="Reflects actual runtime configuration in config/config.js">
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#08080C] border border-[#252832]" title="Interactive R&D technical preview environment">
           <span data-runtime-status-dot class="w-2 h-2 rounded-full bg-[#00F0FF]"></span>
           <span data-runtime-status-label class="font-mono-tech text-[10px] tracking-wider text-[#9296A3]">SANDBOX PREVIEW MODE</span>
         </div>
-        <a href="login.html" data-nav-signin class="btn-ghost">Sign In</a>
-        <a href="register.html" class="btn-secondary text-xs py-2 px-3.5">Get Started</a>
-        <a href="dashboard.html" class="btn-primary text-xs py-2 px-4">Launch Studio</a>
+        <a href="#comparison-studio" class="btn-secondary text-xs py-2 px-3.5">Launch Studio</a>
+        <a
+          href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+          class="btn-primary text-xs py-2 px-4 font-mono-tech tracking-wide"
+        >
+          REQUEST EARLY ACCESS
+        </a>
       </div>
 
       <!-- Mobile Menu Trigger -->
-      <button id="mobile-menu-btn" type="button" aria-expanded="false" aria-controls="mobile-nav-drawer" class="lg:hidden p-2 rounded-sm border border-[#252832] bg-[#101117] text-[#F5F6FA]" aria-label="Toggle navigation menu">
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav-drawer"
+        class="lg:hidden p-2 rounded-sm border border-[#252832] bg-[#101117] text-[#F5F6FA]"
+        aria-label="Toggle navigation menu"
+      >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="square" stroke-width="1.75" d="M4 7h16M4 12h16M4 17h16" />
         </svg>
@@ -114,20 +168,24 @@
             </button>
           </div>
           <nav class="flex flex-col gap-2" aria-label="Mobile navigation">
-            <a href="#comparison-studio" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Product — Comparison Studio</a>
-            <a href="#bento-showcase" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Models — Showcase &amp; Specs</a>
-            <a href="#motion-rig" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Solutions — Director Motion Rig</a>
+            <a href="#comparison-studio" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Comparison Studio</a>
+            <a href="#bento-showcase" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Bento Showcase &amp; Models</a>
+            <a href="#motion-rig" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Director Motion Rig</a>
             <a href="#architecture" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Architecture &amp; Pipeline</a>
-            <a href="pricing.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Pricing &amp; Plans</a>
-            <a href="security.html#documentation" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Resources &amp; Security</a>
+            <a href="pricing.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Pricing &amp; Compute</a>
+            <a href="security.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Security Overview</a>
+            <a href="privacy.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#9296A3]">Privacy Policy</a>
+            <a href="terms.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#9296A3]">Terms of Service</a>
           </nav>
         </div>
         <div class="pt-6 border-t border-[#252832] flex flex-col gap-3">
-          <a href="dashboard.html" class="btn-primary w-full justify-center">Launch Studio</a>
-          <div class="grid grid-cols-2 gap-3">
-            <a href="login.html" class="btn-secondary w-full justify-center">Sign In</a>
-            <a href="register.html" class="btn-secondary w-full justify-center">Get Started</a>
-          </div>
+          <a href="#comparison-studio" class="btn-secondary w-full justify-center">Launch Studio Viewport</a>
+          <a
+            href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+            class="btn-primary w-full justify-center font-mono-tech"
+          >
+            REQUEST EARLY ACCESS
+          </a>
         </div>
       </div>
     </div>
@@ -135,7 +193,7 @@
 
   <main id="main-content">
     <!-- ======================================================================
-         4C. HERO SECTION
+         HERO SECTION
          ====================================================================== -->
     <section class="relative darkroom-grid-bg border-b border-[#252832] pt-12 pb-20 lg:pt-20 lg:pb-28">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -148,7 +206,7 @@
                 <span>NEURAL VFX PRODUCTION SUITE</span>
               </span>
               <span class="font-mono-tech text-[11px] text-[#626775] px-2 py-0.5 border border-[#252832] bg-[#08080C] rounded-xs">
-                BUILD v0.9.4
+                BUILD v0.9.4-PREVIEW
               </span>
             </div>
 
@@ -163,12 +221,15 @@
 
             <!-- Primary & Secondary CTAs -->
             <div class="flex flex-wrap items-center gap-3.5 pt-2">
-              <a href="dashboard.html" class="btn-primary px-6 py-3 text-sm">
+              <a href="#comparison-studio" class="btn-primary px-6 py-3 text-sm">
                 <span>Launch Studio</span>
-                <span aria-hidden="true" class="font-mono-tech">→</span>
+                <span aria-hidden="true" class="font-mono-tech">↓</span>
               </a>
-              <a href="#comparison-studio" class="btn-secondary px-6 py-3 text-sm">
-                <span>Explore Technology</span>
+              <a
+                href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+                class="btn-secondary px-6 py-3 text-sm font-mono-tech"
+              >
+                <span>REQUEST EARLY ACCESS</span>
               </a>
             </div>
 
@@ -211,6 +272,7 @@
                   loop
                   muted
                   playsinline
+                  aria-label="VidSynth Studio multi-pass neural character synthesis preview reel"
                   class="w-full h-full object-cover"
                 ></video>
               </div>
@@ -227,7 +289,7 @@
     </section>
 
     <!-- ======================================================================
-         4D. PRODUCT CAPABILITY METRICS (STRICT DATA INTEGRITY)
+         PRODUCT CAPABILITY METRICS (STRICT DATA INTEGRITY)
          ====================================================================== -->
     <section aria-labelledby="metrics-heading" class="bg-[#08080C] border-b border-[#252832] py-12">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -281,7 +343,7 @@
     </section>
 
     <!-- ======================================================================
-         5. INTERACTIVE CINEMATIC COMPARISON STUDIO
+         INTERACTIVE CINEMATIC COMPARISON STUDIO
          ====================================================================== -->
     <section id="comparison-studio" class="py-20 lg:py-28 border-b border-[#252832]">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -332,6 +394,7 @@
                   muted
                   playsinline
                   preload="auto"
+                  aria-label="VidSynth transformed neural conditioning video layer"
                 ></video>
               </div>
 
@@ -345,6 +408,7 @@
                   muted
                   playsinline
                   preload="auto"
+                  aria-label="Original Rec.709 witness camera source footage layer"
                 ></video>
               </div>
 
@@ -521,7 +585,7 @@
               </div>
 
               <div class="p-2.5 bg-[#08080C] border border-[#252832] rounded-xs text-[11px] text-[#9296A3]">
-                <strong class="text-[#F5F6FA] font-mono-tech">TRANSPARENCY NOTE:</strong> Toggling passes switches synchronized pre-rendered reference streams to demonstrate pipeline outputs. It does not execute live browser GPU inference.
+                <strong class="text-[#F5F6FA] font-mono-tech">TRANSPARENCY NOTE:</strong> Toggling passes switches synchronized pre-rendered reference streams in the browser to demonstrate pipeline outputs. It does not execute live cloud GPU inference.
               </div>
             </div>
           </div>
@@ -530,7 +594,7 @@
     </section>
 
     <!-- ======================================================================
-         6. DIRECTOR MOTION RIG
+         DIRECTOR MOTION RIG
          ====================================================================== -->
     <section id="motion-rig" class="py-20 lg:py-28 bg-[#08080C] border-b border-[#252832]">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -632,6 +696,7 @@
                 loop
                 muted
                 playsinline
+                aria-label="Director Motion Rig camera trajectory preview"
                 class="w-full h-full object-cover"
               ></video>
             </div>
@@ -668,7 +733,7 @@
                   <span>TRAJECTORY SOLVER CURVE</span>
                   <span class="text-[#00F0FF]">72 FRAMES</span>
                 </div>
-                <svg viewBox="0 0 240 92" class="w-full h-24 my-1">
+                <svg viewBox="0 0 240 92" class="w-full h-24 my-1" role="img" aria-label="Camera trajectory velocity curve">
                   <line x1="16" y1="16" x2="224" y2="16" stroke="#252832" stroke-dasharray="3 3" stroke-width="1" />
                   <line x1="16" y1="46" x2="224" y2="46" stroke="#252832" stroke-dasharray="3 3" stroke-width="1" />
                   <line x1="16" y1="76" x2="224" y2="76" stroke="#252832" stroke-dasharray="3 3" stroke-width="1" />
@@ -693,7 +758,7 @@
     </section>
 
     <!-- ======================================================================
-         7. CINEMATIC SHOWCASE — ASYMMETRIC BENTO GRID
+         CINEMATIC SHOWCASE — ASYMMETRIC BENTO GRID
          ====================================================================== -->
     <section id="bento-showcase" class="py-20 lg:py-28 border-b border-[#252832]">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -710,8 +775,11 @@
               Hover over any reference plate to preview playback, or open the frame inspector for full pipeline metadata. All plates are verified internal VidSynth R&amp;D sequences.
             </p>
           </div>
-          <a href="dashboard.html" class="btn-secondary text-xs">
-            <span>Configure Custom Project in Studio</span>
+          <a
+            href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+            class="btn-secondary text-xs font-mono-tech"
+          >
+            <span>REQUEST EARLY ACCESS PILOT</span>
             <span aria-hidden="true">→</span>
           </a>
         </div>
@@ -738,6 +806,7 @@
                 muted
                 playsinline
                 preload="metadata"
+                aria-label="Project Chronos Neo-Tokyo Rain Sequence preview"
                 class="w-full h-full object-cover"
               ></video>
               <div class="absolute top-3 left-3 flex flex-wrap items-center gap-2">
@@ -781,6 +850,7 @@
                 muted
                 playsinline
                 preload="metadata"
+                aria-label="Project Valence Biomorphic Suit Replacement preview"
                 class="w-full h-full object-cover"
               ></video>
               <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#F5F6FA] rounded-xs">
@@ -817,6 +887,7 @@
                 muted
                 playsinline
                 preload="metadata"
+                aria-label="Project Aether Anamorphic Lighting Transfer preview"
                 class="w-full h-full object-cover"
               ></video>
               <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#00F0FF] rounded-xs">
@@ -853,6 +924,7 @@
                 muted
                 playsinline
                 preload="metadata"
+                aria-label="Sub-Pixel Alpha Matte and Hair Rotoscoping preview"
                 class="w-full h-full object-cover"
               ></video>
               <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#10B981] rounded-xs">
@@ -889,6 +961,7 @@
                 muted
                 playsinline
                 preload="metadata"
+                aria-label="Temporal Coherence Under Rapid Occlusion split diagnostic preview"
                 class="w-full h-full object-cover"
               ></video>
               <span class="absolute top-2.5 left-2.5 px-2 py-0.5 font-mono-tech text-[10px] bg-[#040407]/90 border border-[#252832] text-[#F59E0B] rounded-xs">
@@ -939,7 +1012,7 @@
               </ul>
             </div>
             <div class="pt-4 mt-4 border-t border-[#252832]">
-              <a href="dashboard.html" class="btn-primary w-full text-xs py-2">Open Model Catalog in Studio →</a>
+              <a href="#comparison-studio" class="btn-primary w-full text-xs py-2">Test Passes in Studio Viewport ↑</a>
             </div>
           </div>
         </div>
@@ -947,7 +1020,7 @@
     </section>
 
     <!-- ======================================================================
-         8. TECHNOLOGY & INFRASTRUCTURE ARCHITECTURE
+         TECHNOLOGY & INFRASTRUCTURE ARCHITECTURE
          ====================================================================== -->
     <section id="architecture" class="py-20 lg:py-28 bg-[#08080C] border-b border-[#252832]">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
@@ -961,11 +1034,11 @@
               Technology &amp; Proposed Infrastructure Architecture
             </h2>
             <p class="text-sm sm:text-base text-[#9296A3]">
-              In accordance with our engineering transparency standards, we clearly separate capabilities implemented in this web application from our proposed cloud GPU rendering infrastructure.
+              In accordance with our engineering transparency standards, we clearly separate capabilities operational in this interactive browser preview from our proposed cloud GPU rendering infrastructure.
             </p>
           </div>
           <div class="flex flex-wrap items-center gap-3 text-xs font-mono-tech">
-            <span class="px-2.5 py-1 rounded-xs bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981]">● IMPLEMENTED IN STUDIO</span>
+            <span class="px-2.5 py-1 rounded-xs bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981]">● OPERATIONAL R&amp;D VIEWPORT</span>
             <span class="px-2.5 py-1 rounded-xs bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA]">◌ PROPOSED CLOUD DEPLOYMENT</span>
           </div>
         </div>
@@ -975,7 +1048,7 @@
           <div class="surface-elevated p-5 space-y-2">
             <div class="flex items-center justify-between">
               <span class="font-mono-tech text-xs text-[#00F0FF]">01 // CHARACTER TRANSFORMATION</span>
-              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">R&amp;D REFERENCE</span>
             </div>
             <h3 class="text-base font-semibold text-[#F5F6FA]">Spatial ControlNet + Identity Lock</h3>
             <p class="text-xs text-[#9296A3] leading-relaxed">
@@ -986,7 +1059,7 @@
           <div class="surface-elevated p-5 space-y-2">
             <div class="flex items-center justify-between">
               <span class="font-mono-tech text-xs text-[#00F0FF]">02 // VIDEO SEGMENTATION</span>
-              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">R&amp;D REFERENCE</span>
             </div>
             <h3 class="text-base font-semibold text-[#F5F6FA]">Sub-Pixel Trimap &amp; Semantic Mattes</h3>
             <p class="text-xs text-[#9296A3] leading-relaxed">
@@ -997,7 +1070,7 @@
           <div class="surface-elevated p-5 space-y-2">
             <div class="flex items-center justify-between">
               <span class="font-mono-tech text-xs text-[#00F0FF]">03 // DEPTH ESTIMATION</span>
-              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">R&amp;D REFERENCE</span>
             </div>
             <h3 class="text-base font-semibold text-[#F5F6FA]">16-Bit Disparity &amp; Normal Relighting</h3>
             <p class="text-xs text-[#9296A3] leading-relaxed">
@@ -1008,7 +1081,7 @@
           <div class="surface-elevated p-5 space-y-2">
             <div class="flex items-center justify-between">
               <span class="font-mono-tech text-xs text-[#00F0FF]">04 // TEMPORAL CONSISTENCY</span>
-              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">R&amp;D REFERENCE</span>
             </div>
             <h3 class="text-base font-semibold text-[#F5F6FA]">Bi-Directional Optical Flow Warping</h3>
             <p class="text-xs text-[#9296A3] leading-relaxed">
@@ -1018,12 +1091,12 @@
 
           <div class="surface-elevated p-5 space-y-2">
             <div class="flex items-center justify-between">
-              <span class="font-mono-tech text-xs text-[#00F0FF]">05 // AUTH &amp; TENANT DATA LAYER</span>
-              <span class="font-mono-tech text-[10px] text-[#10B981]">IMPLEMENTED</span>
+              <span class="font-mono-tech text-xs text-[#00F0FF]">05 // COLOR &amp; COMPOSITING I/O</span>
+              <span class="font-mono-tech text-[10px] text-[#10B981]">SPECIFIED</span>
             </div>
-            <h3 class="text-base font-semibold text-[#F5F6FA]">Supabase PostgreSQL + Row Level Security</h3>
+            <h3 class="text-base font-semibold text-[#F5F6FA]">ACEScg 16-Bit OpenEXR Multi-Pass</h3>
             <p class="text-xs text-[#9296A3] leading-relaxed">
-              Complete schema (`001_initial_schema.sql`) with strict per-user RLS policies for profiles, projects, render job logs, and credit ledgers.
+              Designed for non-destructive downstream finishing in Foundry Nuke and DaVinci Resolve with separated beauty, matte, depth, and motion vector layers.
             </p>
           </div>
 
@@ -1034,12 +1107,12 @@
             </div>
             <h3 class="text-base font-semibold text-[#F5F6FA]">Asynchronous Batch GPU Workers</h3>
             <p class="text-xs text-[#9296A3] leading-relaxed">
-              Designed to dispatch multi-pass conditioning jobs to containerized GPU worker nodes via asynchronous job queues.
+              Architected to dispatch multi-pass conditioning jobs to containerized cloud GPU worker nodes via asynchronous job queues.
             </p>
           </div>
         </div>
 
-        <!-- Proposed AWS Infrastructure Architecture Blueprint -->
+        <!-- Proposed Cloud Infrastructure Architecture Blueprint -->
         <div class="surface-elevated p-6 sm:p-8 border-l-2 border-l-[#7161FF]">
           <div class="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#252832]">
             <div>
@@ -1047,7 +1120,7 @@
                 PROPOSED INFRASTRUCTURE ARCHITECTURE (CLOUD DEPLOYMENT BLUEPRINT)
               </span>
               <h3 class="text-lg font-semibold text-[#F5F6FA] mt-1">
-                Target AWS Production Topology for Distributed GPU Rendering
+                Target Cloud Production Topology for Distributed Neural Rendering
               </h3>
             </div>
             <span class="px-3 py-1 font-mono-tech text-[11px] bg-[#08080C] border border-[#252832] text-[#9296A3] rounded-xs">
@@ -1058,33 +1131,33 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
             <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
               <div class="font-mono-tech text-[10px] text-[#00F0FF]">COMPUTE TIER (PROPOSED)</div>
-              <div class="text-sm font-semibold text-[#F5F6FA]">Amazon EC2 GPU Instances</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Dedicated Cloud GPU Nodes</div>
               <p class="text-xs text-[#9296A3]">
-                Target `g5.2xlarge` / `p4d` inference nodes for running UNet-3D diffusion, RAFT optical flow, and ViT-Matte passes.
+                Containerized inference nodes for executing UNet-3D diffusion, RAFT optical flow, and ViT-Matte conditioning passes.
               </p>
             </div>
 
             <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
               <div class="font-mono-tech text-[10px] text-[#00F0FF]">ORCHESTRATION (PROPOSED)</div>
-              <div class="text-sm font-semibold text-[#F5F6FA]">AWS Batch Job Queue</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Asynchronous Batch Queue</div>
               <p class="text-xs text-[#9296A3]">
-                Asynchronous scheduling of frame-chunked conditioning jobs with spot/on-demand scaling based on queue depth.
+                Scheduled execution of frame-chunked conditioning jobs with autoscaling based on pilot workload demand.
               </p>
             </div>
 
             <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
               <div class="font-mono-tech text-[10px] text-[#00F0FF]">MEDIA STORAGE (PROPOSED)</div>
-              <div class="text-sm font-semibold text-[#F5F6FA]">Amazon S3 Asset Buckets</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Isolated Object Storage</div>
               <p class="text-xs text-[#9296A3]">
-                Pre-signed URL ingest for source plates and lifecycle-managed storage for 16-bit OpenEXR / ProRes output sequences.
+                Signed URL ingest for source plates and lifecycle-managed buckets for 16-bit OpenEXR / ProRes output sequences.
               </p>
             </div>
 
             <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs space-y-1.5">
               <div class="font-mono-tech text-[10px] text-[#00F0FF]">OBSERVABILITY (PROPOSED)</div>
-              <div class="text-sm font-semibold text-[#F5F6FA]">Amazon CloudWatch</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Pipeline Telemetry &amp; Logs</div>
               <p class="text-xs text-[#9296A3]">
-                Worker container logging, frame render duration metrics, and dead-letter queue alerting for failed conditioning passes.
+                Worker container health monitoring, frame render duration tracking, and dead-letter alerting for failed passes.
               </p>
             </div>
           </div>
@@ -1093,7 +1166,7 @@
     </section>
 
     <!-- ======================================================================
-         11. COMMERCIAL MODEL & PRICING PREVIEW
+         COMMERCIAL & PILOT OFFERINGS PREVIEW (MATCHES PRICING.HTML)
          ====================================================================== -->
     <section id="pricing-preview" class="py-20 lg:py-28 border-b border-[#252832]">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
@@ -1101,90 +1174,79 @@
           <div class="max-w-2xl space-y-3">
             <span class="eyebrow-tag">
               <span class="eyebrow-dot"></span>
-              <span>COMMERCIAL ARCHITECTURE</span>
+              <span>PROGRAM &amp; COMPUTE ACCESS</span>
             </span>
             <h2 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA]">
-              Transparent Plans for Individuals &amp; Production Studios
+              Early Access Pilot &amp; Enterprise Compute
             </h2>
             <p class="text-sm sm:text-base text-[#9296A3]">
-              Commercial terms are structured around transparent compute credit consumption. Finalized volume pricing and SLA commitments are tailored during onboarding.
+              Pricing and compute availability are subject to direct confirmation based on project scope and infrastructure allocation.
             </p>
           </div>
           <a href="pricing.html" class="btn-secondary text-xs">
-            <span>View Full Feature Matrix &amp; Credit Calculator</span>
+            <span>View Full Program &amp; Pricing Details</span>
             <span aria-hidden="true">→</span>
           </a>
         </div>
 
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <!-- Tier 1: SANDBOX -->
-          <div class="surface-elevated p-6 sm:p-7 flex flex-col justify-between">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <!-- Offering 1: EARLY ACCESS PILOT -->
+          <div class="surface-elevated p-6 sm:p-8 flex flex-col justify-between border-[#00F0FF]">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <span class="font-mono-tech text-xs uppercase text-[#9296A3]">TIER 01 // SANDBOX</span>
-                <span class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#08080C] border border-[#252832] text-[#00F0FF] rounded-xs">EVALUATION ACCESS</span>
+                <span class="font-mono-tech text-xs uppercase text-[#00F0FF]">OFFERING 01 // PILOT COHORT</span>
+                <span class="px-2.5 py-0.5 font-mono-tech text-[10px] bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">
+                  SUBJECT TO CONFIRMATION
+                </span>
               </div>
-              <h3 class="text-2xl font-semibold text-[#F5F6FA]">Sandbox</h3>
-              <p class="text-xs text-[#9296A3]">
-                For individual technical directors and creators evaluating VidSynth's workflow and conditioning passes.
+              <h3 class="text-2xl font-semibold text-[#F5F6FA]">EARLY ACCESS PILOT</h3>
+              <div class="font-mono-tech text-sm text-[#00F0FF]">Pricing: Custom / Sponsored Grant</div>
+              <p class="text-xs sm:text-sm text-[#9296A3] leading-relaxed">
+                A limited-access pilot program for selected creators, technical partners, and research collaborators.
               </p>
               <div class="pt-4 border-t border-[#252832] space-y-2.5 text-xs text-[#F5F6FA]">
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Limited evaluation generation credits</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Standard export (MP4 H.264 / WebM VP9)</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Basic studio project management</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Community &amp; pipeline documentation</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Guided evaluation of character transformation &amp; rotoscoping passes</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Direct technical collaboration on R&amp;D conditioning workflows</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Eligibility for sponsored compute grants during pilot milestones</span></div>
               </div>
             </div>
             <div class="pt-6 mt-6 border-t border-[#252832]">
-              <a href="register.html" class="btn-secondary w-full justify-center">Launch Sandbox Studio</a>
+              <a
+                href="mailto:founder@vidsynth.app?subject=VidSynth%20Early%20Access%20Pilot"
+                class="btn-primary w-full justify-center font-mono-tech text-xs py-3"
+              >
+                CONTACT FOUNDER
+              </a>
             </div>
           </div>
 
-          <!-- Tier 2: PRO VFX STUDIO -->
-          <div class="surface-elevated p-6 sm:p-7 flex flex-col justify-between border-[#00F0FF] relative">
+          <!-- Offering 2: ENTERPRISE COMPUTE -->
+          <div class="surface-elevated p-6 sm:p-8 flex flex-col justify-between">
             <div class="space-y-4">
               <div class="flex items-center justify-between">
-                <span class="font-mono-tech text-xs uppercase text-[#00F0FF]">TIER 02 // PRO VFX STUDIO</span>
-                <span class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">PROPOSED PLAN</span>
+                <span class="font-mono-tech text-xs uppercase text-[#7161FF]">OFFERING 02 // CUSTOM COMPUTE</span>
+                <span class="px-2.5 py-0.5 font-mono-tech text-[10px] bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA] rounded-xs">
+                  COMMERCIAL EVALUATION
+                </span>
               </div>
-              <h3 class="text-2xl font-semibold text-[#F5F6FA]">Pro VFX Studio</h3>
-              <p class="text-xs text-[#9296A3]">
-                For professional creators, finishing artists, and boutique VFX studios requiring multi-pass deliverables.
+              <h3 class="text-2xl font-semibold text-[#F5F6FA]">ENTERPRISE COMPUTE</h3>
+              <div class="font-mono-tech text-sm text-[#7161FF]">Pricing: Custom Enterprise Agreement</div>
+              <p class="text-xs sm:text-sm text-[#9296A3] leading-relaxed">
+                A configurable compute offering for professional neural visual effects workflows, subject to infrastructure availability and commercial evaluation.
               </p>
               <div class="pt-4 border-t border-[#252832] space-y-2.5 text-xs text-[#F5F6FA]">
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Higher monthly generation credit limits</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Priority batch queue processing (when active)</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>All 5 conditioning passes &amp; 6-DoF Motion Rig</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>16-bit OpenEXR &amp; ProRes 422 HQ export support</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#00F0FF]">✓</span><span>Extended project &amp; render history retention</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Configurable multi-pass EXR &amp; ProRes pipeline integration</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Scoped compute scheduling aligned with production requirements</span></div>
+                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Architecture &amp; security review directly with project leadership</span></div>
               </div>
             </div>
             <div class="pt-6 mt-6 border-t border-[#252832]">
-              <a href="#early-access" class="btn-primary w-full justify-center">Request Early Access</a>
-            </div>
-          </div>
-
-          <!-- Tier 3: ENTERPRISE -->
-          <div class="surface-elevated p-6 sm:p-7 flex flex-col justify-between">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <span class="font-mono-tech text-xs uppercase text-[#7161FF]">TIER 03 // ENTERPRISE</span>
-                <span class="px-2 py-0.5 font-mono-tech text-[10px] bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA] rounded-xs">CUSTOM COMMERCIAL</span>
-              </div>
-              <h3 class="text-2xl font-semibold text-[#F5F6FA]">Enterprise</h3>
-              <p class="text-xs text-[#9296A3]">
-                For production studios and media organizations requiring custom workspace governance and dedicated support.
-              </p>
-              <div class="pt-4 border-t border-[#252832] space-y-2.5 text-xs text-[#F5F6FA]">
-                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Custom usage pools &amp; volume allocations</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Multi-seat team workspaces &amp; organization RBAC</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Custom pipeline integrations (ShotGrid / Nuke)</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Dedicated solutions engineering support</span></div>
-                <div class="flex items-center gap-2"><span class="text-[#7161FF]">✓</span><span>Isolated storage &amp; enterprise security options</span></div>
-              </div>
-            </div>
-            <div class="pt-6 mt-6 border-t border-[#252832]">
-              <a href="#early-access" class="btn-secondary w-full justify-center">Contact Sales</a>
+              <a
+                href="mailto:founder@vidsynth.app?subject=VidSynth%20Enterprise%20Compute%20Inquiry"
+                class="btn-secondary w-full justify-center font-mono-tech text-xs py-3"
+              >
+                CONTACT FOUNDER
+              </a>
             </div>
           </div>
         </div>
@@ -1192,43 +1254,49 @@
     </section>
 
     <!-- ======================================================================
-         12. EARLY ACCESS & ENTERPRISE LEAD REGISTRATION
+         EARLY ACCESS & FOUNDER INQUIRY SECTION (REAL MAILTO DISPATCH)
          ====================================================================== -->
     <section id="early-access" class="py-20 lg:py-28 bg-[#08080C] border-b border-[#252832]">
       <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-          <!-- Left 5 Cols: Context & Data Integrity Disclosure -->
+          <!-- Left 5 Cols: Founder Identity & Direct Contact -->
           <div class="lg:col-span-5 space-y-4">
             <span class="eyebrow-tag">
               <span class="eyebrow-dot"></span>
-              <span>COHORT ONBOARDING &amp; SALES INQUIRIES</span>
+              <span>PILOT &amp; PARTNER COMMUNICATION</span>
             </span>
             <h2 class="text-3xl font-semibold tracking-tight text-[#F5F6FA]">
-              Request Early Access or Commercial Consultation
+              Request Early Access or Technical Briefing
             </h2>
             <p class="text-sm text-[#9296A3] leading-relaxed">
-              Register your studio or engineering team for the upcoming Pro VFX Studio cohort or schedule a technical architecture review.
+              Connect directly with VidSynth AI leadership to request Early Access Pilot participation, discuss Google Cloud / technology partner evaluations, or schedule a technical demonstration.
             </p>
-            <div class="p-4 surface-elevated space-y-2 text-xs text-[#9296A3]">
-              <div class="font-mono-tech text-[11px] text-[#00F0FF] uppercase">DATA STORAGE TRANSPARENCY</div>
-              <p>
-                When Supabase credentials are configured in <code class="text-[#F5F6FA]">config/config.js</code>, submissions are persisted directly to <code class="text-[#F5F6FA]">public.early_access_leads</code> with duplicate-email validation. In Local Sandbox Mode, submissions are validated and stored in your browser's local demonstration registry.
-              </p>
-            </div>
-            <div class="p-4 surface-elevated border-l-2 border-l-[#00F0FF] space-y-1.5 text-xs">
-              <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#9296A3]">DIRECT FOUNDER &amp; EXECUTIVE INQUIRIES</div>
+            <div class="p-4 surface-elevated border-l-2 border-l-[#00F0FF] space-y-2 text-xs">
+              <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#00F0FF]">OFFICIAL FOUNDER CONTACT</div>
+              <div class="text-sm font-semibold text-[#F5F6FA]">Founded by Najla Afaf Ullaya</div>
               <p class="text-[#9296A3]">
-                For studio partnerships, architecture briefings, or direct founder correspondence:
+                All early access, partnership, and institutional due diligence inquiries are handled directly via:
               </p>
-              <a href="mailto:founder@vidsynth.app" class="inline-flex items-center gap-2 font-mono-tech text-xs text-[#00F0FF] hover:underline pt-0.5">
+              <a
+                href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+                class="inline-flex items-center gap-2 font-mono-tech text-xs text-[#00F0FF] hover:underline pt-1"
+              >
                 <span>founder@vidsynth.app</span>
                 <span aria-hidden="true">→</span>
               </a>
             </div>
           </div>
 
-          <!-- Right 7 Cols: Functional Lead Registration Form -->
-          <div class="lg:col-span-7 surface-elevated p-6 sm:p-8">
+          <!-- Right 7 Cols: Structured Email Inquiry Composer -->
+          <div class="lg:col-span-7 surface-elevated p-6 sm:p-8 space-y-4">
+            <div class="border-b border-[#252832] pb-3 flex flex-wrap items-center justify-between gap-2">
+              <h3 class="text-base font-semibold text-[#F5F6FA]">Compose Structured Early Access Request</h3>
+              <span class="font-mono-tech text-[10px] text-[#9296A3]">DIRECT MAILTO DISPATCH</span>
+            </div>
+            <p class="text-xs text-[#9296A3]">
+              Complete the fields below to format and launch an email in your default mail client addressed to <a href="mailto:founder@vidsynth.app" class="text-[#00F0FF] underline">founder@vidsynth.app</a>, or click <strong>Direct Email</strong> to message immediately.
+            </p>
+
             <form data-early-access-form novalidate class="space-y-4">
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
@@ -1275,29 +1343,35 @@
                 </div>
                 <div>
                   <label for="ea-use-case" class="block font-mono-tech text-[11px] uppercase text-[#9296A3] mb-1.5">
-                    Intended Use Case <span class="text-[#00F0FF]">*</span>
+                    Primary Inquiry / Use Case <span class="text-[#00F0FF]">*</span>
                   </label>
                   <select id="ea-use-case" name="use_case" required class="input-field">
-                    <option value="">Select primary use case...</option>
-                    <option value="Character Transformation & Wardrobe Synthesis">Character Transformation &amp; Wardrobe Synthesis</option>
-                    <option value="Semantic Rotoscoping & 16-Bit EXR Mattes">Semantic Rotoscoping &amp; 16-Bit EXR Mattes</option>
-                    <option value="Depth-Guided Relighting & Color Pipeline">Depth-Guided Relighting &amp; Color Pipeline</option>
-                    <option value="Director Motion Rig & Previsualization">Director Motion Rig &amp; Previsualization</option>
-                    <option value="Enterprise Studio Pipeline Integration">Enterprise Studio Pipeline Integration</option>
+                    <option value="">Select inquiry type...</option>
+                    <option value="Early Access Pilot Evaluation">Early Access Pilot Evaluation</option>
+                    <option value="Enterprise Compute & VFX Pipeline Inquiry">Enterprise Compute &amp; VFX Pipeline Inquiry</option>
+                    <option value="Technology Partner / Institutional Review">Technology Partner / Institutional Review</option>
+                    <option value="Character Transformation & 16-Bit EXR Research">Character Transformation &amp; 16-Bit EXR Research</option>
                   </select>
                 </div>
               </div>
 
-              <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div class="pt-2 flex flex-wrap items-center justify-between gap-4">
                 <span class="text-xs text-[#626775]">
-                  By submitting, you agree to our <a href="security.html#privacy" class="text-[#9296A3] underline hover:text-[#F5F6FA]">Privacy Policy</a>.
+                  See our <a href="privacy.html" class="text-[#9296A3] underline hover:text-[#F5F6FA]">Privacy Policy</a> and <a href="terms.html" class="text-[#9296A3] underline hover:text-[#F5F6FA]">Terms of Service</a>.
                 </span>
-                <button type="submit" class="btn-primary px-6 py-2.5 text-sm">
-                  Register for Early Access →
-                </button>
+                <div class="flex flex-wrap items-center gap-3">
+                  <a
+                    href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+                    class="btn-secondary text-xs py-2.5 px-4 font-mono-tech"
+                  >
+                    Direct Email →
+                  </a>
+                  <button type="submit" class="btn-primary px-5 py-2.5 text-xs font-mono-tech">
+                    COMPOSE EARLY ACCESS EMAIL
+                  </button>
+                </div>
               </div>
 
-              <!-- Dynamic Form Validation & Persistence Status Box -->
               <div data-form-status class="hidden" role="status" aria-live="polite"></div>
             </form>
           </div>
@@ -1307,76 +1381,75 @@
   </main>
 
   <!-- ========================================================================
-       14. REFINED MULTI-COLUMN FOOTER
+       PHASE 5 — CONSISTENT FOUR-COLUMN INSTITUTIONAL FOOTER
        ======================================================================== -->
   <footer class="bg-[#040407] border-t border-[#252832] pt-14 pb-10 text-xs text-[#9296A3]">
     <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-2 md:grid-cols-5 gap-8 pb-12 border-b border-[#252832]">
-        <!-- Brand Column -->
-        <div class="col-span-2 md:col-span-1 space-y-3">
-          <a href="index.html" class="flex items-center gap-2">
-            <img src="assets/icons/favicon.svg" alt="VidSynth" class="w-6 h-6" />
-            <span class="font-semibold text-sm text-[#F5F6FA] tracking-tight">VIDSYNTH</span>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-[#252832]">
+        <!-- COLUMN 1 — BRAND & VISION -->
+        <div class="space-y-3">
+          <a href="index.html" class="flex items-center gap-2.5">
+            <img src="assets/icons/favicon.svg" alt="VidSynth AI logo" class="w-6 h-6" />
+            <span class="font-semibold text-sm text-[#F5F6FA] tracking-tight">VidSynth AI</span>
           </a>
-          <p class="text-xs text-[#626775] leading-relaxed">
-            Transform Vision Into Motion. Professional AI video creation, character transformation &amp; visual production studio.
-          </p>
-          <div class="font-mono-tech text-[10px] text-[#626775] space-y-1">
-            <div>DOMAIN: https://vidsynth.app</div>
-            <div>FOUNDER: <a href="mailto:founder@vidsynth.app" class="text-[#00F0FF] hover:underline">founder@vidsynth.app</a></div>
+          <div class="font-mono-tech text-[11px] text-[#00F0FF]">
+            VidSynth Studio — Neural VFX Production Suite.
           </div>
+          <p class="text-xs text-[#9296A3] leading-relaxed">
+            A professional neural visual effects platform designed for advanced video synthesis and creative production workflows.
+          </p>
         </div>
 
-        <!-- Product -->
+        <!-- COLUMN 2 — NAVIGATION -->
         <div class="space-y-2.5">
-          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Product</div>
+          <div class="font-mono-tech text-[11px] uppercase tracking-wider text-[#F5F6FA]">Navigation</div>
           <ul class="space-y-2">
-            <li><a href="dashboard.html" class="hover:text-[#F5F6FA]">Studio</a></li>
-            <li><a href="#bento-showcase" class="hover:text-[#F5F6FA]">Models</a></li>
-            <li><a href="pricing.html" class="hover:text-[#F5F6FA]">Pricing</a></li>
-            <li><button type="button" data-open-changelog class="hover:text-[#F5F6FA]">Changelog</button></li>
+            <li><a href="#comparison-studio" class="hover:text-[#00F0FF] transition-colors">Comparison Studio</a></li>
+            <li><a href="#bento-showcase" class="hover:text-[#00F0FF] transition-colors">Bento Showcase</a></li>
+            <li><a href="#motion-rig" class="hover:text-[#00F0FF] transition-colors">Motion Rig</a></li>
+            <li><a href="pricing.html" class="hover:text-[#00F0FF] transition-colors">Pricing &amp; Compute</a></li>
           </ul>
         </div>
 
-        <!-- Resources -->
+        <!-- COLUMN 3 — LEGAL -->
         <div class="space-y-2.5">
-          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Resources</div>
+          <div class="font-mono-tech text-[11px] uppercase tracking-wider text-[#F5F6FA]">Legal</div>
           <ul class="space-y-2">
-            <li><a href="security.html#documentation" class="hover:text-[#F5F6FA]">Documentation</a></li>
-            <li><a href="security.html#api-reference" class="hover:text-[#F5F6FA]">API Reference</a></li>
-            <li><a href="dashboard.html" class="hover:text-[#F5F6FA]">Help Center</a></li>
-            <li><a href="security.html#support" class="hover:text-[#F5F6FA]">Community &amp; Support</a></li>
+            <li><a href="privacy.html" class="hover:text-[#00F0FF] transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-[#00F0FF] transition-colors">Terms of Service</a></li>
+            <li><a href="security.html" class="hover:text-[#00F0FF] transition-colors">Security</a></li>
           </ul>
         </div>
 
-        <!-- Company -->
-        <div class="space-y-2.5">
-          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Company</div>
-          <ul class="space-y-2">
-            <li><a href="#architecture" class="hover:text-[#F5F6FA]">About Architecture</a></li>
-            <li><a href="security.html#contact" class="hover:text-[#F5F6FA]">Contact</a></li>
-            <li><a href="security.html#security-overview" class="hover:text-[#F5F6FA]">Security Overview</a></li>
-          </ul>
-        </div>
-
-        <!-- Legal -->
-        <div class="space-y-2.5">
-          <div class="font-mono-tech text-[11px] uppercase text-[#F5F6FA]">Legal</div>
-          <ul class="space-y-2">
-            <li><a href="security.html#privacy" class="hover:text-[#F5F6FA]">Privacy Policy</a></li>
-            <li><a href="security.html#terms" class="hover:text-[#F5F6FA]">Terms of Service</a></li>
-            <li><a href="security.html#cookies" class="hover:text-[#F5F6FA]">Cookie Policy</a></li>
-            <li><a href="security.html#data-processing" class="hover:text-[#F5F6FA]">Data Processing</a></li>
-          </ul>
+        <!-- COLUMN 4 — FOUNDER & CONTACT -->
+        <div class="space-y-3">
+          <div class="font-mono-tech text-[11px] uppercase tracking-wider text-[#F5F6FA]">Founder &amp; Contact</div>
+          <div class="text-xs text-[#F5F6FA] font-medium">Founded by Najla Afaf Ullaya</div>
+          <div class="space-y-1">
+            <div class="text-[11px] text-[#626775] font-mono-tech uppercase">Official Contact:</div>
+            <a href="mailto:founder@vidsynth.app" class="font-mono-tech text-xs text-[#00F0FF] hover:underline block">
+              founder@vidsynth.app
+            </a>
+          </div>
+          <div class="pt-1">
+            <a
+              href="mailto:founder@vidsynth.app"
+              class="btn-secondary text-xs py-1.5 px-3 font-mono-tech inline-flex items-center gap-1.5"
+            >
+              <span>Contact Founder</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
         </div>
       </div>
 
+      <!-- COPYRIGHT BAR -->
       <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#626775]">
         <div>
-          © <span data-current-year>2026</span> VidSynth Studio. All rights reserved.
+          © 2026 VidSynth AI. All rights reserved. Built for professional neural visual effects.
         </div>
         <div class="font-mono-tech">
-          DESIGN SYSTEM: MIDNIGHT OBSIDIAN // ZERO FABRICATED METRICS POLICY
+          SANDBOX PREVIEW MODE // VERIFIED TRANSPARENCY ARCHITECTURE
         </div>
       </div>
     </div>
@@ -1416,14 +1489,14 @@
   </div>
 
   <!-- ========================================================================
-       MODAL 2: ARCHITECTURE & SYSTEM CHANGELOG
+       MODAL 2: ARCHITECTURE & RELEASE NOTES
        ======================================================================== -->
   <div id="changelog-modal" class="hidden modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="changelog-modal-title">
     <div class="modal-panel p-6 space-y-4">
       <div class="flex items-center justify-between border-b border-[#252832] pb-3">
         <div>
           <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">RELEASE &amp; ARCHITECTURE NOTES</span>
-          <h3 id="changelog-modal-title" class="text-base font-semibold text-[#F5F6FA]">Introducing VidSynth Studio (v0.9.4-preview)</h3>
+          <h3 id="changelog-modal-title" class="text-base font-semibold text-[#F5F6FA]">VidSynth Studio (v0.9.4-preview)</h3>
         </div>
         <button type="button" data-close-changelog class="px-2.5 py-1 font-mono-tech text-xs border border-[#252832] rounded-xs text-[#9296A3] hover:text-[#F5F6FA]">
           CLOSE ✕
@@ -1439,12 +1512,12 @@
           <p>Interactive camera trajectory conditioning preview supporting Crash Zoom, 360° Orbit, 4× Optical Flow Slow Motion, Tracking Pan, Dolly In, and Handheld profiles.</p>
         </div>
         <div class="p-3.5 bg-[#08080C] border border-[#252832] space-y-1.5">
-          <div class="font-mono-tech text-[11px] text-[#F5F6FA]">SUPABASE AUTH &amp; STUDIO WORKSPACE</div>
-          <p>Complete authentication flows, PostgreSQL RLS migration (`001_initial_schema.sql`), project CRUD, render pass simulation logging, and credit ledger tracking.</p>
+          <div class="font-mono-tech text-[11px] text-[#F5F6FA]">INSTITUTIONAL &amp; LEGAL READINESS</div>
+          <p>Dedicated Privacy Policy (`privacy.html`), Terms of Service (`terms.html`), Security Overview (`security.html`), and Early Access Pilot / Enterprise Compute offerings (`pricing.html`).</p>
         </div>
       </div>
       <div class="pt-3 border-t border-[#252832] flex justify-end">
-        <button type="button" data-close-changelog class="btn-primary text-xs py-2 px-4">Acknowledge</button>
+        <button type="button" data-close-changelog class="btn-primary text-xs py-2 px-4">Close</button>
       </div>
     </div>
   </div>

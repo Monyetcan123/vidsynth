@@ -3,10 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Security, Legal, Documentation &amp; Trust — VidSynth Studio</title>
-  <meta name="description" content="VidSynth Studio Security Overview, Data Processing Architecture, Privacy Policy, Terms of Service, Pipeline Documentation, and Support." />
+  <title>Security Overview — VidSynth AI | VidSynth Studio</title>
+  <meta name="description" content="Technical Security Overview for VidSynth AI (https://vidsynth.app), distinguishing between implemented browser-side security controls, planned cloud pipeline controls, and responsible disclosure." />
+  <meta name="robots" content="index, follow" />
   <link rel="canonical" href="https://vidsynth.app/security.html" />
+
+  <!-- Open Graph / Social Metadata -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="VidSynth AI" />
+  <meta property="og:url" content="https://vidsynth.app/security.html" />
+  <meta property="og:title" content="Security Overview — VidSynth AI" />
+  <meta property="og:description" content="Implemented security controls, planned cloud pipeline architecture, and responsible disclosure policy for VidSynth AI." />
+  <meta property="og:image" content="https://vidsynth.app/assets/images/comp-transformed-poster.jpg" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Security Overview — VidSynth AI" />
+  <meta name="twitter:description" content="Technical Security Overview for VidSynth AI (https://vidsynth.app)." />
+
   <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": "https://vidsynth.app/security.html#webpage",
+    "url": "https://vidsynth.app/security.html",
+    "name": "Security Overview — VidSynth AI",
+    "description": "Security Overview and Responsible Disclosure documentation for VidSynth AI.",
+    "isPartOf": {
+      "@id": "https://vidsynth.app/#website"
+    }
+  }
+  </script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -15,208 +42,383 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="css/styles.css" />
 </head>
-<body class="surface-obsidian text-[#F5F6FA] antialiased">
-  <a href="#trust-main" class="skip-link">Skip to documentation content</a>
+<body class="surface-obsidian text-[#F5F6FA] antialiased selection:bg-[#00F0FF]/20">
+  <a href="#security-main" class="skip-link">Skip to Security Overview content</a>
 
-  <!-- Top Navigation Header -->
+  <!-- Header Navigation Bar -->
   <header class="sticky top-0 z-40 bg-[#040407]/90 backdrop-blur-md border-b border-[#252832]">
     <div class="max-w-[1360px] mx-auto h-16 px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
-      <a href="index.html" class="flex items-center gap-2.5">
-        <img src="assets/icons/favicon.svg" alt="VidSynth" class="w-8 h-8 rounded-xs" />
-        <div class="flex items-baseline gap-2">
-          <span class="font-semibold tracking-tight text-base text-[#F5F6FA]">VIDSYNTH</span>
-          <span class="font-mono-tech text-[10px] tracking-widest uppercase px-1.5 py-0.5 bg-[#101117] border border-[#252832] text-[#9296A3] rounded-xs">TRUST &amp; DOCS</span>
-        </div>
-      </a>
+      <div class="flex items-center gap-3">
+        <a href="index.html" class="flex items-center gap-2.5 group focus:outline-none">
+          <img src="assets/icons/favicon.svg" alt="VidSynth AI geometric brand mark" class="w-8 h-8 rounded-xs" />
+          <div class="flex items-baseline gap-2">
+            <span class="font-semibold tracking-tight text-base text-[#F5F6FA] group-hover:text-[#00F0FF] transition-colors">VIDSYNTH</span>
+            <span class="font-mono-tech text-[10px] tracking-widest uppercase px-1.5 py-0.5 bg-[#101117] border border-[#252832] text-[#9296A3] rounded-xs">SECURITY</span>
+          </div>
+        </a>
+      </div>
 
       <nav aria-label="Main navigation" class="hidden lg:flex items-center gap-1">
-        <a href="index.html#comparison-studio" class="btn-ghost">Product</a>
-        <a href="index.html#bento-showcase" class="btn-ghost">Models</a>
+        <a href="index.html#comparison-studio" class="btn-ghost">Comparison Studio</a>
+        <a href="index.html#bento-showcase" class="btn-ghost">Bento Showcase</a>
+        <a href="index.html#motion-rig" class="btn-ghost">Motion Rig</a>
         <a href="pricing.html" class="btn-ghost">Pricing</a>
-        <a href="#security-overview" class="btn-ghost text-[#00F0FF]">Security</a>
-        <a href="#documentation" class="btn-ghost">Documentation</a>
+        <a href="security.html" aria-current="page" class="btn-ghost text-[#00F0FF]">Security</a>
+        <a href="privacy.html" class="btn-ghost">Privacy</a>
+        <a href="terms.html" class="btn-ghost">Terms</a>
       </nav>
 
-      <div class="flex items-center gap-3">
-        <a href="login.html" data-nav-signin class="btn-ghost text-xs">Sign In</a>
-        <a href="dashboard.html" class="btn-primary text-xs py-2 px-4">Launch Studio</a>
+      <div class="hidden lg:flex items-center gap-3">
+        <div class="flex items-center gap-2 px-2.5 py-1 rounded-xs bg-[#08080C] border border-[#252832]">
+          <span data-runtime-status-dot class="w-2 h-2 rounded-full bg-[#00F0FF]"></span>
+          <span data-runtime-status-label class="font-mono-tech text-[10px] tracking-wider text-[#9296A3]">SANDBOX PREVIEW MODE</span>
+        </div>
+        <a href="index.html#comparison-studio" class="btn-secondary text-xs py-2 px-3.5">Launch Studio</a>
+        <a
+          href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+          class="btn-primary text-xs py-2 px-4 font-mono-tech tracking-wide"
+        >
+          REQUEST EARLY ACCESS
+        </a>
+      </div>
+
+      <button
+        id="mobile-menu-btn"
+        type="button"
+        aria-expanded="false"
+        aria-controls="mobile-nav-drawer"
+        class="lg:hidden p-2 rounded-sm border border-[#252832] bg-[#101117] text-[#F5F6FA]"
+        aria-label="Toggle navigation menu"
+      >
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="square" stroke-width="1.75" d="M4 7h16M4 12h16M4 17h16" />
+        </svg>
+      </button>
+    </div>
+
+    <!-- Mobile Responsive Menu Drawer -->
+    <div id="mobile-nav-drawer" class="hidden lg:hidden fixed inset-0 top-16 z-50 bg-[#040407]/98 border-t border-[#252832] p-6 overflow-y-auto">
+      <div class="flex flex-col justify-between h-full max-w-md mx-auto">
+        <div class="space-y-6">
+          <div class="flex items-center justify-between pb-4 border-b border-[#252832]">
+            <div class="flex items-center gap-2">
+              <span data-runtime-status-dot class="w-2 h-2 rounded-full bg-[#00F0FF]"></span>
+              <span data-runtime-status-label class="font-mono-tech text-[11px] text-[#9296A3]">SANDBOX PREVIEW MODE</span>
+            </div>
+            <button id="mobile-menu-close-btn" type="button" class="text-xs font-mono-tech text-[#9296A3] hover:text-[#F5F6FA] px-2 py-1 border border-[#252832] rounded-xs">
+              CLOSE ✕
+            </button>
+          </div>
+          <nav class="flex flex-col gap-2" aria-label="Mobile navigation">
+            <a href="index.html#comparison-studio" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Comparison Studio</a>
+            <a href="index.html#bento-showcase" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Bento Showcase</a>
+            <a href="index.html#motion-rig" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Motion Rig</a>
+            <a href="pricing.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#F5F6FA]">Pricing &amp; Compute</a>
+            <a href="security.html" class="px-3 py-2.5 rounded-sm bg-[#101117] border border-[#00F0FF] text-sm font-medium text-[#00F0FF]">Security Overview</a>
+            <a href="privacy.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#9296A3]">Privacy Policy</a>
+            <a href="terms.html" class="px-3 py-2.5 rounded-sm bg-[#08080C] border border-[#252832] text-sm font-medium text-[#9296A3]">Terms of Service</a>
+          </nav>
+        </div>
+        <div class="pt-6 border-t border-[#252832] flex flex-col gap-3">
+          <a href="index.html#comparison-studio" class="btn-secondary w-full justify-center">Launch Studio</a>
+          <a
+            href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+            class="btn-primary w-full justify-center font-mono-tech"
+          >
+            REQUEST EARLY ACCESS
+          </a>
+        </div>
       </div>
     </div>
   </header>
 
-  <main id="trust-main" class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
-      <!-- Sticky Left Navigation Sidebar (3 Cols) -->
-      <aside class="lg:col-span-3 lg:sticky lg:top-24 surface-elevated p-4 space-y-4">
-        <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#00F0FF] border-b border-[#252832] pb-2">
-          TRUST &amp; DOCUMENTATION INDEX
+  <main id="security-main" class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+    <!-- Top Document Banner & Control Status Matrix -->
+    <div class="surface-elevated p-6 sm:p-8 mb-10 border-l-2 border-l-[#00F0FF] space-y-5">
+      <div class="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-[#252832]">
+        <div>
+          <span class="font-mono-tech text-[11px] uppercase tracking-wider text-[#00F0FF]">INSTITUTIONAL SECURITY DOCUMENTATION</span>
+          <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#F5F6FA] mt-1">Security Overview</h1>
         </div>
-        <nav aria-label="Documentation sections" class="flex flex-col space-y-1.5 text-xs">
-          <a href="#security-overview" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#F5F6FA]">1. Security Overview</a>
-          <a href="#data-processing" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">2. Media Data Processing</a>
-          <a href="#privacy" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">3. Privacy Policy</a>
-          <a href="#terms" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">4. Terms of Service</a>
-          <a href="#cookies" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">5. Cookie &amp; Storage Policy</a>
-          <a href="#documentation" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">6. Pipeline Documentation</a>
-          <a href="#api-reference" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">7. Schema &amp; API Reference</a>
-          <a href="#contact" class="px-2.5 py-1.5 rounded-xs hover:bg-[#08080C] text-[#9296A3] hover:text-[#F5F6FA]">8. Contact &amp; Support</a>
+        <div class="flex flex-wrap items-center gap-2 font-mono-tech text-[10px]">
+          <span class="px-2.5 py-1 rounded-xs bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981]">● IMPLEMENTED CONTROL</span>
+          <span class="px-2.5 py-1 rounded-xs bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA]">◌ PLANNED CONTROL</span>
+          <span class="px-2.5 py-1 rounded-xs bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF]">◆ SECURITY PRINCIPLE</span>
+        </div>
+      </div>
+
+      <p class="text-xs sm:text-sm text-[#9296A3] leading-relaxed">
+        This Security Overview documents the actual security posture of <strong>VidSynth AI</strong> (<code class="text-[#F5F6FA]">https://vidsynth.app</code>) for institutional reviewers, cloud program evaluators, and prospective pilot partners. We do not claim unverified third-party security certifications, formal penetration testing attestations, or unimplemented compliance frameworks. Instead, we distinguish transparently between controls active in our codebase today, controls planned for our cloud compute infrastructure, and our guiding engineering principles.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-start">
+      <!-- Left Table of Contents (4 Cols) -->
+      <aside class="lg:col-span-4 lg:sticky lg:top-24 surface-elevated p-5 space-y-3">
+        <div class="font-mono-tech text-xs uppercase tracking-wider text-[#F5F6FA] border-b border-[#252832] pb-2.5">
+          SECURITY SECTIONS
+        </div>
+        <nav aria-label="Security Overview sections" class="flex flex-col space-y-1.5 text-xs text-[#9296A3]">
+          <a href="#sec-philosophy" class="hover:text-[#00F0FF] py-1">1. Security Philosophy</a>
+          <a href="#sec-architecture" class="hover:text-[#00F0FF] py-1">2. Application Architecture</a>
+          <a href="#sec-transmission" class="hover:text-[#00F0FF] py-1">3. Data Transmission</a>
+          <a href="#sec-encryption" class="hover:text-[#00F0FF] py-1">4. Encryption in Transit</a>
+          <a href="#sec-pipeline" class="hover:text-[#00F0FF] py-1">5. Processing Pipeline Security</a>
+          <a href="#sec-retention" class="hover:text-[#00F0FF] py-1">6. Data Retention</a>
+          <a href="#sec-access" class="hover:text-[#00F0FF] py-1">7. Access Control</a>
+          <a href="#sec-third-party" class="hover:text-[#00F0FF] py-1">8. Third-Party Infrastructure</a>
+          <a href="#sec-incident" class="hover:text-[#00F0FF] py-1">9. Security Incident Communication</a>
+          <a href="#sec-disclosure" class="hover:text-[#00F0FF] py-1">10. Responsible Disclosure</a>
+          <a href="#sec-contact" class="hover:text-[#00F0FF] py-1">11. Security Contact</a>
         </nav>
       </aside>
 
-      <!-- Main Content Column (9 Cols) -->
-      <div class="lg:col-span-9 space-y-12">
-        <!-- 1. SECURITY OVERVIEW -->
-        <section id="security-overview" class="surface-elevated p-6 sm:p-8 space-y-4">
-          <div class="flex flex-wrap items-center justify-between gap-2 border-b border-[#252832] pb-4">
-            <div>
-              <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 01 // APPLICATION SECURITY</span>
-              <h1 class="text-2xl font-semibold text-[#F5F6FA] mt-1">Security Overview &amp; Scope Disclosure</h1>
-            </div>
-            <span class="px-2.5 py-1 font-mono-tech text-[10px] bg-[#08080C] border border-[#252832] text-[#10B981]">
-              ACCURATE SCOPE STATEMENT
-            </span>
+      <!-- Right Technical Security Sections (8 Cols) -->
+      <div class="lg:col-span-8 space-y-6 text-sm text-[#9296A3] leading-relaxed">
+        <!-- 1. Security Philosophy -->
+        <section id="sec-philosophy" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 01</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">◆ SECURITY PRINCIPLE</span>
           </div>
-
-          <p class="text-xs sm:text-sm text-[#9296A3] leading-relaxed">
-            VidSynth is engineered with strict separation between public client code and privileged backend operations. In accordance with our transparency rules, we document only the security controls implemented in this codebase and do not claim unverified third-party compliance certifications (such as SOC 2, ISO 27001, or formal GDPR certification).
-          </p>
-
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 text-xs">
-            <div class="p-4 bg-[#08080C] border border-[#252832] space-y-1.5">
-              <div class="font-mono-tech text-[#00F0FF]">ROW LEVEL SECURITY (RLS)</div>
-              <p class="text-[#9296A3]">
-                All PostgreSQL tables (`profiles`, `projects`, `render_jobs`, `credit_ledger`) enforce `auth.uid() = user_id` policies in `001_initial_schema.sql` so tenants can never query or mutate another user's records.
-              </p>
-            </div>
-            <div class="p-4 bg-[#08080C] border border-[#252832] space-y-1.5">
-              <div class="font-mono-tech text-[#00F0FF]">CREDENTIAL ISOLATION</div>
-              <p class="text-[#9296A3]">
-                Browser JavaScript uses only the public Supabase `anon` key combined with user JWT sessions. Privileged `service_role` keys are strictly prohibited from frontend bundles.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <!-- 2. DATA PROCESSING INFORMATION -->
-        <section id="data-processing" class="surface-elevated p-6 sm:p-8 space-y-4">
-          <div class="border-b border-[#252832] pb-3">
-            <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 02 // MEDIA LIFECYCLE</span>
-            <h2 class="text-xl font-semibold text-[#F5F6FA] mt-1">Data Processing for Source Videos, Generated Content &amp; Accounts</h2>
-          </div>
-          <div class="space-y-3 text-xs text-[#9296A3] leading-relaxed">
-            <p>
-              <strong class="text-[#F5F6FA]">1. Uploaded Source Plates &amp; Conditioning Inputs:</strong> Source footage, depth maps, and segmentation masks configured within a Studio project are scoped strictly to the owning account ID. Customer media is processed solely to execute requested conditioning passes and is never used to train shared foundation models without explicit written authorization.
-            </p>
-            <p>
-              <strong class="text-[#F5F6FA]">2. Synthesized Video &amp; Multi-Pass Outputs:</strong> Generated MP4, WebM, ProRes, and 16-bit OpenEXR sequences are associated with the user's project record. When a project is deleted via the Studio Dashboard, its project metadata record is removed immediately.
-            </p>
-            <p>
-              <strong class="text-[#F5F6FA]">3. Account &amp; Telemetry Records:</strong> Account profiles store full name, email address, organization name, and credit ledger history required for session authentication and usage accounting.
-            </p>
-          </div>
-        </section>
-
-        <!-- 3. PRIVACY POLICY -->
-        <section id="privacy" class="surface-elevated p-6 sm:p-8 space-y-4">
-          <div class="border-b border-[#252832] pb-3">
-            <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 03 // PRIVACY</span>
-            <h2 class="text-xl font-semibold text-[#F5F6FA] mt-1">Privacy Policy</h2>
-          </div>
-          <div class="space-y-3 text-xs text-[#9296A3] leading-relaxed">
-            <p>
-              VidSynth collects only the information you explicitly provide when registering an account, configuring a project, or submitting an Early Access inquiry (`full_name`, `work_email`, `company`, `use_case`).
-            </p>
-            <p>
-              In Local Sandbox Mode, account and project records are stored exclusively inside your browser's `localStorage` and are never transmitted to third-party analytics trackers. When connected to a configured Supabase instance, data is stored in your designated PostgreSQL database under RLS protection.
-            </p>
-          </div>
-        </section>
-
-        <!-- 4. TERMS OF SERVICE -->
-        <section id="terms" class="surface-elevated p-6 sm:p-8 space-y-4">
-          <div class="border-b border-[#252832] pb-3">
-            <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 04 // LEGAL TERMS</span>
-            <h2 class="text-xl font-semibold text-[#F5F6FA] mt-1">Terms of Service</h2>
-          </div>
-          <div class="space-y-3 text-xs text-[#9296A3] leading-relaxed">
-            <p>
-              <strong class="text-[#F5F6FA]">Acceptable Use &amp; Authorized Likeness:</strong> Users must hold appropriate rights, licenses, and performer consent for any source footage or likeness submitted for character transformation or identity conditioning. Creating deceptive non-consensual likenesses is strictly prohibited.
-            </p>
-            <p>
-              <strong class="text-[#F5F6FA]">Output Ownership:</strong> Subject to compliance with these Terms, you retain all rights, title, and interest in your original source media and the conditioned output sequences generated within your workspace.
-            </p>
-          </div>
-        </section>
-
-        <!-- 5. COOKIE & STORAGE POLICY -->
-        <section id="cookies" class="surface-elevated p-6 sm:p-8 space-y-4">
-          <div class="border-b border-[#252832] pb-3">
-            <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 05 // BROWSER STORAGE</span>
-            <h2 class="text-xl font-semibold text-[#F5F6FA] mt-1">Cookie &amp; Local Storage Policy</h2>
-          </div>
-          <p class="text-xs text-[#9296A3] leading-relaxed">
-            VidSynth uses functional browser storage (`localStorage` and `sessionStorage`) strictly for maintaining authenticated session tokens (`vidsynth_active_session_v1`), persisting announcement bar dismissal states, and storing Sandbox project configurations. No third-party advertising cookies are used.
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">1. Security Philosophy</h2>
+          <p>
+            Our security philosophy is grounded in <strong>attack-surface minimization</strong>, <strong>separation of responsibilities</strong>, and <strong>verifiable transparency</strong>. Rather than exposing unbacked login portals, unverified upload endpoints, or client-side database credentials during our preview stage, we restrict our public web surface to deterministic, read-only R&amp;D demonstrations and handle pilot onboarding through verified direct communication.
           </p>
         </section>
 
-        <!-- 6. DOCUMENTATION & 7. API / SCHEMA REFERENCE -->
-        <section id="documentation" class="surface-elevated p-6 sm:p-8 space-y-5">
-          <div class="border-b border-[#252832] pb-3">
-            <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 06 &amp; 07 // TECHNICAL DOCUMENTATION</span>
-            <h2 id="api-reference" class="text-xl font-semibold text-[#F5F6FA] mt-1">Pipeline Documentation &amp; Database Schema Reference</h2>
+        <!-- 2. Application Architecture -->
+        <section id="sec-architecture" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 02</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981] rounded-xs">● IMPLEMENTED CONTROL</span>
           </div>
-
-          <div class="space-y-4 text-xs text-[#9296A3]">
-            <div class="p-4 bg-[#08080C] border border-[#252832] space-y-2">
-              <div class="font-mono-tech text-[#F5F6FA]">COMPARISON STUDIO KEYBOARD SHORTCUTS</div>
-              <ul class="space-y-1 font-mono-tech text-[11px]">
-                <li><span class="text-[#00F0FF]">ArrowLeft / ArrowRight</span> : Adjust A/B split divider by 2% increments</li>
-                <li><span class="text-[#00F0FF]">Shift + ArrowLeft / ArrowRight</span> : Adjust A/B split divider by 10% increments</li>
-                <li><span class="text-[#00F0FF]">-1F / +1F Buttons</span> : Step synchronized plates by 1 frame (1/24s = 41.67ms)</li>
-              </ul>
-            </div>
-
-            <div class="p-4 bg-[#08080C] border border-[#252832] space-y-2">
-              <div class="font-mono-tech text-[#F5F6FA]">POSTGRESQL TABLES (`supabase/migrations/001_initial_schema.sql`)</div>
-              <ul class="space-y-1 font-mono-tech text-[11px]">
-                <li><span class="text-[#00F0FF]">public.profiles</span> : User identity, organization, plan_tier, available_credits</li>
-                <li><span class="text-[#00F0FF]">public.projects</span> : Studio conditioning projects with transformation_mode &amp; model_id</li>
-                <li><span class="text-[#00F0FF]">public.render_jobs</span> : Auditable execution &amp; simulation telemetry logs</li>
-                <li><span class="text-[#00F0FF]">public.credit_ledger</span> : Immutable credit grants and pass deductions</li>
-                <li><span class="text-[#00F0FF]">public.early_access_leads</span> : Validated cohort registration leads</li>
-              </ul>
-            </div>
-          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">2. Application Architecture</h2>
+          <p>
+            The VidSynth AI architecture strictly separates the public frontend presentation layer from backend compute and database systems:
+          </p>
+          <ul class="list-disc pl-5 space-y-2">
+            <li>
+              <strong class="text-[#F5F6FA]">Implemented Public Frontend (<code class="text-[#F5F6FA]">vidsynth.app</code>):</strong> Delivered as a static HTML5, CSS, and vanilla JavaScript application running in <strong>Sandbox Preview Mode</strong>. All interactive comparison viewports, frame-steppers, and camera trajectory previews operate on pre-rendered local reference media (<code class="text-[#F5F6FA]">assets/videos/*.webm</code>) inside the user's browser.
+            </li>
+            <li>
+              <strong class="text-[#F5F6FA]">Zero Client-Side Secret Exposure:</strong> No private API keys, cloud storage credentials, or privileged database <code class="text-[#F5F6FA]">service_role</code> tokens are embedded in browser JavaScript (<code class="text-[#F5F6FA]">config/config.js</code>, <code class="text-[#F5F6FA]">js/app.js</code>, <code class="text-[#F5F6FA]">js/video-comparison.js</code>).
+            </li>
+            <li>
+              <strong class="text-[#F5F6FA]">Prepared Relational Schema (<code class="text-[#F5F6FA]">supabase/migrations/001_initial_schema.sql</code>):</strong> Repository includes a prepared PostgreSQL schema with Row Level Security (<code class="text-[#F5F6FA]">auth.uid() = user_id</code>) policies designed for future authenticated tenant deployment once backend services are provisioned.
+            </li>
+          </ul>
         </section>
 
-        <!-- 8. CONTACT & SUPPORT -->
-        <section id="contact" class="surface-elevated p-6 sm:p-8 space-y-4">
-          <div id="support" class="border-b border-[#252832] pb-3">
-            <span class="font-mono-tech text-[10px] uppercase text-[#00F0FF]">SECTION 08 // SUPPORT &amp; INQUIRIES</span>
-            <h2 class="text-xl font-semibold text-[#F5F6FA] mt-1">Contact &amp; Technical Support</h2>
+        <!-- 3. Data Transmission -->
+        <section id="sec-transmission" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 03</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981] rounded-xs">● IMPLEMENTED &amp; ◌ PLANNED</span>
           </div>
-          <p class="text-xs text-[#9296A3] leading-relaxed">
-            In compliance with our data integrity rules, we do not publish fabricated office street addresses or fictional support phone numbers. For direct founder and executive inquiries, reach out via our official configured address, or use our validated registration flow:
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">3. Data Transmission</h2>
+          <p>
+            <strong>Implemented (Public Website):</strong> Browsing <code class="text-[#F5F6FA]">https://vidsynth.app</code> transmits only standard HTTP GET requests to fetch static HTML, CSS, JavaScript, font, and reference video assets. Early access inquiries initiated via our website use standard <code class="text-[#F5F6FA]">mailto:</code> links that open your local email client; no form payloads are transmitted silently to unverified third-party webhook servers.
           </p>
-          <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-            <div>
-              <div class="font-mono-tech text-[10px] uppercase text-[#626775]">OFFICIAL FOUNDER &amp; EXECUTIVE CONTACT</div>
-              <a href="mailto:founder@vidsynth.app" class="font-mono-tech text-sm text-[#00F0FF] hover:underline mt-0.5 inline-block">founder@vidsynth.app</a>
-            </div>
-            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#101117] border border-[#252832] text-[#10B981] rounded-xs">VERIFIED CHANNEL</span>
+          <p>
+            <strong>Planned (Pilot &amp; Enterprise API Communication):</strong> For cloud rendering workflows, API communication between authorized client workspaces and backend orchestration endpoints is designed to occur exclusively over authenticated HTTPS endpoints using short-lived, scoped tokens and pre-signed object storage URLs.
+          </p>
+        </section>
+
+        <!-- 4. Encryption in Transit -->
+        <section id="sec-encryption" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 04</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981] rounded-xs">● IMPLEMENTED CONTROL</span>
           </div>
-          <div class="flex flex-wrap gap-3 pt-1">
-            <a href="index.html#early-access" class="btn-primary text-xs py-2 px-4">Submit Early Access / Support Inquiry →</a>
-            <a href="mailto:founder@vidsynth.app" class="btn-secondary text-xs py-2 px-4">Email Founder (founder@vidsynth.app)</a>
-            <a href="dashboard.html" class="btn-secondary text-xs py-2 px-4">Open Studio Help Center</a>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">4. Encryption in Transit</h2>
+          <p>
+            Public web traffic to <code class="text-[#F5F6FA]">https://vidsynth.app</code> and external stylesheet/font dependencies (<code class="text-[#F5F6FA]">https://fonts.googleapis.com</code>, <code class="text-[#F5F6FA]">https://cdn.tailwindcss.com</code>) is served over HTTPS using Transport Layer Security (TLS) managed by the underlying hosting and CDN infrastructure.
+          </p>
+          <p>
+            <em>Note on Encryption at Rest:</em> Because the public website is a static frontend without an active customer database or media upload server, we do not make claims regarding customer database encryption-at-rest configurations at this stage. Encryption at rest for pilot media buckets will be configured and documented per cloud provider capabilities upon cloud storage deployment.
+          </p>
+        </section>
+
+        <!-- 5. Processing Pipeline Security -->
+        <section id="sec-pipeline" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 05</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#7161FF]/15 border border-[#7161FF]/40 text-[#F5F6FA] rounded-xs">◌ PLANNED CONTROL</span>
+          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">5. Processing Pipeline Security</h2>
+          <p>
+            Our neural visual effects conditioning pipeline (supporting <code class="text-[#F5F6FA]">VS-CHAR-2.4</code>, <code class="text-[#F5F6FA]">VS-MATTE-3.0</code>, <code class="text-[#F5F6FA]">VS-RELIGHT-1.2</code>, <code class="text-[#F5F6FA]">VS-IDLOCK-2.1</code>, and <code class="text-[#F5F6FA]">VS-TEMPORAL-1.5</code>) is designed around controlled processing environments:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5">
+            <li><strong class="text-[#F5F6FA]">Workload Isolation (Planned):</strong> Batch GPU conditioning jobs are architected to run in isolated container environments that process a single project job specification per task invocation.</li>
+            <li><strong class="text-[#F5F6FA]">No Cross-Tenant Model Training (Principle):</strong> Customer source plates submitted during pilot or commercial evaluations are segregated from shared model training datasets unless explicitly authorized in writing.</li>
+          </ul>
+        </section>
+
+        <!-- 6. Data Retention -->
+        <section id="sec-retention" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 06</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">◆ PRINCIPLE &amp; ◌ PLANNED</span>
+          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">6. Data Retention</h2>
+          <p>
+            <strong>Temporary Media Handling Principle:</strong> Intermediate conditioning passes (such as temporary optical flow vectors, uncompressed frame buffers, and scratch trimaps generated during rendering) are intended to be treated as ephemeral scratch data and purged upon job completion.
+          </p>
+          <p>
+            <strong>Pilot &amp; Correspondence Retention:</strong> During manual Early Access Pilot evaluations, source plates and rendered deliverables are retained only for the duration agreed with the participating studio or researcher, and may be deleted upon request to <a href="mailto:founder@vidsynth.app" class="text-[#00F0FF] hover:underline">founder@vidsynth.app</a>. Automated object-storage lifecycle expiration policies are planned for production cloud deployment.
+          </p>
+        </section>
+
+        <!-- 7. Access Control -->
+        <section id="sec-access" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 07</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">◆ SECURITY PRINCIPLE</span>
+          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">7. Access Control</h2>
+          <p>
+            We follow the principle of <strong>least-privilege access</strong>:
+          </p>
+          <ul class="list-disc pl-5 space-y-1.5">
+            <li><strong class="text-[#F5F6FA]">Repository &amp; Domain Administration:</strong> Administrative access to the <code class="text-[#F5F6FA]">vidsynth.app</code> domain configuration, source repository, and official founder correspondence (<code class="text-[#F5F6FA]">founder@vidsynth.app</code>) is restricted to project leadership.</li>
+            <li><strong class="text-[#F5F6FA]">Credential Management:</strong> Environment configuration templates (<code class="text-[#F5F6FA]">config/config.example.js</code>) explicitly prohibit committing private credentials or service keys to source control.</li>
+            <li><strong class="text-[#F5F6FA]">Tenant Isolation (Planned):</strong> When multi-tenant cloud workspaces are enabled, database queries are scoped via PostgreSQL Row Level Security (<code class="text-[#F5F6FA]">RLS</code>) policies tied to verified user session identifiers.</li>
+          </ul>
+        </section>
+
+        <!-- 8. Third-Party Infrastructure -->
+        <section id="sec-third-party" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 08</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981] rounded-xs">● IMPLEMENTED</span>
+          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">8. Third-Party Infrastructure</h2>
+          <p>
+            VidSynth AI relies on established third-party infrastructure providers for static web hosting, DNS routing, typography delivery (Google Fonts), and planned cloud GPU compute. While we select reputable infrastructure providers, physical data-center security and network backbone resilience are managed by those respective providers under their published security programs.
+          </p>
+        </section>
+
+        <!-- 9. Security Incident Communication -->
+        <section id="sec-incident" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 09</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#00F0FF]/10 border border-[#00F0FF]/40 text-[#00F0FF] rounded-xs">◆ SECURITY PRINCIPLE</span>
+          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">9. Security Incident Communication</h2>
+          <p>
+            In the event of a confirmed security incident affecting confidential pilot media assets or partner correspondence held by VidSynth AI, we will investigate the scope of the incident, take remediation steps to contain the issue, and notify affected pilot participants or partners via email without unreasonable delay and in accordance with applicable legal obligations.
+          </p>
+        </section>
+
+        <!-- 10. Responsible Disclosure -->
+        <section id="sec-disclosure" class="surface-elevated p-6 sm:p-7 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 10</span>
+            <span class="font-mono-tech text-[10px] px-2 py-0.5 bg-[#10B981]/10 border border-[#10B981]/40 text-[#10B981] rounded-xs">● ACTIVE POLICY</span>
+          </div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">10. Responsible Disclosure</h2>
+          <p>
+            We welcome reports from security researchers and institutional reviewers who identify potential vulnerabilities on <code class="text-[#F5F6FA]">https://vidsynth.app</code>. If you discover a security issue, please report it privately to <a href="mailto:founder@vidsynth.app?subject=Security%20Vulnerability%20Report%20-%20VidSynth%20AI" class="text-[#00F0FF] hover:underline">founder@vidsynth.app</a> with:
+          </p>
+          <ul class="list-disc pl-5 space-y-1">
+            <li>A clear description of the issue and affected URL or component;</li>
+            <li>Steps required to reproduce the behavior; and</li>
+            <li>Reasonable time for us to investigate and remediate the issue before public disclosure.</li>
+          </ul>
+          <p>
+            Please do not perform denial-of-service testing, automated high-volume scanning against third-party hosting infrastructure, or social engineering when evaluating our site.
+          </p>
+        </section>
+
+        <!-- 11. Security Contact -->
+        <section id="sec-contact" class="surface-elevated p-6 sm:p-7 space-y-3 border-l-2 border-l-[#00F0FF]">
+          <div class="font-mono-tech text-[11px] text-[#00F0FF]">SECTION 11</div>
+          <h2 class="text-xl font-semibold text-[#F5F6FA]">11. Security Contact</h2>
+          <p>
+            For security architecture questions, partner due diligence questionnaires, or vulnerability reports, contact:
+          </p>
+          <div class="p-4 bg-[#08080C] border border-[#252832] rounded-xs font-mono-tech text-xs space-y-1.5 text-[#F5F6FA]">
+            <div><strong>Project / Platform:</strong> VidSynth AI (VidSynth Studio)</div>
+            <div><strong>Founder:</strong> Najla Afaf Ullaya</div>
+            <div><strong>Security &amp; Official Contact:</strong> <a href="mailto:founder@vidsynth.app?subject=VidSynth%20Security%20Inquiry" class="text-[#00F0FF] hover:underline">founder@vidsynth.app</a></div>
           </div>
         </section>
       </div>
     </div>
   </main>
 
-  <footer class="bg-[#040407] border-t border-[#252832] py-8 px-6 text-center text-xs text-[#626775]">
-    © <span data-current-year>2026</span> VidSynth Studio • Founder: <a href="mailto:founder@vidsynth.app" class="text-[#00F0FF] hover:underline">founder@vidsynth.app</a> • <a href="index.html" class="hover:text-[#F5F6FA]">Home</a> • <a href="pricing.html" class="hover:text-[#F5F6FA]">Pricing</a> • <a href="dashboard.html" class="hover:text-[#F5F6FA]">Studio</a>
+  <!-- Consistent Four-Column Institutional Footer -->
+  <footer class="bg-[#040407] border-t border-[#252832] pt-14 pb-10 text-xs text-[#9296A3]">
+    <div class="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 pb-12 border-b border-[#252832]">
+        <!-- COLUMN 1 — BRAND & VISION -->
+        <div class="space-y-3">
+          <a href="index.html" class="flex items-center gap-2.5">
+            <img src="assets/icons/favicon.svg" alt="VidSynth AI logo" class="w-6 h-6" />
+            <span class="font-semibold text-sm text-[#F5F6FA] tracking-tight">VidSynth AI</span>
+          </a>
+          <div class="font-mono-tech text-[11px] text-[#00F0FF]">
+            VidSynth Studio — Neural VFX Production Suite.
+          </div>
+          <p class="text-xs text-[#9296A3] leading-relaxed">
+            A professional neural visual effects platform designed for advanced video synthesis and creative production workflows.
+          </p>
+        </div>
+
+        <!-- COLUMN 2 — NAVIGATION -->
+        <div class="space-y-2.5">
+          <div class="font-mono-tech text-[11px] uppercase tracking-wider text-[#F5F6FA]">Navigation</div>
+          <ul class="space-y-2">
+            <li><a href="index.html#comparison-studio" class="hover:text-[#00F0FF] transition-colors">Comparison Studio</a></li>
+            <li><a href="index.html#bento-showcase" class="hover:text-[#00F0FF] transition-colors">Bento Showcase</a></li>
+            <li><a href="index.html#motion-rig" class="hover:text-[#00F0FF] transition-colors">Motion Rig</a></li>
+            <li><a href="pricing.html" class="hover:text-[#00F0FF] transition-colors">Pricing &amp; Compute</a></li>
+          </ul>
+        </div>
+
+        <!-- COLUMN 3 — LEGAL -->
+        <div class="space-y-2.5">
+          <div class="font-mono-tech text-[11px] uppercase tracking-wider text-[#F5F6FA]">Legal</div>
+          <ul class="space-y-2">
+            <li><a href="privacy.html" class="hover:text-[#00F0FF] transition-colors">Privacy Policy</a></li>
+            <li><a href="terms.html" class="hover:text-[#00F0FF] transition-colors">Terms of Service</a></li>
+            <li><a href="security.html" class="text-[#00F0FF] transition-colors">Security</a></li>
+          </ul>
+        </div>
+
+        <!-- COLUMN 4 — FOUNDER & CONTACT -->
+        <div class="space-y-3">
+          <div class="font-mono-tech text-[11px] uppercase tracking-wider text-[#F5F6FA]">Founder &amp; Contact</div>
+          <div class="text-xs text-[#F5F6FA] font-medium">Founded by Najla Afaf Ullaya</div>
+          <div class="space-y-1">
+            <div class="text-[11px] text-[#626775] font-mono-tech uppercase">Official Contact:</div>
+            <a href="mailto:founder@vidsynth.app" class="font-mono-tech text-xs text-[#00F0FF] hover:underline block">
+              founder@vidsynth.app
+            </a>
+          </div>
+          <div class="pt-1">
+            <a
+              href="mailto:founder@vidsynth.app"
+              class="btn-secondary text-xs py-1.5 px-3 font-mono-tech inline-flex items-center gap-1.5"
+            >
+              <span>Contact Founder</span>
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-[#626775]">
+        <div>
+          © 2026 VidSynth AI. All rights reserved. Built for professional neural visual effects.
+        </div>
+        <div class="font-mono-tech">
+          SANDBOX PREVIEW MODE // VERIFIED TRANSPARENCY ARCHITECTURE
+        </div>
+      </div>
+    </div>
   </footer>
 
   <script src="config/config.js"></script>

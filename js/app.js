@@ -1,33 +1,36 @@
 /**
- * VIDSYNTH — CORE APPLICATION CONTROLLER (js/app.js)
+ * VIDSYNTH AI — CORE APPLICATION CONTROLLER (js/app.js)
  * ============================================================================
  * Handles:
- * - Sticky Announcement Bar & Changelog Modal
- * - Responsive Mobile Navigation & Auth Header Synchronization
- * - Runtime Environment Status Indicator (Supabase Cloud vs. Local Sandbox Demo)
- * - Early Access & Enterprise Lead Registration (Client + DB/Demo Validation + Duplicate Check)
- * - Bento Showcase Video Inspection Modal & Hover Playback
+ * - Sticky Announcement Bar & Architecture/Changelog Modal
+ * - Responsive Mobile Navigation Drawer & Accessible Keyboard Controls
+ * - Smooth-Scroll Anchor Navigation (including Launch Studio -> #comparison-studio)
+ * - Bento Showcase Video Hover Preview & Frame Inspection Modal
+ * - Direct Founder Mailto Composer (no dummy/fake database submissions)
  */
 
 (function initVidSynthApp() {
-  const CONFIG = window.VIDSYNTH_CONFIG || {
-    APP_NAME: "VidSynth Studio",
-    IS_SUPABASE_CONFIGURED: false,
-    RUNTIME_MODE: "LOCAL_SANDBOX_DEMO"
-  };
-
-  const LEADS_STORAGE_KEY = "vidsynth_early_access_leads_v1";
   const ANNOUNCEMENT_DISMISSED_KEY = "vidsynth_announcement_dismissed_v1";
 
+  function escapeHtml(str) {
+    return String(str || "")
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+  }
+
   // --------------------------------------------------------------------------
-  // 1. Toast Notification System
+  // 1. Toast Notification Helper
   // --------------------------------------------------------------------------
   function showToast(message, type = "info") {
     let container = document.getElementById("vs-toast-container");
     if (!container) {
       container = document.createElement("div");
       container.id = "vs-toast-container";
-      container.className = "fixed bottom-5 right-5 z-[200] flex flex-col gap-2 max-w-md w-full px-4 pointer-events-none";
+      container.className =
+        "fixed bottom-5 right-5 z-[200] flex flex-col gap-2 max-w-md w-full px-4 pointer-events-none";
       container.setAttribute("aria-live", "polite");
       document.body.appendChild(container);
     }
@@ -44,9 +47,9 @@
 
     const badgeText =
       type === "success"
-        ? "CONFIRMED"
+        ? "READY"
         : type === "error"
-        ? "VALIDATION ERROR"
+        ? "VALIDATION NOTICE"
         : type === "warning"
         ? "NOTICE"
         : "SYSTEM";
@@ -65,22 +68,13 @@
 
     setTimeout(() => {
       if (toast.parentNode) toast.remove();
-    }, 5200);
-  }
-
-  function escapeHtml(str) {
-    return String(str || "")
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;")
-      .replace(/'/g, "&#039;");
+    }, 5000);
   }
 
   window.VidSynthToast = { show: showToast };
 
   // --------------------------------------------------------------------------
-  // 2. Announcement Bar & System Changelog Modal
+  // 2. Announcement Bar & Architecture Changelog Modal
   // --------------------------------------------------------------------------
   function initAnnouncementBar() {
     const bar = document.getElementById("announcement-bar");
@@ -89,14 +83,18 @@
     const changelogModal = document.getElementById("changelog-modal");
     const closeChangelogBtns = document.querySelectorAll("[data-close-changelog]");
 
-    if (bar && sessionStorage.getItem(ANNOUNCEMENT_DISMISSED_KEY) === "1") {
-      bar.classList.add("hidden");
-    }
+    try {
+      if (bar && sessionStorage.getItem(ANNOUNCEMENT_DISMISSED_KEY) === "1") {
+        bar.classList.add("hidden");
+      }
+    } catch (_) {}
 
     if (dismissBtn && bar) {
       dismissBtn.addEventListener("click", () => {
         bar.classList.add("hidden");
-        sessionStorage.setItem(ANNOUNCEMENT_DISMISSED_KEY, "1");
+        try {
+          sessionStorage.setItem(ANNOUNCEMENT_DISMISSED_KEY, "1");
+        } catch (_) {}
       });
     }
 
@@ -121,7 +119,7 @@
   }
 
   // --------------------------------------------------------------------------
-  // 3. Navigation, Mobile Menu & Runtime Status Indicator
+  // 3. Responsive Navigation & Smooth Scroll Anchor Handling
   // --------------------------------------------------------------------------
   function initNavigation() {
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
@@ -150,40 +148,33 @@
       mobileMenuCloseBtn.addEventListener("click", () => toggleMobileMenu(false));
     }
     mobileLinks.forEach((link) => {
-      link.addEventListener("click", () => toggleMobileMenu(false));
-    });
-
-    // Runtime Environment Status Indicator in Navbar
-    const statusDots = document.querySelectorAll("[data-runtime-status-dot]");
-    const statusLabels = document.querySelectorAll("[data-runtime-status-label]");
-    statusDots.forEach((dot) => {
-      dot.className = CONFIG.IS_SUPABASE_CONFIGURED
-        ? "w-2 h-2 rounded-full bg-[#10B981]"
-        : "w-2 h-2 rounded-full bg-[#00F0FF]";
-    });
-    statusLabels.forEach((lbl) => {
-      lbl.textContent = CONFIG.IS_SUPABASE_CONFIGURED
-        ? "SUPABASE CONNECTED"
-        : "SANDBOX PREVIEW MODE";
-    });
-
-    // Reflect active session in header if user is logged in
-    try {
-      const rawSession = localStorage.getItem("vidsynth_active_session_v1");
-      if (rawSession) {
-        const session = JSON.parse(rawSession);
-        if (session && session.user && session.user.email) {
-          const signInLinks = document.querySelectorAll("[data-nav-signin]");
-          signInLinks.forEach((el) => {
-            el.textContent = session.user.full_name || session.user.email.split("@")[0];
-            el.href = "dashboard.html";
-            el.title = `Signed in as ${session.user.email}`;
-          });
-        }
+      if (link.id !== "mobile-menu-close-btn") {
+        link.addEventListener("click", () => toggleMobileMenu(false));
       }
-    } catch (_) {
-      // Ignore storage parse error
-    }
+    });
+
+    // Smooth-scroll handler for same-page hash anchors (e.g., #comparison-studio)
+    document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener("click", (e) => {
+        const hash = anchor.getAttribute("href");
+        if (!hash || hash === "#") return;
+        const targetEl = document.querySelector(hash);
+        if (targetEl) {
+          e.preventDefault();
+          toggleMobileMenu(false);
+          targetEl.scrollIntoView({ behavior: "smooth", block: "start" });
+          history.replaceState(null, "", hash);
+        }
+      });
+    });
+
+    // Preserve SANDBOX PREVIEW MODE badge state
+    document.querySelectorAll("[data-runtime-status-dot]").forEach((dot) => {
+      dot.className = "w-2 h-2 rounded-full bg-[#00F0FF]";
+    });
+    document.querySelectorAll("[data-runtime-status-label]").forEach((lbl) => {
+      lbl.textContent = "SANDBOX PREVIEW MODE";
+    });
   }
 
   // --------------------------------------------------------------------------
@@ -252,65 +243,16 @@
   }
 
   // --------------------------------------------------------------------------
-  // 5. Early Access & Enterprise Lead Registration Flow
+  // 5. Direct Founder Mailto Inquiry Composer (Transparent Email Dispatch)
   // --------------------------------------------------------------------------
   function validateEmail(email) {
     return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(String(email).trim());
   }
 
-  function getStoredLeads() {
-    try {
-      const raw = localStorage.getItem(LEADS_STORAGE_KEY);
-      return raw ? JSON.parse(raw) : [];
-    } catch (_) {
-      return [];
-    }
-  }
-
-  function saveStoredLeads(leads) {
-    localStorage.setItem(LEADS_STORAGE_KEY, JSON.stringify(leads));
-  }
-
-  function initEarlyAccessForms() {
+  function initEarlyAccessMailtoComposer() {
     const forms = document.querySelectorAll("[data-early-access-form]");
-    const openModalBtns = document.querySelectorAll("[data-open-early-access-modal]");
-    const earlyAccessModal = document.getElementById("early-access-modal");
-    const closeModalBtns = document.querySelectorAll("[data-close-early-access-modal]");
-
-    openModalBtns.forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        const plan = btn.getAttribute("data-plan-interest") || "";
-        if (earlyAccessModal) {
-          const selectEl = earlyAccessModal.querySelector("select[name='use_case']");
-          if (selectEl && plan) {
-            for (const opt of selectEl.options) {
-              if (opt.value.toLowerCase().includes(plan.toLowerCase())) {
-                selectEl.value = opt.value;
-                break;
-              }
-            }
-          }
-          earlyAccessModal.classList.remove("hidden");
-          document.body.style.overflow = "hidden";
-        } else {
-          const inlineSection = document.getElementById("early-access");
-          if (inlineSection) inlineSection.scrollIntoView({ behavior: "smooth" });
-        }
-      });
-    });
-
-    closeModalBtns.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        if (earlyAccessModal) {
-          earlyAccessModal.classList.add("hidden");
-          document.body.style.overflow = "";
-        }
-      });
-    });
-
     forms.forEach((form) => {
-      form.addEventListener("submit", async (e) => {
+      form.addEventListener("submit", (e) => {
         e.preventDefault();
 
         const nameInput = form.querySelector("[name='full_name']");
@@ -318,40 +260,38 @@
         const companyInput = form.querySelector("[name='company']");
         const useCaseInput = form.querySelector("[name='use_case']");
         const statusBox = form.querySelector("[data-form-status]");
-        const submitBtn = form.querySelector("button[type='submit']");
 
         const fullName = nameInput ? nameInput.value.trim() : "";
-        const workEmail = emailInput ? emailInput.value.trim().toLowerCase() : "";
+        const workEmail = emailInput ? emailInput.value.trim() : "";
         const company = companyInput ? companyInput.value.trim() : "";
         const useCase = useCaseInput ? useCaseInput.value.trim() : "";
 
-        // Reset error visuals
         [nameInput, emailInput, companyInput, useCaseInput].forEach((el) => {
           if (el) el.classList.remove("input-error");
         });
 
-        // Client-side validation
         const errors = [];
         if (fullName.length < 2) {
-          errors.push("Please enter your full name (at least 2 characters).");
+          errors.push("Please enter your full name.");
           if (nameInput) nameInput.classList.add("input-error");
         }
         if (!validateEmail(workEmail)) {
-          errors.push("Please provide a valid work or organization email address.");
+          errors.push("Please provide a valid email address.");
           if (emailInput) emailInput.classList.add("input-error");
         }
         if (company.length < 2) {
-          errors.push("Please specify your studio, company, or organization name.");
+          errors.push("Please specify your studio, company, or organization.");
           if (companyInput) companyInput.classList.add("input-error");
         }
         if (!useCase) {
-          errors.push("Please select your primary intended production use case.");
+          errors.push("Please select your primary intended use case.");
           if (useCaseInput) useCaseInput.classList.add("input-error");
         }
 
         if (errors.length > 0) {
           if (statusBox) {
-            statusBox.className = "mt-3 p-3 rounded-sm border border-[#EF4444] bg-[#EF4444]/10 text-xs text-[#F5F6FA]";
+            statusBox.className =
+              "mt-3 p-3 rounded-sm border border-[#EF4444] bg-[#EF4444]/10 text-xs text-[#F5F6FA]";
             statusBox.textContent = errors[0];
             statusBox.classList.remove("hidden");
           }
@@ -359,106 +299,44 @@
           return;
         }
 
-        // Loading state
-        const origBtnHtml = submitBtn ? submitBtn.innerHTML : "Submit";
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = `<span class="font-mono-tech text-xs">VALIDATING & RECORDING...</span>`;
+        const subject = encodeURIComponent(`VidSynth Studio Early Access Request — ${company}`);
+        const bodyLines = [
+          "Hello Najla Afaf Ullaya (VidSynth AI Founder),",
+          "",
+          "We would like to request Early Access Pilot / Technical Evaluation information for VidSynth Studio.",
+          "",
+          `Full Name: ${fullName}`,
+          `Work Email: ${workEmail}`,
+          `Organization / Studio: ${company}`,
+          `Primary Use Case: ${useCase}`,
+          "",
+          "Thank you."
+        ];
+        const body = encodeURIComponent(bodyLines.join("\r\n"));
+        const mailtoUrl = `mailto:founder@vidsynth.app?subject=${subject}&body=${body}`;
+
+        if (statusBox) {
+          statusBox.className =
+            "mt-3 p-3.5 rounded-sm border border-[#00F0FF] bg-[#00F0FF]/10 text-xs text-[#F5F6FA]";
+          statusBox.innerHTML = `
+            <div class="font-mono-tech text-[11px] text-[#00F0FF] uppercase mb-1">✓ OPENING EMAIL CLIENT TO FOUNDER@VIDSYNTH.APP</div>
+            <p class="text-[#9296A3]">Your inquiry for <strong>${escapeHtml(company)}</strong> has been formatted for your default email client. If it did not open automatically, <a href="${mailtoUrl}" class="text-[#00F0FF] underline">click here to send via mailto:founder@vidsynth.app</a>.</p>
+          `;
+          statusBox.classList.remove("hidden");
         }
 
-        await new Promise((r) => setTimeout(r, 380));
-
-        try {
-          if (CONFIG.IS_SUPABASE_CONFIGURED && window.supabaseClient) {
-            const { error } = await window.supabaseClient.from("early_access_leads").insert([
-              {
-                full_name: fullName,
-                work_email: workEmail,
-                company,
-                use_case: useCase
-              }
-            ]);
-
-            if (error) {
-              if (error.code === "23505" || String(error.message).toLowerCase().includes("duplicate")) {
-                throw new Error("DUPLICATE_EMAIL");
-              }
-              throw error;
-            }
-
-            if (statusBox) {
-              statusBox.className = "mt-3 p-3.5 rounded-sm border border-[#10B981] bg-[#10B981]/10 text-xs text-[#F5F6FA]";
-              statusBox.innerHTML = `
-                <div class="font-mono-tech text-[11px] text-[#10B981] uppercase mb-1">✓ REGISTERED IN SUPABASE DATABASE</div>
-                <p class="text-[#9296A3]">Request logged for <strong>${escapeHtml(workEmail)}</strong> (${escapeHtml(company)}).</p>
-              `;
-              statusBox.classList.remove("hidden");
-            }
-            showToast(`Early access request recorded in Supabase for ${workEmail}.`, "success");
-            form.reset();
-          } else {
-            // Local Sandbox Demonstration Registry with deterministic duplicate check
-            const existing = getStoredLeads();
-            const isDuplicate = existing.some((item) => item.work_email === workEmail);
-            if (isDuplicate) {
-              throw new Error("DUPLICATE_EMAIL");
-            }
-
-            existing.push({
-              id: "lead_" + Date.now(),
-              full_name: fullName,
-              work_email: workEmail,
-              company,
-              use_case: useCase,
-              mode: "LOCAL_SANDBOX_DEMO",
-              created_at: new Date().toISOString()
-            });
-            saveStoredLeads(existing);
-
-            if (statusBox) {
-              statusBox.className = "mt-3 p-3.5 rounded-sm border border-[#00F0FF] bg-[#00F0FF]/10 text-xs text-[#F5F6FA]";
-              statusBox.innerHTML = `
-                <div class="font-mono-tech text-[11px] text-[#00F0FF] uppercase mb-1">✓ RECORDED IN LOCAL DEMONSTRATION REGISTRY</div>
-                <p class="text-[#9296A3]">Validated entry for <strong>${escapeHtml(workEmail)}</strong> (${escapeHtml(company)}). <em>Note: Running in Local Sandbox Mode; connect Supabase in config/config.js to persist leads to cloud PostgreSQL.</em></p>
-              `;
-              statusBox.classList.remove("hidden");
-            }
-            showToast(`Demonstration lead recorded locally for ${workEmail}.`, "success");
-            form.reset();
-          }
-        } catch (err) {
-          const isDup = err && err.message === "DUPLICATE_EMAIL";
-          const msg = isDup
-            ? `The email address "${workEmail}" is already registered in the early access registry.`
-            : `Submission error: ${err.message || "Unable to store request."}`;
-          if (statusBox) {
-            statusBox.className = "mt-3 p-3.5 rounded-sm border border-[#F59E0B] bg-[#F59E0B]/10 text-xs text-[#F5F6FA]";
-            statusBox.textContent = msg;
-            statusBox.classList.remove("hidden");
-          }
-          if (emailInput && isDup) emailInput.classList.add("input-error");
-          showToast(msg, isDup ? "warning" : "error");
-        } finally {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = origBtnHtml;
-          }
-        }
+        window.location.href = mailtoUrl;
       });
     });
   }
 
   // --------------------------------------------------------------------------
-  // 6. Global Keyboard Escape Handler & Dynamic Copyright Year
+  // 6. Global Keyboard Escape Handler
   // --------------------------------------------------------------------------
   function initGlobals() {
-    document.querySelectorAll("[data-current-year]").forEach((el) => {
-      el.textContent = new Date().getFullYear();
-    });
-
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        ["changelog-modal", "showcase-inspect-modal", "early-access-modal", "mobile-nav-drawer"].forEach((id) => {
+        ["changelog-modal", "showcase-inspect-modal", "mobile-nav-drawer"].forEach((id) => {
           const el = document.getElementById(id);
           if (el && !el.classList.contains("hidden")) {
             el.classList.add("hidden");
@@ -475,7 +353,7 @@
     initAnnouncementBar();
     initNavigation();
     initShowcaseInteractions();
-    initEarlyAccessForms();
+    initEarlyAccessMailtoComposer();
     initGlobals();
   });
 })();
