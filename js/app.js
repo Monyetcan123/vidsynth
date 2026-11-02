@@ -6,11 +6,13 @@
  * - Responsive Mobile Navigation Drawer & Accessible Keyboard Controls
  * - Smooth-Scroll Anchor Navigation (including Launch Studio -> #comparison-studio)
  * - Bento Showcase Video Hover Preview & Frame Inspection Modal
- * - Direct Founder Mailto Composer (no dummy/fake database submissions)
+ * - Early Access Request Modal Popup (Form + Instant Confirmation + Copy Email Tooltip)
+ * - Section-level Early Access Inquiry Form
  */
 
 (function initVidSynthApp() {
   const ANNOUNCEMENT_DISMISSED_KEY = "vidsynth_announcement_dismissed_v1";
+  const FOUNDER_EMAIL = "founder@vidsynth.app";
 
   function escapeHtml(str) {
     return String(str || "")
@@ -19,6 +21,35 @@
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;")
       .replace(/'/g, "&#039;");
+  }
+
+  function validateEmail(email) {
+    return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(String(email || "").trim());
+  }
+
+  function copyTextToClipboard(text) {
+    if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+      return navigator.clipboard.writeText(text).catch(() => fallbackCopyText(text));
+    }
+    return Promise.resolve(fallbackCopyText(text));
+  }
+
+  function fallbackCopyText(text) {
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.setAttribute("readonly", "");
+      ta.style.position = "fixed";
+      ta.style.top = "-9999px";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -47,7 +78,7 @@
 
     const badgeText =
       type === "success"
-        ? "READY"
+        ? "CONFIRMED"
         : type === "error"
         ? "VALIDATION NOTICE"
         : type === "warning"
@@ -116,11 +147,30 @@
         }
       });
     });
+
+    if (changelogModal) {
+      changelogModal.addEventListener("click", (e) => {
+        if (e.target === changelogModal) {
+          changelogModal.classList.add("hidden");
+          document.body.style.overflow = "";
+        }
+      });
+    }
   }
 
   // --------------------------------------------------------------------------
   // 3. Responsive Navigation & Smooth Scroll Anchor Handling
   // --------------------------------------------------------------------------
+  function closeMobileDrawer() {
+    const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+    const mobileDrawer = document.getElementById("mobile-nav-drawer");
+    if (mobileDrawer && !mobileDrawer.classList.contains("hidden")) {
+      mobileDrawer.classList.add("hidden");
+      if (mobileMenuBtn) mobileMenuBtn.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+    }
+  }
+
   function initNavigation() {
     const mobileMenuBtn = document.getElementById("mobile-menu-btn");
     const mobileMenuCloseBtn = document.getElementById("mobile-menu-close-btn");
@@ -156,6 +206,7 @@
     // Smooth-scroll handler for same-page hash anchors (e.g., #comparison-studio)
     document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
       anchor.addEventListener("click", (e) => {
+        if (anchor.hasAttribute("data-open-early-access")) return;
         const hash = anchor.getAttribute("href");
         if (!hash || hash === "#") return;
         const targetEl = document.querySelector(hash);
@@ -240,16 +291,245 @@
     }
 
     closeBtns.forEach((btn) => btn.addEventListener("click", closeShowcaseModal));
+
+    if (modal) {
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) closeShowcaseModal();
+      });
+    }
   }
 
   // --------------------------------------------------------------------------
-  // 5. Direct Founder Mailto Inquiry Composer (Transparent Email Dispatch)
+  // 5. Early Access Request Modal Popup (Header, Hero & Mobile Nav CTAs)
   // --------------------------------------------------------------------------
-  function validateEmail(email) {
-    return /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/.test(String(email).trim());
+  function ensureEarlyAccessModal() {
+    let modal = document.getElementById("early-access-modal");
+    if (modal) return modal;
+
+    const wrapper = document.createElement("div");
+    wrapper.innerHTML = `
+      <div
+        id="early-access-modal"
+        class="hidden ea-modal-backdrop"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="early-access-modal-title"
+        aria-describedby="early-access-modal-subtitle"
+      >
+        <div class="ea-modal-panel" data-early-access-panel>
+          <button
+            type="button"
+            id="close-early-access-modal"
+            data-close-early-access
+            class="ea-modal-close"
+            aria-label="Close Early Access modal"
+          >
+            ✕
+          </button>
+          <div class="pr-8 space-y-1.5 pb-4 border-b border-[#252832]">
+            <div class="inline-flex items-center gap-2 font-mono-tech text-[10px] uppercase tracking-wider text-[#00F0FF]">
+              <span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF]"></span>
+              <span>VIDSYNTH STUDIO // EARLY ACCESS</span>
+            </div>
+            <h2 id="early-access-modal-title" class="text-xl font-semibold tracking-tight text-[#F5F6FA]">
+              Request Studio Early Access
+            </h2>
+            <p id="early-access-modal-subtitle" class="font-mono-tech text-xs text-[#9296A3]">
+              Private Beta Cohort — Visual Effects &amp; Neural Pipeline Ingest
+            </p>
+          </div>
+          <div class="mt-4 ea-option-box">
+            <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#00F0FF] mb-2">
+              OPTION 01 // APPLICATION REGISTRATION
+            </div>
+            <form id="early-access-modal-form" novalidate class="space-y-3">
+              <div>
+                <label for="ea-modal-email-input" class="block text-xs font-medium text-[#F5F6FA] mb-1.5">
+                  Your Work Email
+                </label>
+                <input
+                  id="ea-modal-email-input"
+                  name="work_email"
+                  type="email"
+                  required
+                  autocomplete="email"
+                  placeholder="Your Work Email (e.g., lead@vfx-studio.com)"
+                  class="input-field"
+                />
+              </div>
+              <button
+                type="submit"
+                id="ea-modal-submit-btn"
+                class="btn-primary w-full justify-center font-mono-tech text-xs py-2.5"
+              >
+                Submit Request
+              </button>
+            </form>
+            <div
+              id="ea-modal-feedback"
+              class="hidden ea-success-banner"
+              role="status"
+              aria-live="polite"
+            >
+              Thank you! Our engineering team will review your application.
+            </div>
+          </div>
+          <div class="ea-divider">OR DIRECT CONTACT</div>
+          <div class="ea-option-box space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="font-mono-tech text-[10px] uppercase tracking-wider text-[#9296A3]">
+                OPTION 02 // DIRECT FOUNDER DESK
+              </span>
+              <span class="font-mono-tech text-[10px] text-[#626775]">Najla Afaf Ullaya</span>
+            </div>
+            <div class="ea-direct-email-row">
+              <a
+                href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+                id="ea-direct-email-text"
+                class="font-mono-tech text-xs sm:text-sm text-[#00F0FF] hover:underline truncate"
+              >
+                founder@vidsynth.app
+              </a>
+              <div class="ea-copy-wrapper">
+                <span id="ea-copy-tooltip" class="ea-copy-tooltip" role="status" aria-live="polite">
+                  Copied!
+                </span>
+                <button
+                  type="button"
+                  id="ea-copy-email-btn"
+                  data-copy-email="founder@vidsynth.app"
+                  class="ea-copy-btn"
+                  aria-label="Copy founder@vidsynth.app to clipboard"
+                >
+                  <span>Copy Email</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    modal = wrapper.firstElementChild;
+    document.body.appendChild(modal);
+    return modal;
   }
 
-  function initEarlyAccessMailtoComposer() {
+  function initEarlyAccessModal() {
+    const modal = ensureEarlyAccessModal();
+    if (!modal) return;
+
+    const closeBtns = modal.querySelectorAll("[data-close-early-access]");
+    const form = modal.querySelector("#early-access-modal-form");
+    const emailInput = modal.querySelector("#ea-modal-email-input");
+    const feedbackBox = modal.querySelector("#ea-modal-feedback");
+    const copyBtn = modal.querySelector("#ea-copy-email-btn");
+    const copyTooltip = modal.querySelector("#ea-copy-tooltip");
+    let tooltipTimer = null;
+
+    function openEarlyAccessModal(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      closeMobileDrawer();
+      modal.classList.remove("hidden");
+      document.body.style.overflow = "hidden";
+      if (emailInput) {
+        emailInput.classList.remove("input-error");
+        setTimeout(() => {
+          try {
+            emailInput.focus();
+          } catch (_) {}
+        }, 50);
+      }
+    }
+
+    function closeEarlyAccessModal() {
+      modal.classList.add("hidden");
+      document.body.style.overflow = "";
+    }
+
+    // Attach to all explicit [data-open-early-access] elements AND any button/link labeled "REQUEST EARLY ACCESS"
+    const triggers = new Set(document.querySelectorAll("[data-open-early-access]"));
+    document.querySelectorAll("a, button").forEach((el) => {
+      if (modal.contains(el)) return;
+      const text = (el.textContent || "").trim().toUpperCase();
+      if (text.includes("REQUEST EARLY ACCESS")) {
+        el.setAttribute("data-open-early-access", "");
+        triggers.add(el);
+      }
+    });
+
+    triggers.forEach((btn) => {
+      btn.addEventListener("click", openEarlyAccessModal);
+    });
+
+    // Close on 'X' button click
+    closeBtns.forEach((btn) => {
+      btn.addEventListener("click", closeEarlyAccessModal);
+    });
+
+    // Close when clicking outside the modal panel (on the backdrop)
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) {
+        closeEarlyAccessModal();
+      }
+    });
+
+    // Option 1: Simple Work Email Form Submission
+    if (form && emailInput && feedbackBox) {
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const emailVal = emailInput.value.trim();
+        emailInput.classList.remove("input-error");
+
+        if (!validateEmail(emailVal)) {
+          emailInput.classList.add("input-error");
+          feedbackBox.className =
+            "mt-3 p-2.5 rounded-sm border border-[#EF4444] bg-[#EF4444]/10 text-xs text-[#EF4444]";
+          feedbackBox.textContent = "Please enter a valid work email address.";
+          feedbackBox.classList.remove("hidden");
+          emailInput.focus();
+          return;
+        }
+
+        // Instant success confirmation
+        const successMsg = "Thank you! Our engineering team will review your application.";
+        feedbackBox.className = "ea-success-banner";
+        feedbackBox.textContent = successMsg;
+        feedbackBox.classList.remove("hidden");
+        showToast(successMsg, "success");
+        form.reset();
+      });
+    }
+
+    // Option 2: Direct Email Copy Button + "Copied!" Tooltip
+    if (copyBtn) {
+      copyBtn.addEventListener("click", () => {
+        const emailToCopy = copyBtn.getAttribute("data-copy-email") || FOUNDER_EMAIL;
+        copyTextToClipboard(emailToCopy).then(() => {
+          if (copyTooltip) {
+            copyTooltip.textContent = "Copied!";
+            copyTooltip.classList.add("show");
+            if (tooltipTimer) clearTimeout(tooltipTimer);
+            tooltipTimer = setTimeout(() => {
+              copyTooltip.classList.remove("show");
+            }, 2200);
+          }
+        });
+      });
+    }
+
+    window.VidSynthEarlyAccessModal = {
+      open: openEarlyAccessModal,
+      close: closeEarlyAccessModal
+    };
+  }
+
+  // --------------------------------------------------------------------------
+  // 6. Section-Level Early Access Form (Bottom of index.html)
+  // --------------------------------------------------------------------------
+  function initEarlyAccessSectionForm() {
     const forms = document.querySelectorAll("[data-early-access-form]");
     forms.forEach((form) => {
       form.addEventListener("submit", (e) => {
@@ -276,7 +556,7 @@
           if (nameInput) nameInput.classList.add("input-error");
         }
         if (!validateEmail(workEmail)) {
-          errors.push("Please provide a valid email address.");
+          errors.push("Please provide a valid work email address.");
           if (emailInput) emailInput.classList.add("input-error");
         }
         if (company.length < 2) {
@@ -299,44 +579,30 @@
           return;
         }
 
-        const subject = encodeURIComponent(`VidSynth Studio Early Access Request — ${company}`);
-        const bodyLines = [
-          "Hello Najla Afaf Ullaya (VidSynth AI Founder),",
-          "",
-          "We would like to request Early Access Pilot / Technical Evaluation information for VidSynth Studio.",
-          "",
-          `Full Name: ${fullName}`,
-          `Work Email: ${workEmail}`,
-          `Organization / Studio: ${company}`,
-          `Primary Use Case: ${useCase}`,
-          "",
-          "Thank you."
-        ];
-        const body = encodeURIComponent(bodyLines.join("\r\n"));
-        const mailtoUrl = `mailto:founder@vidsynth.app?subject=${subject}&body=${body}`;
-
+        const successMsg = "Thank you! Our engineering team will review your application.";
         if (statusBox) {
-          statusBox.className =
-            "mt-3 p-3.5 rounded-sm border border-[#00F0FF] bg-[#00F0FF]/10 text-xs text-[#F5F6FA]";
-          statusBox.innerHTML = `
-            <div class="font-mono-tech text-[11px] text-[#00F0FF] uppercase mb-1">✓ OPENING EMAIL CLIENT TO FOUNDER@VIDSYNTH.APP</div>
-            <p class="text-[#9296A3]">Your inquiry for <strong>${escapeHtml(company)}</strong> has been formatted for your default email client. If it did not open automatically, <a href="${mailtoUrl}" class="text-[#00F0FF] underline">click here to send via mailto:founder@vidsynth.app</a>.</p>
-          `;
+          statusBox.className = "ea-success-banner";
+          statusBox.textContent = successMsg;
           statusBox.classList.remove("hidden");
         }
-
-        window.location.href = mailtoUrl;
+        showToast(successMsg, "success");
+        form.reset();
       });
     });
   }
 
   // --------------------------------------------------------------------------
-  // 6. Global Keyboard Escape Handler
+  // 7. Global Keyboard Escape Handler
   // --------------------------------------------------------------------------
   function initGlobals() {
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
-        ["changelog-modal", "showcase-inspect-modal", "mobile-nav-drawer"].forEach((id) => {
+        [
+          "early-access-modal",
+          "changelog-modal",
+          "showcase-inspect-modal",
+          "mobile-nav-drawer"
+        ].forEach((id) => {
           const el = document.getElementById(id);
           if (el && !el.classList.contains("hidden")) {
             el.classList.add("hidden");
@@ -353,7 +619,8 @@
     initAnnouncementBar();
     initNavigation();
     initShowcaseInteractions();
-    initEarlyAccessMailtoComposer();
+    initEarlyAccessModal();
+    initEarlyAccessSectionForm();
     initGlobals();
   });
 })();

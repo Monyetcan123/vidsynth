@@ -529,11 +529,18 @@ body {
   inset: 0;
   background-color: rgba(4, 4, 7, 0.82);
   backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
   z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 16px;
+}
+
+.modal-backdrop.hidden,
+.ea-modal-backdrop.hidden {
+  display: none !important;
+  pointer-events: none !important;
 }
 
 .modal-panel {
@@ -545,6 +552,190 @@ body {
   max-height: 90vh;
   overflow-y: auto;
   box-shadow: 0 24px 48px rgba(0, 0, 0, 0.7);
+}
+
+/* Early Access Request Modal (Futuristic Darkroom Popup) */
+[data-open-early-access] {
+  position: relative;
+  z-index: 20;
+  pointer-events: auto !important;
+  cursor: pointer;
+}
+
+.ea-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 160;
+  background-color: rgba(4, 4, 7, 0.84);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  animation: eaFadeIn 160ms ease-out;
+}
+
+.ea-modal-panel {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  max-height: 92vh;
+  overflow-y: auto;
+  background: linear-gradient(180deg, #101117 0%, #090A0F 100%);
+  border: 1px solid var(--border-titanium);
+  border-top: 2px solid var(--accent-cyan);
+  border-radius: var(--radius-md);
+  padding: 26px 24px 24px;
+  box-shadow:
+    0 28px 64px rgba(0, 0, 0, 0.85),
+    0 0 0 1px rgba(0, 240, 255, 0.08),
+    0 0 32px rgba(0, 240, 255, 0.06);
+  color: var(--text-primary);
+  animation: eaSlideUp 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.ea-modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-titanium);
+  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: color 140ms ease, border-color 140ms ease, background-color 140ms ease;
+}
+
+.ea-modal-close:hover {
+  color: var(--text-primary);
+  border-color: var(--accent-cyan);
+  background-color: var(--bg-elevated-hover);
+}
+
+.ea-option-box {
+  background-color: var(--bg-deep);
+  border: 1px solid var(--border-titanium);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+}
+
+.ea-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 16px 0;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.ea-divider::before,
+.ea-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: var(--border-titanium);
+}
+
+.ea-direct-email-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background-color: var(--bg-obsidian);
+  border: 1px solid var(--border-titanium);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.ea-copy-wrapper {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.ea-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-elevated);
+  border: 1px solid var(--border-titanium);
+  border-radius: var(--radius-xs);
+  color: var(--accent-cyan);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 6px 10px;
+  cursor: pointer;
+  transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+  white-space: nowrap;
+}
+
+.ea-copy-btn:hover {
+  background-color: rgba(0, 240, 255, 0.1);
+  border-color: var(--accent-cyan);
+}
+
+.ea-copy-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  right: 0;
+  background-color: var(--accent-cyan);
+  color: var(--bg-obsidian);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: var(--radius-xs);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 150ms ease, transform 150ms ease;
+  white-space: nowrap;
+}
+
+.ea-copy-tooltip.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.ea-success-banner {
+  margin-top: 12px;
+  padding: 11px 13px;
+  border-radius: var(--radius-sm);
+  background-color: rgba(16, 185, 129, 0.1);
+  border: 1px solid rgba(16, 185, 129, 0.45);
+  color: #10B981;
+  font-size: 0.8rem;
+  line-height: 1.45;
+}
+
+@keyframes eaFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes eaSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Custom Range Input (Video Scrubber) */

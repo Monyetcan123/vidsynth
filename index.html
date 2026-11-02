@@ -133,6 +133,9 @@
         <a href="#comparison-studio" class="btn-secondary text-xs py-2 px-3.5">Launch Studio</a>
         <a
           href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+          data-open-early-access
+          aria-haspopup="dialog"
+          aria-controls="early-access-modal"
           class="btn-primary text-xs py-2 px-4 font-mono-tech tracking-wide"
         >
           REQUEST EARLY ACCESS
@@ -182,6 +185,9 @@
           <a href="#comparison-studio" class="btn-secondary w-full justify-center">Launch Studio Viewport</a>
           <a
             href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+            data-open-early-access
+            aria-haspopup="dialog"
+            aria-controls="early-access-modal"
             class="btn-primary w-full justify-center font-mono-tech"
           >
             REQUEST EARLY ACCESS
@@ -227,6 +233,9 @@
               </a>
               <a
                 href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+                data-open-early-access
+                aria-haspopup="dialog"
+                aria-controls="early-access-modal"
                 class="btn-secondary px-6 py-3 text-sm font-mono-tech"
               >
                 <span>REQUEST EARLY ACCESS</span>
@@ -777,6 +786,9 @@
           </div>
           <a
             href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+            data-open-early-access
+            aria-haspopup="dialog"
+            aria-controls="early-access-modal"
             class="btn-secondary text-xs font-mono-tech"
           >
             <span>REQUEST EARLY ACCESS PILOT</span>
@@ -1518,6 +1530,120 @@
       </div>
       <div class="pt-3 border-t border-[#252832] flex justify-end">
         <button type="button" data-close-changelog class="btn-primary text-xs py-2 px-4">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       MODAL 3: EARLY ACCESS REQUEST POPUP
+       ======================================================================== -->
+  <div
+    id="early-access-modal"
+    class="hidden ea-modal-backdrop"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="early-access-modal-title"
+    aria-describedby="early-access-modal-subtitle"
+  >
+    <div class="ea-modal-panel" data-early-access-panel>
+      <!-- Close Button (Top Right 'X') -->
+      <button
+        type="button"
+        id="close-early-access-modal"
+        data-close-early-access
+        class="ea-modal-close"
+        aria-label="Close Early Access modal"
+      >
+        ✕
+      </button>
+
+      <!-- Header: Title & Subtitle -->
+      <div class="pr-8 space-y-1.5 pb-4 border-b border-[#252832]">
+        <div class="inline-flex items-center gap-2 font-mono-tech text-[10px] uppercase tracking-wider text-[#00F0FF]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#00F0FF]"></span>
+          <span>VIDSYNTH STUDIO // EARLY ACCESS</span>
+        </div>
+        <h2 id="early-access-modal-title" class="text-xl font-semibold tracking-tight text-[#F5F6FA]">
+          Request Studio Early Access
+        </h2>
+        <p id="early-access-modal-subtitle" class="font-mono-tech text-xs text-[#9296A3]">
+          Private Beta Cohort — Visual Effects &amp; Neural Pipeline Ingest
+        </p>
+      </div>
+
+      <!-- Option 1: Simple Work Email Form -->
+      <div class="mt-4 ea-option-box">
+        <div class="font-mono-tech text-[10px] uppercase tracking-wider text-[#00F0FF] mb-2">
+          OPTION 01 // APPLICATION REGISTRATION
+        </div>
+        <form id="early-access-modal-form" novalidate class="space-y-3">
+          <div>
+            <label for="ea-modal-email-input" class="block text-xs font-medium text-[#F5F6FA] mb-1.5">
+              Your Work Email
+            </label>
+            <input
+              id="ea-modal-email-input"
+              name="work_email"
+              type="email"
+              required
+              autocomplete="email"
+              placeholder="Your Work Email (e.g., lead@vfx-studio.com)"
+              class="input-field"
+            />
+          </div>
+          <button
+            type="submit"
+            id="ea-modal-submit-btn"
+            class="btn-primary w-full justify-center font-mono-tech text-xs py-2.5"
+          >
+            Submit Request
+          </button>
+        </form>
+
+        <!-- Instant Notification / Success Message -->
+        <div
+          id="ea-modal-feedback"
+          class="hidden ea-success-banner"
+          role="status"
+          aria-live="polite"
+        >
+          Thank you! Our engineering team will review your application.
+        </div>
+      </div>
+
+      <div class="ea-divider">OR DIRECT CONTACT</div>
+
+      <!-- Option 2: Direct Founder Email + Copy Button with Tooltip -->
+      <div class="ea-option-box space-y-2.5">
+        <div class="flex items-center justify-between">
+          <span class="font-mono-tech text-[10px] uppercase tracking-wider text-[#9296A3]">
+            OPTION 02 // DIRECT FOUNDER DESK
+          </span>
+          <span class="font-mono-tech text-[10px] text-[#626775]">Najla Afaf Ullaya</span>
+        </div>
+        <div class="ea-direct-email-row">
+          <a
+            href="mailto:founder@vidsynth.app?subject=VidSynth%20Studio%20Early%20Access%20Request"
+            id="ea-direct-email-text"
+            class="font-mono-tech text-xs sm:text-sm text-[#00F0FF] hover:underline truncate"
+          >
+            founder@vidsynth.app
+          </a>
+          <div class="ea-copy-wrapper">
+            <span id="ea-copy-tooltip" class="ea-copy-tooltip" role="status" aria-live="polite">
+              Copied!
+            </span>
+            <button
+              type="button"
+              id="ea-copy-email-btn"
+              data-copy-email="founder@vidsynth.app"
+              class="ea-copy-btn"
+              aria-label="Copy founder@vidsynth.app to clipboard"
+            >
+              <span>Copy Email</span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
