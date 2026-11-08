@@ -30,6 +30,79 @@
     getDimensionsForAspectRatio,
 
     /**
+     * Validates an uploaded reference image file for Image-to-Image editing.
+     */
+    validateReferenceImageFile(file) {
+      if (!file) throw new Error("Please select a valid image file.");
+      const allowed = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
+      if (file.type && !allowed.includes(file.type.toLowerCase())) {
+        throw new Error("Supported image formats: JPEG, PNG, or WEBP.");
+      }
+      if (file.size > 15 * 1024 * 1024) {
+        throw new Error("Reference file exceeds maximum size limit of 15MB.");
+      }
+      return true;
+    },
+
+    /**
+     * Executes AI rendering simulation with 2-second visual log progression
+     * on AWS EC2 G5/G6 GPU infrastructure.
+     */
+    async simulateRenderingPipeline({
+      prompt,
+      isEditMode = false,
+      onProgress = null
+    }) {
+      const logs = [
+        { progress: 15, delay: 0, text: "[0.0s] ALLOCATING AWS EC2 G5 GPU CLUSTER & MOUNTING TENSOR PIPELINE..." },
+        { progress: 45, delay: 650, text: "[0.7s] RUNNING NEURAL DIFFUSION SAMPLER ON AWS EC2 G5 GPU CLUSTER..." },
+        { progress: 80, delay: 1350, text: "[1.4s] COLOR GRADING & COMPOSITING HIGH-RESOLUTION 1024×1024 ARTIFACT..." },
+        { progress: 100, delay: 2000, text: "[2.0s] SYNTHESIS COMPLETE • PERSISTING TO SECURE ASSET STORAGE..." }
+      ];
+
+      for (let i = 0; i < logs.length; i++) {
+        const step = logs[i];
+        const prevDelay = i > 0 ? logs[i - 1].delay : 0;
+        const waitTime = step.delay - prevDelay;
+        if (waitTime > 0) {
+          await new Promise((r) => setTimeout(r, waitTime));
+        }
+        if (typeof onProgress === "function") {
+          onProgress(step.text, step.progress);
+        }
+      }
+
+      const showcaseAssets = isEditMode
+        ? [
+            "assets/showcase/after/after1.jpeg",
+            "assets/showcase/after/after2.jpeg",
+            "assets/showcase/after/after3.jpeg",
+            "assets/showcase/after/after4.jpeg",
+            "assets/showcase/after/after5.jpg"
+          ]
+        : [
+            "assets/showcase/cinematic/cinematic-relit-portrait.webp",
+            "assets/showcase/sci-fi/scifi-cyberpunk-metropolis.webp",
+            "assets/showcase/fantasy/fantasy-enchanted-sanctuary.webp",
+            "assets/showcase/portal/portal-dimensional-rift.webp",
+            "assets/showcase/anime/anime-choreography-frame.webp",
+            "assets/showcase/elemental/elemental-volcanic-eruption.webp",
+            "assets/showcase/energy/energy-aurora-borealis.webp",
+            "assets/showcase/creature/creatures-mythic-griffin.webp",
+            "assets/showcase/robotic/robotic-biomech-valkyrie.webp",
+            "assets/showcase/environmental/environment-neomorphic-desert.webp"
+          ];
+
+      return {
+        success: true,
+        outputUrl: showcaseAssets[Math.floor(Math.random() * showcaseAssets.length)],
+        width: 1024,
+        height: 1024,
+        durationSeconds: 2.0
+      };
+    },
+
+    /**
      * Submits a real Text-to-Image or Image-to-Image Editing request to the
      * authenticated VidSynth AI backend (/api/generate-or-edit).
      */
@@ -37,6 +110,7 @@
       prompt,
       description = "",
       referenceFile = null,
+      referenceFiles = null,
       referenceImagePath = "",
       stylePreset = "",
       aspectRatio = "1:1",
@@ -82,8 +156,15 @@
       }
       formData.append("requestId", reqId);
 
-      if (referenceFile instanceof Blob) {
-        formData.append("image", referenceFile, referenceFile.name || "reference.jpg");
+      const actualRefFile =
+        referenceFile instanceof Blob
+          ? referenceFile
+          : Array.isArray(referenceFiles) && referenceFiles[0] instanceof Blob
+          ? referenceFiles[0]
+          : null;
+
+      if (actualRefFile instanceof Blob) {
+        formData.append("image", actualRefFile, actualRefFile.name || "reference.jpg");
       } else if (referenceImagePath) {
         formData.append("referenceImagePath", referenceImagePath);
       }

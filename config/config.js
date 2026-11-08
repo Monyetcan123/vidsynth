@@ -15,6 +15,11 @@ const SUPABASE_URL = "https://bypicewulwgbxypthdpf.supabase.co";
 // FIELD 02 — SUPABASE PUBLISHABLE / ANON KEY
 const SUPABASE_ANON_KEY = "sb_publishable_tynIxLMhw_kQJU1-9MsRMw_F07kmcfK";
 
+if (typeof window !== "undefined") {
+  window.SUPABASE_URL = SUPABASE_URL;
+  window.SUPABASE_ANON_KEY = SUPABASE_ANON_KEY;
+}
+
 (function initVidSynthConfig() {
   function isSupabaseConfigValid() {
     return (
@@ -52,12 +57,16 @@ const SUPABASE_ANON_KEY = "sb_publishable_tynIxLMhw_kQJU1-9MsRMw_F07kmcfK";
   }
 
   window.VIDSYNTH_CONFIG = Object.freeze({
+    SUPABASE_URL: SUPABASE_URL,
+    SUPABASE_ANON_KEY: SUPABASE_ANON_KEY,
     APP_NAME: "Vidsynth AI",
     BRAND_UPPER: "VIDSYNTH AI",
     TAGLINE: "Transform What You Imagine.",
     DOMAIN: "https://vidsynth.app",
     FOUNDER_NAME: "Najla Afaf Ullaya",
     FOUNDER_EMAIL: "founder@vidsynth.app",
+    HEADQUARTERS: "Tegal, Central Java 52121, Indonesia",
+    CLOUD_INFRASTRUCTURE: "Powered by AWS (Amazon EC2 G5/G6 GPU & S3)",
     DEFAULT_SANDBOX_CREDITS: 2,
     SUPABASE_CONFIGURED: isSupabaseConfigValid(),
     BUCKETS: Object.freeze({

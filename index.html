@@ -2718,9 +2718,12 @@
           <p class="text-xs sm:text-sm text-[#C9BBA5] max-w-sm leading-relaxed">
             Transform What You Imagine. An advanced AI visual and video creation platform for transforming images, characters, and cinematic ideas into something extraordinary.
           </p>
-          <div class="font-mono-tech text-xs text-[#C9BBA5] space-y-1 pt-1">
+          <div class="font-mono-tech text-xs text-[#C9BBA5] space-y-1.5 pt-1">
+            <div>Entity: <span class="text-[#FAF8F3] font-semibold">VidSynth AI (VidSynth Studio)</span></div>
             <div>Founder: <span class="text-[#FAF8F3] font-semibold">Najla Afaf Ullaya</span> (<a href="mailto:najla@vidsynth.app" class="text-[#FAF8F3] underline hover:text-[#C9BBA5]">najla@vidsynth.app</a>)</div>
-            <div>Business Contact: <a href="mailto:founder@vidsynth.app" class="text-[#FAF8F3] underline hover:text-[#C9BBA5]">founder@vidsynth.app</a></div>
+            <div>Official Contact: <a href="mailto:founder@vidsynth.app" class="text-[#FAF8F3] underline hover:text-[#C9BBA5]">founder@vidsynth.app</a></div>
+            <div>Headquarters: <span class="text-[#FAF8F3]">Tegal, Central Java 52121, Indonesia</span></div>
+            <div>Cloud Infrastructure: <span class="text-[#FAF8F3]">Powered by AWS (Amazon EC2 G5/G6 GPU &amp; S3)</span></div>
             <div>Website: <a href="https://vidsynth.app/" class="text-[#FAF8F3] underline hover:text-[#C9BBA5]">https://vidsynth.app/</a></div>
           </div>
         </div>
@@ -2762,7 +2765,7 @@
       </div>
 
       <div class="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#C9BBA5]">
-        <div>© 2025 VidSynth AI. Founded by Najla Afaf Ullaya. All rights reserved.</div>
+        <div>© 2025–2026 VidSynth AI (VidSynth Studio). Founded by Najla Afaf Ullaya. Headquarters: Tegal, Central Java 52121, Indonesia. Powered by AWS (Amazon EC2 G5/G6 GPU &amp; S3).</div>
         <div class="font-mono-tech text-[11px]">
           VidSynth AI • AI Visual &amp; Video Generation Platform • https://vidsynth.app/
         </div>
@@ -2903,6 +2906,41 @@
           </button>
         </form>
 
+        <!-- 3. Verification Email Sent Confirmation Card (Supabase Confirm Email Active) -->
+        <div id="auth-verify-email-card" class="hidden p-5 rounded-xl bg-[#FAF8F3] border border-[#C9BBA5] space-y-4 text-center">
+          <div class="w-12 h-12 mx-auto rounded-full bg-[#EBF2EC] text-[#3F6A4E] border border-[#3F6A4E]/30 flex items-center justify-center">
+            <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+            </svg>
+          </div>
+          <div class="space-y-1.5">
+            <h3 class="font-bold text-base text-[#292720]">Check Your Inbox</h3>
+            <p class="text-xs text-[#5C5549] leading-relaxed">
+              Verification email sent to <strong id="auth-verify-email-target" class="text-[#292720] font-mono-tech">user@example.com</strong>.
+            </p>
+            <p class="text-xs text-[#75624E] leading-relaxed">
+              Please check your inbox (and spam folder) and click the confirmation link to activate your account and claim your <strong>2 Free Credits</strong>.
+            </p>
+          </div>
+
+          <div class="pt-2 border-t border-[#E8DFD0] space-y-2">
+            <button
+              type="button"
+              id="auth-resend-verification-btn"
+              class="btn-secondary w-full justify-center !py-2.5 !text-xs font-mono-tech"
+            >
+              <span id="auth-resend-btn-label">Resend verification email</span>
+            </button>
+            <button
+              type="button"
+              id="auth-back-to-login-btn"
+              class="w-full text-center text-xs font-mono-tech text-[#75624E] hover:text-[#292720] underline pt-1"
+            >
+              ← Back to Sign In
+            </button>
+          </div>
+        </div>
+
         <!-- Feedback Banner -->
         <div id="auth-modal-feedback" class="hidden p-3 rounded-lg text-xs font-medium" role="status"></div>
       </div>
@@ -2911,7 +2949,7 @@
 
   <!-- ========================================================================
        MODAL 2: SANDBOX CREDITS EXHAUSTED MODAL (Section 9)
-       Title: "Your Free Sandbox Credits Have Been Used"
+       Title: "Sandbox / Free Credits Exhausted"
        ======================================================================== -->
   <div id="credits-exhausted-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="credits-exhausted-title">
     <div class="modal-panel">
@@ -2922,22 +2960,30 @@
         </div>
 
         <h2 id="credits-exhausted-title" class="text-2xl font-bold text-[#292720]">
-          Your Free Credits Have Been Used
+          Sandbox / Free Credits Exhausted
         </h2>
 
         <p class="text-xs sm:text-sm text-[#5C5549] leading-relaxed">
-          You have used both of your complimentary starter credits. Contact our team to request additional studio generation capacity or upgrade your workspace allocation.
+          You have used both of your complimentary starter credits. Upgrade your workspace allocation or request a dedicated B2B Enterprise API Key with high-concurrency EC2 GPU quota.
         </p>
 
         <div class="ea-option-box space-y-3">
           <div class="font-mono-tech text-xs uppercase tracking-wider text-[#292720] font-semibold">
-            Direct Allocation Contact
+            Allocation &amp; Enterprise Access
           </div>
-          <div class="ea-direct-email-row">
-            <a href="mailto:founder@vidsynth.app" class="font-mono-tech text-xs font-semibold text-[#292720] underline">founder@vidsynth.app</a>
-            <button type="button" data-open-early-access class="btn-primary !py-1.5 !px-3.5 !text-xs">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+            <button type="button" data-open-early-access class="btn-primary !py-2 !px-3 !text-xs justify-center">
               Request Allocation →
             </button>
+            <a
+              href="mailto:founder@vidsynth.app?subject=VidSynth%20AI%20-%20B2B%20Enterprise%20API%20Key%20Request&body=Hello%20VidSynth%20Team%2C%0A%0AI%20would%20like%20to%20request%20a%20B2B%20Enterprise%20API%20Key%20and%20GPU%20cluster%20allocation%20for%20our%20production%20pipeline.%0A%0ACompany%3A%0AUse%20Case%3A%0AExpected%20Volume%3A"
+              class="btn-secondary !py-2 !px-3 !text-xs justify-center text-center font-mono-tech"
+            >
+              Request B2B API Key ↗
+            </a>
+          </div>
+          <div class="text-[11px] text-[#75624E] text-center pt-1 font-mono-tech">
+            Official Contact: <a href="mailto:founder@vidsynth.app" class="underline text-[#292720]">founder@vidsynth.app</a>
           </div>
         </div>
       </div>

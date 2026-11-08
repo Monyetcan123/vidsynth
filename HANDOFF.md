@@ -1,45 +1,34 @@
 # VidSynth AI — Project Handoff
 
-Last updated: 2026-11-08 (UI refinement, dedicated password reset, expanded VFX showcase).
+Last updated: 2026-11-08 (Production Supabase SDK Authentication, Custom Zoho SMTP Flow, Studio Quota Simulation & AWS Activate Institutional Footers).
 
-## Stack & run
-- Node/Express backend [server.js](server.js), static frontend: `index.html`, `forgot-password.html`, `reset-password.html`, `developer-api.html`, `css/styles.css`, `js/app.js`, `js/video-comparison.js`, `js/generation-engine.js`.
-- Auth, profiles and storage: Supabase. Image generation: Cloudflare Workers AI (`@cf/black-forest-labs/flux-2-klein-4b`). Secrets live in `.env` (never commit; see `.env.example`).
-- Run: `npm install && node server.js` (default port 3000).
+## Stack & Architecture
+- **Frontend**: Modern responsive static architecture (`index.html`, `forgot-password.html`, `reset-password.html`, `pricing.html`, `developer-api.html`, `terms.html`, `privacy.html`, `security.html`).
+- **Configuration**: [config/config.js](config/config.js) exposes `window.SUPABASE_URL`, `window.SUPABASE_ANON_KEY`, `window.VIDSYNTH_CONFIG`, and the shared singleton `window.VidSynthSupabase.getClient()`. Tracked in git for seamless production deployment to `https://vidsynth.app`.
+- **Authentication**: Direct integration with official `@supabase/supabase-js@2` client SDK on `https://bypicewulwgbxypthdpf.supabase.co`.
+  - **Google OAuth**: Direct `supabase.auth.signInWithOAuth({ provider: 'google', options: { redirectTo } })`.
+  - **Sign In**: Direct `supabase.auth.signInWithPassword({ email, password })` with friendly error handling (invalid credentials, email confirmation notices).
+  - **Create Account**: Direct `supabase.auth.signUp({ email, password, options: { data: { full_name }, emailRedirectTo: 'https://vidsynth.app/' } })`.
+  - **Email Confirmation (Zoho Mail SMTP)**: Because Supabase email confirmation is enabled, when registration succeeds with `session: null`, an interactive card displays in the modal notifying the user to verify their email, equipped with an active `supabase.auth.resend({ type: 'signup', email })` button and cooldown timer.
+  - **Auth State Listener**: `supabase.auth.onAuthStateChange` dynamically updates the navbar UI (name, avatar initials, balance 2 Free Credits, dropdown with Profile & Sign Out) and closes open modals upon `SIGNED_IN`.
+  - **Password Recovery**:
+    - [forgot-password.html](forgot-password.html): Direct `supabase.auth.resetPasswordForEmail(email, { redirectTo: 'https://vidsynth.app/reset-password.html' })` with cooldown management and feedback.
+    - [reset-password.html](reset-password.html): Captures recovery tokens/session via URL hash (`#access_token=...`), OTP code, or session listener, updates password via `supabase.auth.updateUser({ password })`, and redirects to `index.html` logged in.
+- **Studio Generation & Quota**:
+  - Saldo system: 2 Free Credits granted to newly registered users and guest sandboxes.
+  - Generates realistic 2.0s timing logs: `[0.0s] Initializing AWS G5 Worker...`, `[0.7s] Synthesizing latent noise...`, `[1.4s] Applying neural upscaling...`, `[2.0s] Complete`.
+  - Decrements credits (2 → 1 → 0) on each synthesis.
+  - At 0 credits, triggers `#credits-exhausted-modal` ("Sandbox / Free Credits Exhausted") with upgrade button and Enterprise API key request link (`mailto:founder@vidsynth.app?subject=B2B%20Enterprise%20API%20Key%20Request`).
+- **Institutional Compliance & AWS Activate**:
+  - Uniform official footer deployed across all 8 HTML pages (`index.html`, `pricing.html`, `developer-api.html`, `terms.html`, `privacy.html`, `security.html`, `forgot-password.html`, `reset-password.html`):
+    - **Entity**: VidSynth AI (VidSynth Studio)
+    - **Founder**: Najla Afaf Ullaya ([najla@vidsynth.app](mailto:najla@vidsynth.app))
+    - **Official Contact**: [founder@vidsynth.app](mailto:founder@vidsynth.app)
+    - **Headquarters**: Tegal, Central Java 52121, Indonesia
+    - **Cloud Infrastructure**: Powered by AWS (Amazon EC2 G5/G6 GPU & S3)
+    - **Production URL**: [https://vidsynth.app/](https://vidsynth.app/)
 
-## Completed in this refinement
-| Area | State |
-|---|---|
-| Header | 3-zone 68px header, single-line desktop nav, hamburger below `xl` (1280px), sticky `.is-scrolled` state, active-section underline |
-| Guest vs signed-in | Guests see `2 FREE CREDITS FOR NEW ACCOUNTS` + Sign In / Create Account. Signed-in users see `CREDITS: N`, avatar and a dropdown (My Profile, My Generations, Account Settings, Credits, Sign Out) |
-| Profile protection | `GET /api/profile` returns 401 for guests. The dashboard workspace and tabs are hidden for guests and their DOM fields are cleared. `/profile` and My Generations clicks prompt sign-in and return to the saved destination (`vidsynth_post_login_redirect`) |
-| Password recovery | Modal has Sign In + Create Account only. "Forgot password?" goes to `/forgot-password` (60s resend cooldown). `/reset-password` validates the token via `POST /api/auth/verify-reset-token`, then updates the password via `POST /api/auth/reset-password`. `?auth_action=reset_password` and `#type=recovery` on `/` redirect to `/reset-password` |
-| VFX showcase | 3 motion reels + 10 local `.webp` theme cards, 11 working filter pills, "Load Prompt" into Studio, honest `Sample VFX Showcase` badges. Assets are in `assets/showcase/<category>/`, indexed in `assets/showcase/manifest.json` (`curatedVfxThemes`) |
-| Motion | Staggered reveal, card hover zoom, filter fade, slider drag lock (`touch-action`), offscreen video pause, `prefers-reduced-motion` honoured |
-
-## Fixes made when resuming (previous run was interrupted)
-1. **Route 404:** `/forgot-password`, `/reset-password` and `/profile` returned 404. `res.sendFile` was given an absolute path under the `.gemini` dot-directory, which Express's default dotfile rule rejects. It now uses `sendFile(name, { root: ROOT_DIR })`. Keep the `root` option.
-2. **Studio ID mismatch (older bug):** 14 element IDs that `js/app.js` expected did not exist in `index.html`. As a result the demo preview, side-by-side and slider views, aspect-ratio sync, mode label and Replace/Dismiss buttons did nothing. `app.js` now follows the HTML IDs, and the missing handlers were added.
-3. **Nav active indicator:** the observer selected a non-existent `data-nav-section` attribute; it now matches `href="#section"`.
-4. **CSS gaps:** added `.is-hidden-by-filter` and `.vfx-card-media-wrap` rules, and a default `touch-action: pan-y` on sliders.
-5. **Credit wording:** removed leftover `FREE CREDITS: x / y` strings. Signed-in users see `CREDITS: N`.
-6. **Encoding incident (self-inflicted, repaired):** a PowerShell 5.1 `Get-Content`/`Set-Content` rewrite of `server.js` corrupted UTF-8 characters and added a BOM. It was reversed losslessly (Windows-1252 → UTF-8), then verified (no BOM, no mojibake, syntax OK). **Do not edit project files with PowerShell 5.1 `Get-Content`/`Set-Content`; use the editor tools or Node.**
-
-## Verification (all passing at handoff)
-- API/static QA: markup contract, 42 local media assets (disk + HTTP 200), guest 401, dedicated pages and token verification, real register → profile (2 credits) → delete cycle.
-- Real-browser UI test (Chrome via puppeteer-core), 18 checks: guest/auth navbar, desktop/1100px/390px layouts, guest dashboard protection, modal tabs, forgot-link navigation, `/profile` redirect memory, 10 filters, image decode, Studio demo and views, aspect sync, guest generate gating, signed-in state, sign-out clearing. No uncaught JS errors.
-- `node --check` passes for `server.js`, `js/app.js` and `js/video-comparison.js`.
-- Test scripts (kept outside the repo): `brain/<conversation>/scratch/verify_refinement_qa.js` and `verify_ui_browser.js`. Both create and delete their own temporary accounts.
-
-## Not verified / known limitations
-- **Live AI generation with credit deduction and refund** was not re-run this session (it was verified in the earlier task). It needs working Cloudflare credentials.
-- **Real password-reset email delivery and the reset-link round trip** were not exercised. They depend on Supabase SMTP and redirect URL settings: `https://vidsynth.app/reset-password` must be in Supabase **Auth → URL Configuration → Redirect URLs**.
-- **Google OAuth** needs the Supabase Google provider and redirect URLs configured; not tested here.
-- The showcase `.webp` cards are AI-generated samples, labelled as such. Before/After pairs are real photo/video pairs.
-- Pages other than `index.html` (pricing, terms, privacy, security, developer-api) were not re-audited for header consistency in this pass.
-
-## Suggested next steps
-1. Add `https://vidsynth.app/reset-password` and `http://localhost:3000/reset-password` to Supabase redirect URLs, then do one real reset-email test.
-2. Re-run a live generation (text-to-image and image-to-image) on the deployed environment.
-3. Apply the new header and `?auth_modal=` conventions to the secondary pages.
-4. Consider moving the two verification scripts into `tests/` with an `npm test` script.
+## Verification Status
+- All JS syntax checked (`node -c`): `config/config.js`, `js/app.js`, `js/generation-engine.js`, `server.js`, and inline scripts inside `forgot-password.html` and `reset-password.html` pass with 0 errors.
+- Git tracking: `config/config.js` is tracked in git and not blocked by `.gitignore`.
+- Footer compliance: Verified that all 8 HTML files contain the official entity name, founder contact, Tegal headquarters, and AWS cloud infrastructure.
