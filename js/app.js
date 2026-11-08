@@ -743,7 +743,6 @@
     const registerForm = document.getElementById("auth-register-form");
     const oauthRow = document.getElementById("auth-oauth-row");
     const oauthDivider = document.getElementById("auth-oauth-divider");
-    const feedback = document.getElementById("auth-modal-feedback");
     const verifyCard = document.getElementById("auth-verify-email-card");
     const targetEmail = document.getElementById("auth-verify-email-target");
     const modalTitle = document.getElementById("auth-modal-title");
@@ -754,7 +753,6 @@
     if (registerForm) registerForm.classList.add("hidden");
     if (oauthRow) oauthRow.classList.add("hidden");
     if (oauthDivider) oauthDivider.classList.add("hidden");
-    if (feedback) feedback.classList.add("hidden");
 
     if (modalTitle) modalTitle.textContent = "Check Your Inbox";
     if (subtitleEl) subtitleEl.textContent = "One final step to claim your 2 Free Credits.";
@@ -820,9 +818,10 @@
     const feedback = document.getElementById("auth-modal-feedback");
     if (!feedback) return;
     feedback.textContent = msg;
+    feedback.setAttribute("role", isError ? "alert" : "status");
     feedback.className = isError
-      ? "p-3 rounded-lg text-xs font-medium bg-[#F9EBE9] text-[#9E3B33] border border-[#9E3B33]"
-      : "p-3 rounded-lg text-xs font-medium bg-[#EBF2EC] text-[#3F6A4E] border border-[#3F6A4E]";
+      ? "p-3.5 rounded-xl text-xs font-medium leading-relaxed bg-[#F9EBE9] text-[#9E3B33] border border-[#9E3B33]"
+      : "p-3.5 rounded-xl text-xs font-medium leading-relaxed bg-[#EBF2EC] text-[#3F6A4E] border border-[#3F6A4E]";
     feedback.classList.remove("hidden");
   }
 
@@ -1049,7 +1048,24 @@
     // Production Google Sign-In Flow via Supabase OAuth
     async function triggerGoogleOAuth() {
       const googleBtn = document.getElementById("auth-oauth-google");
-      if (!supabase) {
+      let sb = supabase;
+      if (!sb && window.VidSynthSupabase && typeof window.VidSynthSupabase.getClient === "function") {
+        sb = window.VidSynthSupabase.getClient();
+        supabase = sb;
+      }
+      if (!sb && window.supabase && typeof window.supabase.createClient === "function" && window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+        sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY, {
+          auth: {
+            persistSession: true,
+            autoRefreshToken: true,
+            detectSessionInUrl: true,
+            storageKey: "vidsynth_ai_supabase_auth"
+          }
+        });
+        supabase = sb;
+      }
+
+      if (!sb) {
         showAuthFeedback("Authentication service is initializing. Please try again.", true);
         return;
       }
@@ -1068,12 +1084,9 @@
       }
 
       try {
-        const redirectTo =
-          window.location.origin.includes("localhost") || window.location.origin.includes("127.0.0.1")
-            ? window.location.origin
-            : "https://vidsynth.app";
+        const redirectTo = window.location.origin;
 
-        const { error } = await supabase.auth.signInWithOAuth({
+        const { error } = await sb.auth.signInWithOAuth({
           provider: "google",
           options: {
             redirectTo: redirectTo
@@ -1088,7 +1101,7 @@
           }
         }
       } catch (err) {
-        showAuthFeedback(err.message || "Could not initiate Google sign-in.", true);
+        showAuthFeedback(err?.message || "Could not initiate Google sign-in.", true);
         if (googleBtn) {
           googleBtn.disabled = false;
           googleBtn.innerHTML = originalHtml;
@@ -1122,7 +1135,24 @@
           submitBtn.textContent = "Signing In...";
         }
 
-        if (!supabase) {
+        let sb = supabase;
+        if (!sb && window.VidSynthSupabase && typeof window.VidSynthSupabase.getClient === "function") {
+          sb = window.VidSynthSupabase.getClient();
+          supabase = sb;
+        }
+        if (!sb && window.supabase && typeof window.supabase.createClient === "function" && window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+          sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY, {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true,
+              storageKey: "vidsynth_ai_supabase_auth"
+            }
+          });
+          supabase = sb;
+        }
+
+        if (!sb) {
           showAuthFeedback("Authentication service is initializing. Please try again in a moment.", true);
           if (submitBtn) {
             submitBtn.disabled = false;
@@ -1132,7 +1162,7 @@
         }
 
         try {
-          const { data, error } = await supabase.auth.signInWithPassword({
+          const { data, error } = await sb.auth.signInWithPassword({
             email,
             password
           });
@@ -1188,7 +1218,7 @@
             loginForm.reset();
           }
         } catch (err) {
-          showAuthFeedback(err.message || "An unexpected error occurred during sign-in.", true);
+          showAuthFeedback(err?.message || "An unexpected error occurred during sign-in.", true);
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;
@@ -1198,28 +1228,37 @@
       });
     }
 
-    // Form Create Account (Direct Supabase SDK signUp with Confirm Email card)
+    // Form Create Account (Direct Supabase SDK signUp with detailed response handling)
     const registerForm = document.getElementById("auth-register-form");
     if (registerForm) {
       registerForm.addEventListener("submit", async (e) => {
         e.preventDefault();
-        const fullName = (document.getElementById("auth-register-name")?.value || "").trim();
-        const email = (document.getElementById("auth-register-email")?.value || "").trim();
-        const password = document.getElementById("auth-register-password")?.value || "";
-        const confirmPassword = document.getElementById("auth-register-confirm")?.value || "";
-        const termsAccepted = Boolean(document.getElementById("auth-register-terms")?.checked);
+        const fullNameInput = document.getElementById("auth-register-name");
+        const emailInput = document.getElementById("auth-register-email");
+        const passwordInput = document.getElementById("auth-register-password");
+        const confirmPasswordInput = document.getElementById("auth-register-confirm");
+        const termsInput = document.getElementById("auth-register-terms");
         const submitBtn = document.getElementById("auth-register-submit");
+
+        const fullName = (fullNameInput?.value || "").trim();
+        const email = (emailInput?.value || "").trim();
+        const password = passwordInput?.value || "";
+        const confirmPassword = confirmPasswordInput?.value || "";
+        const termsAccepted = Boolean(termsInput?.checked);
 
         if (!validateEmail(email)) {
           showAuthFeedback("Please enter a valid email address.", true);
+          emailInput?.focus();
           return;
         }
         if (password.length < 8) {
           showAuthFeedback("Password must be at least 8 characters long.", true);
+          passwordInput?.focus();
           return;
         }
         if (password !== confirmPassword) {
           showAuthFeedback("Passwords do not match. Please confirm your password.", true);
+          confirmPasswordInput?.focus();
           return;
         }
         if (!termsAccepted) {
@@ -1233,8 +1272,25 @@
           submitBtn.textContent = "Creating Account...";
         }
 
-        if (!supabase) {
-          showAuthFeedback("Authentication service is initializing. Please try again.", true);
+        let sb = supabase;
+        if (!sb && window.VidSynthSupabase && typeof window.VidSynthSupabase.getClient === "function") {
+          sb = window.VidSynthSupabase.getClient();
+          supabase = sb;
+        }
+        if (!sb && window.supabase && typeof window.supabase.createClient === "function" && window.SUPABASE_URL && window.SUPABASE_ANON_KEY) {
+          sb = window.supabase.createClient(window.SUPABASE_URL, window.SUPABASE_ANON_KEY, {
+            auth: {
+              persistSession: true,
+              autoRefreshToken: true,
+              detectSessionInUrl: true,
+              storageKey: "vidsynth_ai_supabase_auth"
+            }
+          });
+          supabase = sb;
+        }
+
+        if (!sb) {
+          showAuthFeedback("Authentication service is initializing. Please check your connection and try again.", true);
           if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.textContent = originalBtnText;
@@ -1243,64 +1299,66 @@
         }
 
         try {
-          const redirectTo = "https://vidsynth.app/";
-
-          const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
+          const { data, error } = await sb.auth.signUp({
+            email: emailInput.value.trim(),
+            password: passwordInput.value,
             options: {
-              data: {
-                full_name: fullName,
-                username: email.split("@")[0].replace(/[^a-zA-Z0-9_]/g, "").toLowerCase() || "creator"
-              },
-              emailRedirectTo: redirectTo
+              data: { full_name: fullNameInput.value.trim() },
+              emailRedirectTo: window.location.origin
             }
           });
 
+          // Detail 1: Error from Supabase -> show specific error.message in red banner
           if (error) {
-            showAuthFeedback(error.message || "Could not create account.", true);
+            showAuthFeedback(error.message || "Failed to create account. Please check your credentials.", true);
             return;
           }
 
-          // Case A: Confirm Email is ON (session is null) -> Reveal Interactive Confirmation Card
-          if (data && !data.session) {
-            showEmailVerificationSentCard(email);
-            showToast("Verification email sent! Please check your inbox.", "info");
-            registerForm.reset();
-            return;
-          }
+          // Detail 2: Success (data.user exists)
+          if (data && data.user) {
+            // Case A: Confirm Email is ON (data.session === null)
+            if (data.session === null) {
+              showAuthFeedback("Verification link sent to your email. Please check your inbox (or spam) to activate your account.", false);
+              showEmailVerificationSentCard(emailInput.value.trim());
+              showToast("Verification link sent to your email. Please check your inbox (or spam) to activate your account.", "info");
+              registerForm.reset();
+              return;
+            }
 
-          // Case B: Instant session established (Auto-confirm active)
-          if (data && data.session && data.session.user) {
-            authToken = data.session.access_token;
-            try {
-              localStorage.setItem(AUTH_TOKEN_KEY, authToken);
-            } catch (_) {}
+            // Case B: Auto-confirmed (data.session exists)
+            if (data.session) {
+              authToken = data.session.access_token;
+              try {
+                localStorage.setItem(AUTH_TOKEN_KEY, authToken);
+              } catch (_) {}
 
-            const u = data.session.user;
-            currentUser = {
-              id: u.id,
-              email: u.email || email,
-              full_name: fullName || email.split("@")[0],
-              username: email.split("@")[0].replace(/[^a-zA-Z0-9_]/g, "").toLowerCase() || "creator",
-              avatar_url: "",
-              credits: DEFAULT_CREDITS,
-              remainingCredits: DEFAULT_CREDITS,
-              maxCredits: DEFAULT_CREDITS,
-              is_verified: true,
-              auth_provider: "email",
-              created_at: new Date().toISOString()
-            };
+              const u = data.session.user;
+              const meta = u.user_metadata || {};
+              currentUser = {
+                id: u.id,
+                email: u.email || emailInput.value.trim(),
+                full_name: fullNameInput.value.trim() || meta.full_name || meta.name || (u.email ? u.email.split("@")[0] : "Creator"),
+                username: (u.email || emailInput.value.trim()).split("@")[0].replace(/[^a-zA-Z0-9_]/g, "").toLowerCase() || "creator",
+                avatar_url: meta.avatar_url || meta.picture || "",
+                credits: DEFAULT_CREDITS,
+                remainingCredits: DEFAULT_CREDITS,
+                maxCredits: DEFAULT_CREDITS,
+                is_verified: true,
+                auth_provider: "email",
+                created_at: new Date().toISOString()
+              };
 
-            saveLocalUserSession(currentUser);
-            updateApplicationUI();
-            closeAuthModal();
-            showToast("Welcome to VidSynth AI! 2 Free Credits activated.", "success");
-            completePostAuthNavigation();
-            registerForm.reset();
+              saveLocalUserSession(currentUser);
+              updateApplicationUI();
+              closeAuthModal();
+              showToast("Welcome to VidSynth AI! 2 Free Credits activated.", "success");
+              completePostAuthNavigation();
+              registerForm.reset();
+              return;
+            }
           }
         } catch (err) {
-          showAuthFeedback(err.message || "An unexpected error occurred during registration.", true);
+          showAuthFeedback(err?.message || "An unexpected error occurred during registration. Please try again.", true);
         } finally {
           if (submitBtn) {
             submitBtn.disabled = false;
@@ -1315,23 +1373,34 @@
       const email = document.getElementById("auth-verify-email-target")?.textContent?.trim();
       const resendBtn = document.getElementById("auth-resend-verification-btn");
       const resendLabel = document.getElementById("auth-resend-btn-label");
-      if (!email || !supabase) return;
+      let sb = supabase;
+      if (!sb && window.VidSynthSupabase && typeof window.VidSynthSupabase.getClient === "function") {
+        sb = window.VidSynthSupabase.getClient();
+        supabase = sb;
+      }
+      if (!email || !sb) return;
 
       if (resendBtn) resendBtn.disabled = true;
       if (resendLabel) resendLabel.textContent = "Resending...";
 
       try {
-        const { error } = await supabase.auth.resend({
+        const { error } = await sb.auth.resend({
           type: "signup",
-          email: email
+          email: email,
+          options: {
+            emailRedirectTo: window.location.origin
+          }
         });
         if (error) {
+          showAuthFeedback(error.message || "Could not resend verification email.", true);
           showToast(error.message || "Could not resend verification email.", "warning");
         } else {
+          showAuthFeedback("Verification email resent! Please check your inbox (and spam).", false);
           showToast("Verification email resent! Please check your inbox.", "success");
         }
       } catch (err) {
-        showToast(err.message || "Could not resend email.", "warning");
+        showAuthFeedback(err?.message || "Could not resend verification email.", true);
+        showToast(err?.message || "Could not resend email.", "warning");
       } finally {
         if (resendLabel) resendLabel.textContent = "Resend verification email";
         setTimeout(() => {
