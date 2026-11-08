@@ -190,7 +190,7 @@
         : "VIDSYNTH AI";
 
     const toast = document.createElement("div");
-    toast.className = `pointer-events-auto bg-[#FAF8F3] border-l-4 ${borderCol} border border-[#C9BBA5] rounded-lg p-3.5 shadow-xl flex items-start justify-between gap-3`;
+    toast.className = `vidsynth-glass-toast pointer-events-auto border-l-4 ${borderCol} rounded-lg p-3.5 flex items-start justify-between gap-3`;
     toast.innerHTML = `
       <div class="flex flex-col gap-1">
         <span class="font-mono-tech text-[10px] tracking-wider uppercase text-[#75624E] font-semibold">${badgeText}</span>
@@ -521,15 +521,20 @@
         savedAt: Date.now()
       };
 
-      sessionStorage.setItem(GUEST_DRAFT_KEY, JSON.stringify(draft));
+      const serialized = JSON.stringify(draft);
+      sessionStorage.setItem("vidsynth_pending_generation_draft", serialized);
+      sessionStorage.setItem(GUEST_DRAFT_KEY, serialized);
     } catch (_) {}
   }
 
   function restoreGuestStudioDraftAfterAuth() {
     try {
-      const raw = sessionStorage.getItem(GUEST_DRAFT_KEY);
+      const raw =
+        sessionStorage.getItem("vidsynth_pending_generation_draft") ||
+        sessionStorage.getItem(GUEST_DRAFT_KEY);
       if (!raw) return false;
       const draft = JSON.parse(raw);
+      sessionStorage.removeItem("vidsynth_pending_generation_draft");
       sessionStorage.removeItem(GUEST_DRAFT_KEY);
       if (!draft || (!draft.prompt && !draft.referenceDataUrl)) return false;
 
@@ -573,6 +578,10 @@
       const restoredBanner = document.getElementById("studio-restored-draft-banner");
       if (restoredBanner) {
         restoredBanner.classList.remove("hidden");
+        const titleEl = document.getElementById("studio-restored-draft-title");
+        const msgEl = document.getElementById("studio-restored-draft-msg");
+        if (titleEl) titleEl.textContent = "Your creation is ready.";
+        if (msgEl) msgEl.textContent = "Your prompt and reference image have been restored. You can now generate your image.";
       }
 
       document.getElementById("interactive-sandbox")?.scrollIntoView({ behavior: "smooth" });
@@ -581,6 +590,11 @@
       return false;
     }
   }
+
+  function checkAndRestorePendingGenerationDraft() {
+    return restoreGuestStudioDraftAfterAuth();
+  }
+  window.checkAndRestorePendingGenerationDraft = checkAndRestorePendingGenerationDraft;
 
   // --------------------------------------------------------------------------
   // 4. Load Profile, Credits & Generations from Backend + Realtime
@@ -710,7 +724,7 @@
     }
   }
 
-  function openAuthModal(tab = "login", customSubtitle = "") {
+  function openAuthModal(tab = "login", customSubtitle = "", customTitle = "") {
     if (tab === "forgot") {
       window.location.href = "forgot-password.html";
       return;
@@ -721,10 +735,16 @@
     }
     const modal = document.getElementById("auth-modal");
     const subtitleEl = document.getElementById("auth-modal-subtitle");
+    const titleEl = document.getElementById("auth-modal-title");
+    const badgeEl = document.getElementById("auth-modal-passes-badge");
     if (!modal) return;
     switchAuthTab(tab);
     if (customSubtitle && subtitleEl) {
       subtitleEl.textContent = customSubtitle;
+    }
+    if (customTitle) {
+      if (titleEl) titleEl.textContent = customTitle;
+      if (badgeEl) badgeEl.textContent = customTitle;
     }
     modal.classList.remove("hidden");
     document.body.style.overflow = "hidden";
@@ -735,6 +755,12 @@
     if (!modal) return;
     modal.classList.add("hidden");
     document.body.style.overflow = "";
+    const subtitleEl = document.getElementById("auth-modal-subtitle");
+    const titleEl = document.getElementById("auth-modal-title");
+    const badgeEl = document.getElementById("auth-modal-passes-badge");
+    if (subtitleEl) subtitleEl.textContent = "Sign in to access your creative workspace and continue creating.";
+    if (titleEl) titleEl.textContent = "Welcome to VidSynth AI";
+    if (badgeEl) badgeEl.textContent = "2 FREE CREDITS FOR NEW ACCOUNTS";
   }
 
   function showEmailVerificationSentCard(email) {
@@ -2180,37 +2206,97 @@
       });
     });
 
+    function formatFileSize(bytes) {
+      if (!bytes || bytes <= 0) return "0 B";
+      const k = 1024;
+      const sizes = ["B", "KB", "MB", "GB"];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return (bytes / Math.pow(k, i)).toFixed(i > 1 ? 1 : 0) + " " + sizes[i];
+    }
+
     // Local + Authenticated Reference Image Preview (Works for Guests & Logged-In Users)
     function attachReferenceFile(file) {
       if (!file) return;
+
+      const engine = window.generationEngine || (typeof root !== "undefined" ? root.generationEngine : null);
+      let val = null;
       try {
-        window.generationEngine.validateReferenceImageFile(file);
-      } catch (validationErr) {
-        showToast(validationErr.message, "warning");
+        if (engine && typeof engine.validateReferenceImageFile === "function") {
+          val = engine.validateReferenceImageFile(file);
+        }
+      } catch (err) {
+        val = { valid: false, error: err.message };
+      }
+
+      if (!val) {
+        const allowed = ["image/jpeg", "image/png", "image/webp"];
+        const mime = String(file.type || "").toLowerCase();
+        if (!allowed.includes(mime) || file.size <= 0 || file.size > 10 * 1024 * 1024) {
+          val = { valid: false, error: "File format not supported or size exceeds 10MB" };
+        } else {
+          val = { valid: true };
+        }
+      }
+
+      if (!val || !val.valid) {
+        showToast(val?.error || "File format not supported or size exceeds 10MB", "warning");
+        if (refFileInput) refFileInput.value = "";
         return;
       }
 
+      // Show upload / processing state
+      if (refIdle) refIdle.classList.add("hidden");
+      if (refPreviewBox) refPreviewBox.classList.add("hidden");
+      if (refUploading) refUploading.classList.remove("hidden");
+      const refProgBar = document.getElementById("studio-ref-progress-bar");
+      const refProgLabel = document.getElementById("studio-ref-progress-label");
+      if (refProgBar) refProgBar.style.width = "40%";
+      if (refProgLabel) refProgLabel.textContent = "Processing reference image...";
+
       selectedReferenceFile = file;
       const reader = new FileReader();
+
+      reader.onerror = () => {
+        if (refUploading) refUploading.classList.add("hidden");
+        if (refIdle) refIdle.classList.remove("hidden");
+        if (refFileInput) refFileInput.value = "";
+        selectedReferenceFile = null;
+        selectedReferenceDataUrl = "";
+        showToast("Could not read uploaded image file. Please try again.", "error");
+      };
+
       reader.onload = () => {
+        if (refProgBar) refProgBar.style.width = "100%";
         const dataUrl = String(reader.result || "");
         selectedReferenceDataUrl = dataUrl;
+        const formattedSize = formatFileSize(file.size);
+
         if (refPreviewImg) {
           refPreviewImg.onload = () => {
+            const dims = `${refPreviewImg.naturalWidth || "—"}×${refPreviewImg.naturalHeight || "—"}px`;
             if (refDimensions) {
-              refDimensions.textContent = `${refPreviewImg.naturalWidth || "—"}×${
-                refPreviewImg.naturalHeight || "—"
-              }px • Auto-resized < 512×512 on server`;
+              refDimensions.textContent = `${dims} • ${formattedSize} • Auto-resized < 512×512 on server`;
+            }
+            const refMeta = document.getElementById("studio-ref-meta");
+            if (refMeta) {
+              refMeta.textContent = `Image-to-Image Ready • ${dims} (${formattedSize})`;
             }
           };
           refPreviewImg.src = dataUrl;
         }
-        if (refFilename) refFilename.textContent = file.name;
-        if (refIdle) refIdle.classList.add("hidden");
-        if (refUploading) refUploading.classList.add("hidden");
-        if (refPreviewBox) refPreviewBox.classList.remove("hidden");
-        syncStudioModeUI();
+
+        if (refFilename) {
+          refFilename.textContent = file.name;
+        }
+
+        setTimeout(() => {
+          if (refUploading) refUploading.classList.add("hidden");
+          if (refIdle) refIdle.classList.add("hidden");
+          if (refPreviewBox) refPreviewBox.classList.remove("hidden");
+          syncStudioModeUI();
+        }, 100);
       };
+
       reader.readAsDataURL(file);
     }
 
@@ -2351,7 +2437,12 @@
     if (downloadBtn) {
       downloadBtn.addEventListener("click", () => {
         if (!currentGeneratedAssetUrl) return;
-        downloadGenerationById(currentGeneratedRecordId, currentGeneratedAssetUrl, currentGeneratedExt);
+        const filename = `vidsynth-${currentGeneratedRecordId || Date.now()}.${currentGeneratedExt || "jpg"}`;
+        if (window.generationEngine && typeof window.generationEngine.downloadImage === "function") {
+          window.generationEngine.downloadImage(currentGeneratedAssetUrl, filename);
+        } else {
+          downloadGenerationById(currentGeneratedRecordId, currentGeneratedAssetUrl, currentGeneratedExt);
+        }
       });
     }
 
@@ -2425,20 +2516,29 @@
           return;
         }
 
-        // 1. Check Credits (for authenticated user or guest trying sandbox)
+        // 1. GUEST AUTHENTICATION GUARD
+        // Guests can prepare prompt, settings, and reference image freely,
+        // but cannot execute generation or deduct credits without an account.
         const isGuest = !currentUser || !authToken;
-        let remaining = 0;
         if (isGuest) {
-          const rawGuestCredits = localStorage.getItem("vidsynth_guest_sandbox_credits");
-          remaining = rawGuestCredits !== null ? Number(rawGuestCredits) : 2;
-        } else {
-          remaining = Number(currentUser.remainingCredits ?? currentUser.credits ?? 0);
+          saveGuestStudioDraft();
+          openAuthModal(
+            "register",
+            "Sign in or create a free account to execute this generation. Your prepared prompt and reference image will be restored after authentication.",
+            "Create your account to receive 2 complimentary credits and start creating."
+          );
+          showToast(
+            "Please sign in or create a free account to execute this generation. Your inputs have been saved.",
+            "info"
+          );
+          return;
         }
 
-        // 2. Validate credits
+        // 2. CHECK & VALIDATE CREDITS FOR AUTHENTICATED USER
+        const remaining = Number(currentUser.remainingCredits ?? currentUser.credits ?? 0);
         if (remaining < 1) {
           openCreditsExhaustedModal();
-          showToast("Sandbox / Free Credits Exhausted. Request B2B Enterprise API access to continue.", "warning");
+          showToast("Free Credits Exhausted. Request B2B Enterprise API access to continue.", "warning");
           return;
         }
 
@@ -2461,11 +2561,12 @@
           outWidth,
           outHeight,
           outMode,
-          creditDisplay
+          creditDisplay,
+          genRecord
         }) {
           currentGeneratedAssetUrl = outputUrl;
           currentGeneratedExt = outputUrl.endsWith(".webp") ? "webp" : "jpg";
-          currentGeneratedRecordId = "gen_" + Date.now();
+          currentGeneratedRecordId = genRecord?.id || ("gen_" + Date.now());
           currentBeforeImageUrl = inputUrl || "";
 
           const resultImage = document.getElementById("studio-result-image");
@@ -2502,8 +2603,8 @@
           const liveBadge = document.getElementById("studio-result-badge");
           if (liveBadge) liveBadge.textContent = "GENERATED OUTPUT";
 
-          const record = {
-            id: "gen_" + Date.now(),
+          const record = genRecord || {
+            id: currentGeneratedRecordId,
             title: promptText.slice(0, 40) || "Visual Synthesis",
             prompt: promptText,
             mode: outMode,
@@ -2524,80 +2625,120 @@
           );
         }
 
+        let stageTimer1 = null;
+        let stageTimer2 = null;
+
         try {
-          // 2-second visual log rendering simulation on AWS EC2 G5 GPU cluster
           if (loadingLabel) {
-            loadingLabel.textContent = "[0.0s] ALLOCATING AWS EC2 G5 GPU CLUSTER & MOUNTING TENSOR PIPELINE...";
+            loadingLabel.textContent = "[1/3] Preparing composition and setting neural latent seeds...";
           }
-          await new Promise((r) => setTimeout(r, 650));
-          if (loadingLabel) {
-            loadingLabel.textContent = "[0.7s] RUNNING NEURAL DIFFUSION SAMPLER ON AWS EC2 G5 GPU CLUSTER...";
-          }
-          await new Promise((r) => setTimeout(r, 700));
-          if (loadingLabel) {
-            loadingLabel.textContent = "[1.4s] COLOR GRADING & COMPOSITING HIGH-RESOLUTION 1024×1024 ARTIFACT...";
-          }
-          await new Promise((r) => setTimeout(r, 650));
-          if (loadingLabel) {
-            loadingLabel.textContent = "[2.0s] SYNTHESIS COMPLETE • PERSISTING TO SECURE ASSET STORAGE...";
+          stageTimer1 = setTimeout(() => {
+            if (loadingLabel) {
+              loadingLabel.textContent = "[2/3] Synthesizing neural latent space via Cloudflare Workers AI...";
+            }
+          }, 1800);
+          stageTimer2 = setTimeout(() => {
+            if (loadingLabel) {
+              loadingLabel.textContent = "[3/3] Finalizing high-resolution rendering and persisting asset...";
+            }
+          }, 4200);
+
+          const formData = new FormData();
+          formData.append("prompt", promptText);
+          const addDesc = (addInstructionsInput?.value || "").trim();
+          if (addDesc) formData.append("description", addDesc);
+          if (styleSelect?.value) formData.append("stylePreset", styleSelect.value);
+          if (aspectSelect?.value) formData.append("aspectRatio", aspectSelect.value);
+          if (widthSelect?.value) formData.append("width", widthSelect.value);
+          if (heightSelect?.value) formData.append("height", heightSelect.value);
+          if (guidanceInput?.value) formData.append("guidance", guidanceInput.value);
+          if (seedInput?.value) formData.append("seed", seedInput.value);
+          formData.append("processingMode", selectedStudioModel || "VS-CHAR-2.4");
+
+          if (selectedReferenceFile) {
+            formData.append("reference_image", selectedReferenceFile);
+          } else if (selectedReferenceDataUrl) {
+            formData.append("referenceImageBase64", selectedReferenceDataUrl);
           }
 
-          // Decrement credit from 2 to 1, then to 0
-          const newRemaining = Math.max(0, remaining - 1);
-          if (isGuest) {
-            try {
-              localStorage.setItem("vidsynth_guest_sandbox_credits", String(newRemaining));
-            } catch (_) {}
-            const studioCounter = document.getElementById("studio-passes-counter");
-            const navLabel = document.getElementById("nav-passes-label");
-            const mobileLabel = document.getElementById("mobile-passes-label");
-            const guestLabel = `SANDBOX CREDITS: ${newRemaining}`;
-            if (studioCounter) studioCounter.textContent = guestLabel;
-            if (navLabel) navLabel.textContent = guestLabel;
-            if (mobileLabel) mobileLabel.textContent = guestLabel;
-          } else {
-            currentUser.credits = newRemaining;
-            currentUser.remainingCredits = newRemaining;
-            currentUser.total_generations = (currentUser.total_generations || 0) + 1;
-            saveLocalUserSession(currentUser);
-            updateApplicationUI();
+          const response = await fetch("/api/generate-or-edit", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${authToken}`
+            },
+            body: formData
+          });
+
+          clearTimeout(stageTimer1);
+          clearTimeout(stageTimer2);
+
+          const result = await response.json();
+
+          if (!response.ok || !result.ok) {
+            if (response.status === 401) {
+              openAuthModal("login", "Session expired. Please sign in again.");
+              showToast("Session expired. Please sign in again.", "warning");
+              showCanvasState("empty");
+              return;
+            }
+
+            if (typeof result.remainingCredits === "number") {
+              currentUser.credits = result.remainingCredits;
+              currentUser.remainingCredits = result.remainingCredits;
+              saveLocalUserSession(currentUser);
+              updateApplicationUI();
+            }
+
+            const errTitle = document.getElementById("studio-error-title");
+            const errMsg = document.getElementById("studio-error-msg");
+            if (errTitle) errTitle.textContent = "Generation Notice";
+            if (errMsg) {
+              errMsg.textContent =
+                result.message ||
+                "Image generation could not be completed. Your credit balance has been preserved.";
+            }
+            showCanvasState("error");
+            showToast(result.message || "Could not complete generation.", "error");
+            return;
           }
 
-          const fallbackCatalog = isEditMode
-            ? [
-                "assets/showcase/after/after1.jpeg",
-                "assets/showcase/after/after2.jpeg",
-                "assets/showcase/after/after3.jpeg",
-                "assets/showcase/after/after4.jpeg",
-                "assets/showcase/after/after5.jpg"
-              ]
-            : [
-                "assets/showcase/cinematic/cinematic-relit-portrait.webp",
-                "assets/showcase/sci-fi/scifi-cyberpunk-metropolis.webp",
-                "assets/showcase/fantasy/fantasy-enchanted-sanctuary.webp",
-                "assets/showcase/portal/portal-dimensional-rift.webp",
-                "assets/showcase/anime/anime-choreography-frame.webp",
-                "assets/showcase/elemental/elemental-volcanic-eruption.webp",
-                "assets/showcase/energy/energy-aurora-borealis.webp",
-                "assets/showcase/creature/creatures-mythic-griffin.webp",
-                "assets/showcase/robotic/robotic-biomech-valkyrie.webp",
-                "assets/showcase/environmental/environment-neomorphic-desert.webp"
-              ];
+          // Real generation succeeded
+          const outputUrl = result.imageUrl;
+          const inputUrl = result.inputImageUrl || selectedReferenceDataUrl || "";
+          const newRemaining =
+            typeof result.remainingCredits === "number"
+              ? result.remainingCredits
+              : Math.max(0, remaining - 1);
 
-          const genCount = isGuest ? (2 - newRemaining) : (currentUser.total_generations || 1);
-          const chosenAsset = fallbackCatalog[(genCount - 1) % fallbackCatalog.length];
-          const beforeAsset = selectedReferenceDataUrl || "assets/showcase/before/before1.jpg";
+          currentUser.credits = newRemaining;
+          currentUser.remainingCredits = newRemaining;
+          currentUser.total_generations = (currentUser.total_generations || 0) + 1;
+          saveLocalUserSession(currentUser);
+          updateApplicationUI();
 
           renderStudioOutputAndSaveRecord({
-            outputUrl: chosenAsset,
-            inputUrl: beforeAsset,
-            outWidth: widthSelect ? Number(widthSelect.value) : 1024,
-            outHeight: heightSelect ? Number(heightSelect.value) : 1024,
-            outMode: isEditMode ? "image-to-image" : "text-to-image",
-            creditDisplay: newRemaining
+            outputUrl,
+            inputUrl,
+            outWidth: result.width || (widthSelect ? Number(widthSelect.value) : 1024),
+            outHeight: result.height || (heightSelect ? Number(heightSelect.value) : 1024),
+            outMode: result.mode || (isEditMode ? "image-to-image" : "text-to-image"),
+            creditDisplay: newRemaining,
+            genRecord: result.generation
           });
+
+          // Sync full profile and assets in background
+          syncProfileAndAssetsFromBackend().catch(() => {});
         } catch (err) {
+          if (stageTimer1) clearTimeout(stageTimer1);
+          if (stageTimer2) clearTimeout(stageTimer2);
           console.error("Studio generation error:", err);
+          const errTitle = document.getElementById("studio-error-title");
+          const errMsg = document.getElementById("studio-error-msg");
+          if (errTitle) errTitle.textContent = "Generation Notice";
+          if (errMsg) {
+            errMsg.textContent = err.message || "Network error during generation. Please try again.";
+          }
+          showCanvasState("error");
           showToast(err.message || "Could not complete generation.", "warning");
         } finally {
           if (generateBtn) generateBtn.disabled = false;

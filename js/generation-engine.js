@@ -31,17 +31,55 @@
 
     /**
      * Validates an uploaded reference image file for Image-to-Image editing.
+     * Rules:
+     * - Accept only: image/jpeg, image/png, image/webp
+     * - Maximum file size: 10 MB (10 * 1024 * 1024 bytes)
+     * - Returns { valid: true } or { valid: false, error: 'File format not supported or size exceeds 10MB' }
      */
     validateReferenceImageFile(file) {
-      if (!file) throw new Error("Please select a valid image file.");
-      const allowed = ["image/jpeg", "image/png", "image/webp", "image/jpg"];
-      if (file.type && !allowed.includes(file.type.toLowerCase())) {
-        throw new Error("Supported image formats: JPEG, PNG, or WEBP.");
+      if (!file || typeof file !== "object" || typeof file.size !== "number") {
+        return { valid: false, error: "File format not supported or size exceeds 10MB" };
       }
-      if (file.size > 15 * 1024 * 1024) {
-        throw new Error("Reference file exceeds maximum size limit of 15MB.");
+
+      const allowedMimes = ["image/jpeg", "image/png", "image/webp"];
+      const mime = String(file.type || "").toLowerCase().trim();
+      const MAX_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB
+
+      // Verify MIME type and size boundaries
+      if (!allowedMimes.includes(mime) || file.size <= 0 || file.size > MAX_SIZE_BYTES) {
+        return { valid: false, error: "File format not supported or size exceeds 10MB" };
       }
-      return true;
+
+      return { valid: true };
+    },
+
+    /**
+     * Downloads an image file to the user's device.
+     */
+    async downloadImage(imageUrl, filename = "vidsynth-output.jpg") {
+      if (!imageUrl) return false;
+      try {
+        const response = await fetch(imageUrl);
+        const blob = await response.blob();
+        const blobUrl = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        setTimeout(() => URL.revokeObjectURL(blobUrl), 1500);
+        return true;
+      } catch (_) {
+        const link = document.createElement("a");
+        link.href = imageUrl;
+        link.download = filename;
+        link.target = "_blank";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        return true;
+      }
     },
 
     /**
@@ -202,6 +240,12 @@
   if (typeof module !== "undefined" && module.exports) {
     module.exports = generationEngine;
   }
-  root.VidSynthGenerationEngine = generationEngine;
-  root.generationEngine = generationEngine;
+  if (typeof root !== "undefined") {
+    root.VidSynthGenerationEngine = generationEngine;
+    root.generationEngine = generationEngine;
+  }
+  if (typeof window !== "undefined") {
+    window.VidSynthGenerationEngine = generationEngine;
+    window.generationEngine = generationEngine;
+  }
 })(typeof window !== "undefined" ? window : globalThis);
