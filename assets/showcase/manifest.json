@@ -1,0 +1,218 @@
+{
+  "headline": "One Image. Infinite Possibilities.",
+  "supportingText": "Transform ordinary visuals into extraordinary creative experiences with VidSynth AI.",
+  "licensePolicy": "All assets are stored locally inside assets/showcase/ and assets/videos/. Includes user-provided studio comparison plates and original VidSynth AI synthesized visual demonstrations (first-party owned, commercial license).",
+  "videoPairs": [
+    {
+      "id": "human-to-anime",
+      "theme": "anime",
+      "title": "Human Performance to Anime Synthesis",
+      "beforeUrl": "assets/showcase/videos/vidio before1.mp4",
+      "afterUrl": "assets/showcase/videos/vidio after1.mp4",
+      "beforePoster": "assets/showcase/videos/human-to-anime-before-poster.jpg",
+      "afterPoster": "assets/showcase/videos/human-to-anime-after-poster.jpg",
+      "source": "VidSynth AI First-Party Transformation Study"
+    },
+    {
+      "id": "lion-to-robot",
+      "theme": "robotic",
+      "title": "Organic Wildlife to Biomechanical Robot Lion",
+      "beforeUrl": "assets/showcase/videos/vidio before2.mp4",
+      "afterUrl": "assets/showcase/videos/vidio after2.mp4",
+      "beforePoster": "assets/showcase/videos/lion-to-robot-before-poster.jpg",
+      "afterPoster": "assets/showcase/videos/lion-to-robot-after-poster.jpg",
+      "source": "VidSynth AI First-Party Transformation Study"
+    }
+  ],
+  "pairs": [
+    {
+      "id": 1,
+      "title": "Cel-Shaded Animation to Live-Action Cinema",
+      "category": "Character Realism Transfer",
+      "theme": "cinematic",
+      "model": "VS-CHAR-2.4",
+      "aspectLabel": "1:1 Editorial Square",
+      "beforeFile": "before1.jpg",
+      "afterFile": "after1.jpeg",
+      "beforeUrl": "assets/showcase/before/before1.jpg",
+      "afterUrl": "assets/showcase/after/after1.jpeg",
+      "beforeDimensions": { "width": 736, "height": 736 },
+      "afterDimensions": { "width": 2048, "height": 2048 },
+      "description": "Preserves primary subject identity and expression while synthesizing stylized animated companions and golden-hour park lighting."
+    },
+    {
+      "id": 2,
+      "title": "Stylized Illustration to Natural Daylight Portrait",
+      "category": "Photorealistic Synthesis",
+      "theme": "cinematic",
+      "model": "VS-CHAR-2.4",
+      "aspectLabel": "3:4 Portrait Plate",
+      "beforeFile": "before2.jpg",
+      "afterFile": "after2.jpeg",
+      "beforeUrl": "assets/showcase/before/before2.jpg",
+      "afterUrl": "assets/showcase/after/after2.jpeg",
+      "beforeDimensions": { "width": 736, "height": 931 },
+      "afterDimensions": { "width": 1792, "height": 2400 },
+      "description": "Maintains exact facial landmarks and eyeglasses reflection while reconstructing studio lighting and multi-character framing."
+    },
+    {
+      "id": 3,
+      "title": "Concept Sketch to 35mm European Street Cinema",
+      "category": "Scene & Relighting Conditioning",
+      "theme": "environment",
+      "model": "VS-RELIGHT-1.2",
+      "aspectLabel": "9:16 Vertical Cinema",
+      "beforeFile": "before3.jpg",
+      "afterFile": "after3.jpeg",
+      "beforeUrl": "assets/showcase/before/before3.jpg",
+      "afterUrl": "assets/showcase/after/after3.jpeg",
+      "beforeDimensions": { "width": 736, "height": 1308 },
+      "afterDimensions": { "width": 1536, "height": 2752 },
+      "description": "Transforms a casual interior snapshot into a dynamic urban street composition with cohesive perspective and lighting."
+    },
+    {
+      "id": 4,
+      "title": "Tactile Felt Stop-Motion to Clean 2D Animation",
+      "category": "Cross-Medium Style Conditioning",
+      "theme": "anime",
+      "model": "VS-CHAR-2.4",
+      "aspectLabel": "9:16 Vertical Plate",
+      "beforeFile": "before4.jpg",
+      "afterFile": "after4.jpeg",
+      "beforeUrl": "assets/showcase/before/before4.jpg",
+      "afterUrl": "assets/showcase/after/after4.jpeg",
+      "beforeDimensions": { "width": 816, "height": 1456 },
+      "afterDimensions": { "width": 1536, "height": 2752 },
+      "description": "Anchors subject pose and wardrobe while synthesizing multi-plane character depth and atmospheric background lighting."
+    },
+    {
+      "id": 5,
+      "title": "Live-Action Studio Plate to Handcrafted Felt Character",
+      "category": "Material & Character Transformation",
+      "theme": "sci-fi",
+      "model": "VS-CHAR-2.4",
+      "aspectLabel": "9:16 Vertical Plate",
+      "beforeFile": "before5.jpeg",
+      "afterFile": "after5.jpg",
+      "beforeUrl": "assets/showcase/before/before5.jpeg",
+      "afterUrl": "assets/showcase/after/after5.jpg",
+      "beforeDimensions": { "width": 1536, "height": 2752 },
+      "afterDimensions": { "width": 720, "height": 1280 },
+      "description": "Retains full-body stance and subject identity while reconstructing a detailed nocturnal metropolis backdrop."
+    }
+  ],
+  "curatedVfxThemes": [
+    {
+      "id": "theme-01-cinematic",
+      "theme": "cinematic",
+      "themeLabel": "Theme 01 • Cinematic Transformation",
+      "title": "35mm Sandstone Colonnade Relighting",
+      "assetUrl": "assets/showcase/cinematic/cinematic-relit-portrait.webp",
+      "videoUrl": "assets/showcase/videos/showcase-character-cinema.webm",
+      "posterUrl": "assets/showcase/videos/showcase-character-cinema-poster.jpg",
+      "badge": "Sample VFX Showcase",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-02-elemental",
+      "theme": "elemental",
+      "themeLabel": "Theme 02 • Elemental VFX",
+      "title": "Thermal Ember & Glacial Frost Convergence",
+      "assetUrl": "assets/showcase/elemental/elemental-fire-frost.webp",
+      "badge": "Sample VFX Showcase",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-03-energy",
+      "theme": "energy",
+      "themeLabel": "Theme 03 • Energy & Power Effects",
+      "title": "Solar Kinetic Ring & Volumetric Particle Field",
+      "assetUrl": "assets/showcase/energy/energy-arcane-aura.webp",
+      "videoUrl": "assets/videos/showcase-valence.webm",
+      "posterUrl": "assets/images/showcase-valence-poster.jpg",
+      "badge": "Sample VFX Showcase",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-04-fantasy",
+      "theme": "fantasy",
+      "themeLabel": "Theme 04 • Fantasy & Magic",
+      "title": "Runic Sanctuary & Bioluminescent Atmosphere",
+      "assetUrl": "assets/showcase/fantasy/fantasy-enchanted-sanctuary.webp",
+      "videoUrl": "assets/videos/showcase-aether.webm",
+      "posterUrl": "assets/images/showcase-aether-poster.jpg",
+      "badge": "Sample VFX Showcase",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-05-scifi",
+      "theme": "sci-fi",
+      "themeLabel": "Theme 05 • Sci-Fi & Cyberpunk",
+      "title": "Nocturnal Megastructure & Holographic Plazas",
+      "assetUrl": "assets/showcase/sci-fi/scifi-cyberpunk-metropolis.webp",
+      "beforeUrl": "assets/showcase/before/before5.jpeg",
+      "afterUrl": "assets/showcase/after/after5.jpg",
+      "badge": "Sample VFX Showcase • Before/After",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-06-anime",
+      "theme": "anime",
+      "themeLabel": "Theme 06 • Anime Transformation",
+      "title": "Live-Action Choreography to Cel-Shaded Anime",
+      "assetUrl": "assets/showcase/anime/anime-choreography-frame.webp",
+      "videoUrl": "assets/showcase/videos/vidio after1.mp4",
+      "posterUrl": "assets/showcase/videos/human-to-anime-after-poster.jpg",
+      "beforeUrl": "assets/showcase/before/before1.jpg",
+      "afterUrl": "assets/showcase/after/after1.jpeg",
+      "badge": "Sample VFX Showcase • Paired Media",
+      "license": "VidSynth AI First-Party Transformation Study"
+    },
+    {
+      "id": "theme-07-robotic",
+      "theme": "robotic",
+      "themeLabel": "Theme 07 • Robotic & Mechanical",
+      "title": "Articulated Brushed-Bronze Biomechanical Construct",
+      "assetUrl": "assets/showcase/robotic/robotic-biomech-valkyrie.webp",
+      "videoUrl": "assets/showcase/videos/showcase-material-transfer.webm",
+      "posterUrl": "assets/showcase/videos/showcase-material-transfer-poster.jpg",
+      "badge": "Sample VFX Showcase",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-08-creatures",
+      "theme": "creatures",
+      "themeLabel": "Theme 08 • Creature & Character VFX",
+      "title": "Organic Wildlife to Robotic Lion & Mythic Griffin",
+      "assetUrl": "assets/showcase/creature/creature-mythic-griffin.webp",
+      "videoUrl": "assets/showcase/videos/vidio after2.mp4",
+      "posterUrl": "assets/showcase/videos/lion-to-robot-after-poster.jpg",
+      "badge": "Sample VFX Showcase • Paired Video",
+      "license": "VidSynth AI First-Party Transformation Study"
+    },
+    {
+      "id": "theme-09-environment",
+      "theme": "environment",
+      "themeLabel": "Theme 09 • Environmental Transformation",
+      "title": "Autumn-to-Winter Alpine Atmospheric Transition",
+      "assetUrl": "assets/showcase/environmental/environmental-season-shift.webp",
+      "videoUrl": "assets/showcase/videos/showcase-street-environment.webm",
+      "posterUrl": "assets/showcase/videos/showcase-street-environment-poster.jpg",
+      "beforeUrl": "assets/showcase/before/before3.jpg",
+      "afterUrl": "assets/showcase/after/after3.jpeg",
+      "badge": "Sample VFX Showcase • Before/After",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    },
+    {
+      "id": "theme-10-portals",
+      "theme": "portals",
+      "themeLabel": "Theme 10 • Portal & Dimensional Effects",
+      "title": "Monolith Horizon Rift & Gravitational Lens",
+      "assetUrl": "assets/showcase/portal/portal-dimensional-rift.webp",
+      "videoUrl": "assets/videos/showcase-chronos.webm",
+      "posterUrl": "assets/images/showcase-chronos-poster.jpg",
+      "badge": "Sample VFX Showcase",
+      "license": "VidSynth AI Original Asset (First-Party)"
+    }
+  ]
+}

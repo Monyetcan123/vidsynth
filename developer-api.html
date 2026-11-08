@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Developer API — VIDSYNTH AI | Private Beta Documentation &amp; Access</title>
+  <meta name="description" content="VidSynth AI Developer API documentation, endpoints, rate limits, and Private Beta access application for enterprise visual synthesis workflows." />
+  <meta name="theme-color" content="#F4F0E8" />
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-[#F4F0E8] text-[#292720] antialiased selection:bg-[#75624E]/20 selection:text-[#292720]">
+
+  <header class="sticky top-0 z-50 bg-[#F4F0E8]/92 backdrop-blur-md border-b border-[#C9BBA5]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <a href="index.html" class="flex items-center gap-3 group" aria-label="VIDSYNTH AI Home">
+        <div class="w-9 h-9 rounded-lg bg-[#292720] text-[#FAF8F3] flex items-center justify-center border border-[#75624E]">
+          <svg class="w-4 h-4 text-[#FAF8F3]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polygon points="4 4 20 12 4 20 4 4" fill="currentColor" fill-opacity="0.2"></polygon>
+            <line x1="13" y1="7" x2="13" y2="17"></line>
+          </svg>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold tracking-tight text-sm text-[#292720] leading-none">VIDSYNTH AI</span>
+          <span class="font-mono-tech text-[10px] text-[#75624E] tracking-widest uppercase mt-0.5">Developer Platform</span>
+        </div>
+      </a>
+
+      <nav class="hidden md:flex items-center gap-6 text-sm font-medium text-[#75624E]">
+        <a href="index.html" class="hover:text-[#292720]">← Back to Platform</a>
+        <a href="#api-overview" class="hover:text-[#292720]">Overview</a>
+        <a href="#api-endpoints" class="hover:text-[#292720]">Endpoints</a>
+        <a href="#api-examples" class="hover:text-[#292720]">Request Examples</a>
+        <a href="#api-rate-limits" class="hover:text-[#292720]">Rate Limits</a>
+        <a href="#api-key-management" class="hover:text-[#292720]">Key Management</a>
+      </nav>
+
+      <div class="flex items-center gap-2.5">
+        <span class="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#292720] text-[#FAF8F3] font-mono-tech text-[10px] uppercase tracking-wider">
+          PRIVATE BETA — ACCESS REQUIRED
+        </span>
+        <a href="#request-developer-access" class="btn-primary !py-2 !px-4 !text-xs">
+          Request Developer Access
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14 space-y-16">
+
+    <!-- 1. API OVERVIEW -->
+    <section id="api-overview" class="surface-deep-brown p-8 sm:p-12 rounded-2xl border border-[#75624E]/40 shadow-xl">
+      <div class="max-w-3xl space-y-5">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#FAF8F3]/10 border border-[#C9BBA5]/35 font-mono-tech text-xs text-[#FAF8F3]">
+          <span class="w-2 h-2 rounded-full bg-[#C9BBA5]"></span>
+          <span>PRIVATE BETA — ACCESS REQUIRED</span>
+        </div>
+        <h1 class="text-3xl sm:text-5xl font-bold tracking-tight text-[#FAF8F3]">
+          VidSynth AI <span class="font-serif-editorial italic font-normal text-[#C9BBA5]">Developer API</span>
+        </h1>
+        <p class="text-base text-[#C9BBA5] leading-relaxed">
+          Programmatic access to the VidSynth AI Generation Pipeline, character transformation conditioning, reference image ingestion, and asynchronous batch visual processing. All endpoints require an approved organization API token.
+        </p>
+        <div class="pt-2 flex flex-wrap items-center gap-4">
+          <a href="#request-developer-access" class="btn-earth !py-3 !px-6 !text-sm">
+            Request Developer Access →
+          </a>
+          <span class="font-mono-tech text-xs text-[#C9BBA5]">
+            Partner engineering contact: <a href="mailto:founder@vidsynth.app" class="text-[#FAF8F3] underline">founder@vidsynth.app</a>
+          </span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. API DOCUMENTATION & 3. AUTHENTICATION -->
+    <section class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div class="surface-white p-7 space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="font-mono-tech text-xs uppercase text-[#75624E]">01 // API DOCUMENTATION</span>
+          <span class="px-2.5 py-0.5 rounded bg-[#E8DFD0] font-mono-tech text-[10px] text-[#292720]">REST JSON v1</span>
+        </div>
+        <h2 class="text-2xl font-bold text-[#292720]">Architecture &amp; Base URI</h2>
+        <p class="text-xs sm:text-sm text-[#5C5549] leading-relaxed">
+          The VidSynth AI API is organized around RESTful JSON workflows with deterministic idempotency keys (`X-VidSynth-Request-Id`) and signed asset delivery URLs.
+        </p>
+        <div class="p-3.5 rounded-lg bg-[#292720] text-[#FAF8F3] font-mono-tech text-xs">
+          Base URL: https://api.vidsynth.app/v1
+        </div>
+      </div>
+
+      <div class="surface-white p-7 space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="font-mono-tech text-xs uppercase text-[#75624E]">02 // AUTHENTICATION</span>
+          <span class="px-2.5 py-0.5 rounded bg-[#292720] font-mono-tech text-[10px] text-[#FAF8F3]">PRIVATE BETA — ACCESS REQUIRED</span>
+        </div>
+        <h2 class="text-2xl font-bold text-[#292720]">Bearer Token Authentication</h2>
+        <p class="text-xs sm:text-sm text-[#5C5549] leading-relaxed">
+          Approved partners authenticate requests using a workspace-scoped Bearer token in the <code class="font-mono-tech">Authorization</code> header. Never embed secret API keys in client-side code.
+        </p>
+        <div class="p-3.5 rounded-lg bg-[#292720] text-[#C9BBA5] font-mono-tech text-xs">
+          Authorization: Bearer vs_live_&lt;YOUR_APPROVED_PARTNER_KEY&gt;
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. GENERATION ENDPOINTS & 5. REQUEST EXAMPLES -->
+    <section id="api-endpoints" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      <div class="lg:col-span-5 surface-white p-7 space-y-4">
+        <div class="font-mono-tech text-xs uppercase text-[#75624E]">03 // GENERATION ENDPOINTS</div>
+        <h2 class="text-2xl font-bold text-[#292720]">Core Synthesis Routes</h2>
+        <div class="space-y-3 text-xs">
+          <div class="p-3.5 rounded-lg bg-[#F4F0E8] border border-[#C9BBA5]">
+            <div class="font-mono-tech font-bold text-[#292720]">POST /v1/generations</div>
+            <p class="text-[#5C5549] mt-1">Submit a character transformation or prompt-driven synthesis job with optional reference image conditioning.</p>
+          </div>
+          <div class="p-3.5 rounded-lg bg-[#F4F0E8] border border-[#C9BBA5]">
+            <div class="font-mono-tech font-bold text-[#292720]">GET /v1/generations/{id}</div>
+            <p class="text-[#5C5549] mt-1">Poll generation status (<code class="font-mono-tech">queued</code>, <code class="font-mono-tech">processing</code>, <code class="font-mono-tech">completed</code>, <code class="font-mono-tech">failed</code>) and retrieve signed output URLs.</p>
+          </div>
+          <div class="p-3.5 rounded-lg bg-[#F4F0E8] border border-[#C9BBA5]">
+            <div class="font-mono-tech font-bold text-[#292720]">POST /v1/assets/reference</div>
+            <p class="text-[#5C5549] mt-1">Upload a reference plate (JPG, PNG, WebP) to receive an isolated conditioning asset URI.</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="api-examples" class="lg:col-span-7 surface-deep-brown p-7 rounded-2xl border border-[#75624E]/40 space-y-4">
+        <div class="flex items-center justify-between">
+          <span class="font-mono-tech text-xs uppercase text-[#C9BBA5]">04 // REQUEST EXAMPLE</span>
+          <span class="font-mono-tech text-[11px] text-[#FAF8F3]">cURL / HTTP JSON</span>
+        </div>
+        <pre class="text-xs font-mono-tech text-[#FAF8F3] overflow-x-auto leading-relaxed bg-[#343129] p-4 rounded-xl border border-[#C9BBA5]/20"><code>curl -X POST "https://api.vidsynth.app/v1/generations" \
+  -H "Authorization: Bearer vs_live_partner_token" \
+  -H "Content-Type: application/json" \
+  -H "X-VidSynth-Request-Id: req_94f8a21c" \
+  -d '{
+    "prompt": "Stylized anime character transformation mid-choreography under warm twilight lanterns",
+    "description": "Preserve primary subject pose and hand gesture; soft cel-shaded rim lighting",
+    "stylePreset": "Anime Character Transformation",
+    "aspectRatio": "9:16",
+    "processingMode": "VS-CHAR-2.4"
+  }'</code></pre>
+      </div>
+    </section>
+
+    <!-- 6. RATE LIMITS, 7. API USAGE & 8. API KEY MANAGEMENT (LOCKED) -->
+    <section id="api-rate-limits" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="surface-white p-6 space-y-3">
+        <div class="font-mono-tech text-xs uppercase text-[#75624E]">05 // RATE LIMITS</div>
+        <h3 class="text-lg font-bold text-[#292720]">Throughput Tiers</h3>
+        <ul class="text-xs text-[#5C5549] space-y-2">
+          <li>• <strong>Private Beta Pilot:</strong> 30 requests / min</li>
+          <li>• <strong>Production Studio:</strong> 180 requests / min</li>
+          <li>• <strong>Concurrent Jobs:</strong> Up to 25 parallel workers</li>
+        </ul>
+      </div>
+
+      <div class="surface-white p-6 space-y-3">
+        <div class="font-mono-tech text-xs uppercase text-[#75624E]">06 // API USAGE</div>
+        <h3 class="text-lg font-bold text-[#292720]">Usage Telemetry</h3>
+        <div class="p-3 rounded-lg bg-[#F4F0E8] border border-[#C9BBA5] font-mono-tech text-xs text-[#292720]">
+          STATUS: PRIVATE BETA — ACCESS REQUIRED
+        </div>
+        <p class="text-xs text-[#5C5549]">
+          Real-time credit consumption, webhook delivery logs, and per-endpoint latency histograms unlock once your organization is approved.
+        </p>
+      </div>
+
+      <div id="api-key-management" class="surface-white p-6 space-y-3">
+        <div class="font-mono-tech text-xs uppercase text-[#75624E]">07 // API KEY MANAGEMENT</div>
+        <h3 class="text-lg font-bold text-[#292720]">Key Provisioning Vault</h3>
+        <div class="p-3 rounded-lg bg-[#292720] text-[#FAF8F3] font-mono-tech text-xs flex items-center justify-between">
+          <span>🔒 LOCKED</span>
+          <span class="text-[10px] text-[#C9BBA5]">PRIVATE BETA</span>
+        </div>
+        <p class="text-xs text-[#5C5549]">
+          API keys are never auto-issued publicly. Submit an application below for engineering review.
+        </p>
+      </div>
+    </section>
+
+    <!-- REQUEST DEVELOPER ACCESS FORM -->
+    <section id="request-developer-access" class="surface-white p-8 sm:p-12 rounded-2xl border border-[#C9BBA5] shadow-lg max-w-3xl mx-auto">
+      <div class="space-y-2 mb-6">
+        <span class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#292720] text-[#FAF8F3] font-mono-tech text-[11px]">
+          PRIVATE BETA — ACCESS REQUIRED
+        </span>
+        <h2 class="text-2xl sm:text-3xl font-bold text-[#292720]">Request Developer Access</h2>
+        <p class="text-xs sm:text-sm text-[#75624E]">
+          Complete the form below to apply for VidSynth AI Developer API credentials. All submissions are saved to our backend database and reviewed by <a href="mailto:founder@vidsynth.app" class="underline text-[#292720] font-mono-tech">founder@vidsynth.app</a>.
+        </p>
+      </div>
+
+      <form id="dev-page-access-form" class="space-y-4" novalidate>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="dev-full-name" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Full Name *</label>
+            <input id="dev-full-name" type="text" required placeholder="Your full name" class="input-field" />
+          </div>
+          <div>
+            <label for="dev-email" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Email *</label>
+            <input id="dev-email" type="email" required placeholder="engineering@studio.com" class="input-field" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="dev-company" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Company / Organization *</label>
+            <input id="dev-company" type="text" required placeholder="Company or studio name" class="input-field" />
+          </div>
+          <div>
+            <label for="dev-website" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Website (Optional)</label>
+            <input id="dev-website" type="url" placeholder="https://yourcompany.com" class="input-field" />
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label for="dev-use-case" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Intended Use Case *</label>
+            <input id="dev-use-case" type="text" required placeholder="Automated character pipeline, VFX batching..." class="input-field" />
+          </div>
+          <div>
+            <label for="dev-expected-usage" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Expected API Usage *</label>
+            <select id="dev-expected-usage" class="input-field">
+              <option value="1,000 - 10,000 generations / month">1,000 – 10,000 generations / month</option>
+              <option value="10,000 - 50,000 generations / month">10,000 – 50,000 generations / month</option>
+              <option value="50,000+ Enterprise Tier">50,000+ Enterprise Tier</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label for="dev-description" class="block font-mono-tech text-xs uppercase text-[#292720] mb-1">Additional Description *</label>
+          <textarea
+            id="dev-description"
+            rows="4"
+            required
+            placeholder="Describe your technical architecture, integration timeline, concurrency requirements, and creative workflow goals..."
+            class="input-field"
+          ></textarea>
+        </div>
+
+        <div class="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <button type="submit" id="dev-submit-btn" class="btn-primary !py-3.5 !px-7 !text-sm">
+            Request Developer Access
+          </button>
+          <span class="font-mono-tech text-xs text-[#75624E]">
+            Founder: Najla Afaf Ullaya (<a href="mailto:najla@vidsynth.app" class="text-[#292720] underline">najla@vidsynth.app</a>) • Business: <a href="mailto:founder@vidsynth.app" class="text-[#292720] underline">founder@vidsynth.app</a>
+          </span>
+        </div>
+
+        <div id="dev-form-feedback" class="hidden ea-success-banner" role="status"></div>
+      </form>
+    </section>
+
+  </main>
+
+  <script>
+    (function initDeveloperApiPage() {
+      const form = document.getElementById("dev-page-access-form");
+      const feedback = document.getElementById("dev-form-feedback");
+      const submitBtn = document.getElementById("dev-submit-btn");
+      if (!form) return;
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById("dev-full-name").value.trim();
+        const email = document.getElementById("dev-email").value.trim();
+        const company = document.getElementById("dev-company").value.trim();
+        const website = document.getElementById("dev-website").value.trim();
+        const intendedUseCase = document.getElementById("dev-use-case").value.trim();
+        const expectedUsage = document.getElementById("dev-expected-usage").value;
+        const additionalDescription = document.getElementById("dev-description").value.trim();
+
+        if (!fullName || !email || !company || !intendedUseCase) {
+          feedback.textContent = "Please complete all required fields.";
+          feedback.classList.remove("hidden");
+          return;
+        }
+
+        submitBtn.disabled = true;
+        try {
+          const res = await fetch("/api/developer-access", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              fullName,
+              email,
+              company,
+              website,
+              intendedUseCase,
+              expectedUsage,
+              additionalDescription
+            })
+          });
+          const data = await res.json();
+          feedback.textContent =
+            data.message ||
+            "Your Developer API request has been recorded. Contact founder@vidsynth.app for priority review.";
+          feedback.classList.remove("hidden");
+          if (res.ok) form.reset();
+        } catch (_) {
+          feedback.textContent = "Could not submit right now. Please contact founder@vidsynth.app.";
+          feedback.classList.remove("hidden");
+        } finally {
+          submitBtn.disabled = false;
+        }
+      });
+    })();
+  </script>
+</body>
+</html>
